@@ -1,0 +1,27 @@
+/* Admin Screen */
+.admin-screen {
+  padding: 1rem;
+}
+
+.admin-sections {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .menu li {
+    margin: 0.5rem;
+  }
+}
