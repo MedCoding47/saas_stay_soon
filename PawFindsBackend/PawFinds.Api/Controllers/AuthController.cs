@@ -91,6 +91,16 @@ public class AuthController : ControllerBase
     }
 
     // 🔴 ME (NEW)
+    // 🟢 DEBUG USERS (TEMP)
+    [HttpGet("debug-users")]
+    public async Task<IActionResult> DebugUsers()
+    {
+        var users = await _context.Users
+            .IgnoreQueryFilters()
+            .Select(u => new { u.Email, u.Role, u.OrganizationId })
+            .ToListAsync();
+        return Ok(users);
+    }
     [Authorize]
     [HttpGet("me")]
     public async Task<ActionResult<object>> Me()

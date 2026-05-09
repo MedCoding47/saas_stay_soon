@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch data once on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,65 +51,66 @@ const Dashboard = () => {
   }, []);
 
   const statCards = [
-    { label: 'Total Pets', value: stats.totalPets, color: '#D85A30', bg: '#FAECE7' },
-    { label: 'Pending', value: stats.pending, color: '#FAEEDA', bg: '#FFF8E1' },
-    { label: 'Adopted', value: stats.adopted, color: '#1D9E75', bg: '#E1F5EE' },
-    { label: 'Active Users', value: stats.activeUsers, color: '#D85A30', bg: '#FAECE7' }
+    { label: 'Total Pets', value: stats.totalPets },
+    { label: 'Pending Requests', value: stats.pending },
+    { label: 'Adopted', value: stats.adopted },
+    { label: 'Active Users', value: stats.activeUsers }
   ];
 
-  if (loading) return <div style={{padding:'40px',textAlign:'center',color:'#666'}}>Loading dashboard...</div>;
+  if (loading) {
+    return <div className="dashboard-loading">Loading dashboard…</div>;
+  }
 
   return (
-    <div style={{padding:'24px',background:'var(--paw-primary-light)',minHeight:'100%'}}>
-      {/* Stat Cards */}
-      <div style={{display:'grid',gridTemplateColumns:'repeat(4, 1fr)',gap:'16px',marginBottom:'24px'}}>
-        {statCards.map((card, i) => (
-          <div key={i} style={{background: card.bg,padding:'20px',borderRadius:'12px',boxShadow:'0 2px 8px rgba(0,0,0,0.08)'}}>
-            <div style={{fontSize:'13px',color:'#666',marginBottom:'8px',fontWeight:'500'}}>{card.label}</div>
-            <div style={{fontSize:'28px',fontWeight:'700',color: card.color}}>{card.value}</div>
+    <div className="dashboard-wrapper">
+      {/* Stat cards */}
+      <div className="stat-cards">
+        {statCards.map((card, idx) => (
+          <div key={idx} className="stat-card">
+            <div className="stat-label">{card.label}</div>
+            <div className="stat-value">{card.value}</div>
           </div>
         ))}
       </div>
 
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'20px'}}>
+      {/* Main sections */}
+      <div className="dashboard-main">
         {/* Recent Pets */}
-        <div style={{background:'white',borderRadius:'12px',padding:'20px',boxShadow:'0 2px 8px rgba(0,0,0,0.08)'}}>
-          <h3 style={{fontSize:'16px',fontWeight:'600',color:'#333',marginBottom:'16px'}}>Recent Pets</h3>
+        <section className="card recent-pets">
+          <h3 className="section-title">Recent Pets</h3>
           {recentPets.length === 0 ? (
-            <div style={{padding:'20px',textAlign:'center',color:'#999'}}>No pets found</div>
+            <div className="empty-state">No pets found</div>
           ) : (
-            <div>
+            <ul className="pet-list">
               {recentPets.map(pet => (
-                <div key={pet.id} style={{display:'flex',alignItems:'center',gap:'12px',padding:'10px 0',borderBottom:'1px solid #f0f0f0'}}>
-                  <span style={{fontSize:'24px'}}>🐾</span>
-                  <div>
-                    <div style={{fontWeight:'500',fontSize:'13px',color:'#333'}}>{pet.name}</div>
-                    <div style={{fontSize:'11px',color:'#999'}}>{pet.type} • {pet.age} years</div>
+                <li key={pet.id} className="pet-item">
+                  <span className="pet-emoji">🐾</span>
+                  <div className="pet-info">
+                    <div className="pet-name">{pet.name}</div>
+                    <div className="pet-meta">{pet.type} • {pet.age} years</div>
                   </div>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
-        </div>
+        </section>
 
         {/* Activity Feed */}
-        <div style={{background:'white',borderRadius:'12px',padding:'20px',boxShadow:'0 2px 8px rgba(0,0,0,0.08)'}}>
-          <h3 style={{fontSize:'16px',fontWeight:'600',color:'#333',marginBottom:'16px'}}>Recent Activity</h3>
+        <section className="card activity-feed">
+          <h3 className="section-title">Recent Activity</h3>
           {activities.length === 0 ? (
-            <div style={{padding:'20px',textAlign:'center',color:'#999'}}>No recent activity</div>
+            <div className="empty-state">No recent activity</div>
           ) : (
-            <div>
-              {activities.map(activity => (
-                <div key={activity.id} style={{padding:'10px 0',borderBottom:'1px solid #f0f0f0'}}>
-                  <div style={{fontSize:'13px',color:'#333'}}>{activity.content}</div>
-                  <div style={{fontSize:'11px',color:'#999',marginTop:'4px'}}>
-                    {activity.createdAt ? new Date(activity.createdAt).toLocaleDateString() : ''}
-                  </div>
-                </div>
+            <ul className="activity-list">
+              {activities.map(act => (
+                <li key={act.id} className="activity-item">
+                  <div className="activity-content">{act.content}</div>
+                  <div className="activity-date">{act.createdAt ? new Date(act.createdAt).toLocaleDateString() : ''}</div>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
-        </div>
+        </section>
       </div>
     </div>
   );

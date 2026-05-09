@@ -16,7 +16,7 @@ public static class DbSeeder
         await SeedSuperAdminAsync(context, passwordHasher, cancellationToken);
 
         // Seed demo organization + admin + staff (only if no organizations exist)
-        if (await context.Organizations.IgnoreQueryFilters().AnyAsync(cancellationToken))
+        if (await context.Organizations.IgnoreQueryFilters().AnyAsync(o => o.Slug != "platform", cancellationToken))
         {
             return;
         }
