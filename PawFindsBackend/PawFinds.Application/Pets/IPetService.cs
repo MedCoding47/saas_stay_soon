@@ -14,6 +14,7 @@ public interface IPetService
 
     Task<PetDto> CreatePetAsync(
         CreatePetRequest request,
+        Guid ownerId,
         CancellationToken cancellationToken);
 
     Task<bool> UpdatePetAsync(
@@ -23,5 +24,9 @@ public interface IPetService
 
     Task<bool> DeletePetAsync(
         Guid id,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<PetDto>> GetMyPetsAsync(
+        Guid ownerId,
         CancellationToken cancellationToken);
 }

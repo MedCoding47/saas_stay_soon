@@ -17,5 +17,17 @@ public sealed class User : BaseEntity
 
     public bool IsActive { get; set; } = true;
 
+    public string? PhoneNumber { get; set; }
+
+    public string? About { get; set; }
+
+    public string? ProfilePictureUrl { get; set; }
+
     public Organization? Organization { get; set; }
+
+    public ICollection<Conversation> ConversationsAsPetHolder { get; set; } = [];
+
+    public ICollection<Conversation> ConversationsAsAdopter { get; set; } = [];
+
+    public ICollection<Pet> OwnedPets { get; set; } = [];
 }

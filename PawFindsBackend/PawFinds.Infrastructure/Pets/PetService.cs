@@ -64,6 +64,7 @@ public sealed class PetService : IPetService
     {
         return await _dbContext.Pets
             .AsNoTracking()
+            .Include(p => p.Owner)
             .Where(pet => pet.Id == id)
             .Select(pet => ToDto(pet))
             .FirstOrDefaultAsync(cancellationToken);
@@ -71,6 +72,7 @@ public sealed class PetService : IPetService
 
     public async Task<PetDto> CreatePetAsync(
         CreatePetRequest request,
+        Guid ownerId,
         CancellationToken cancellationToken)
     {
         var organizationId = EnsureTenant();
@@ -79,6 +81,7 @@ public sealed class PetService : IPetService
         {
             Id = Guid.NewGuid(),
             OrganizationId = organizationId,
+            OwnerId = ownerId,
             Name = request.Name.Trim(),
             Breed = NormalizeOptional(request.Breed),
             Age = request.Age,
@@ -86,6 +89,7 @@ public sealed class PetService : IPetService
             Location = request.Location.Trim(),
             Description = NormalizeOptional(request.Description),
             ImageUrl = NormalizeOptional(request.ImageUrl),
+            ImageFileName = NormalizeOptional(request.ImageFileName),
             Status = request.Status
         };
 
@@ -117,6 +121,7 @@ public sealed class PetService : IPetService
         pet.Location = request.Location.Trim();
         pet.Description = NormalizeOptional(request.Description);
         pet.ImageUrl = NormalizeOptional(request.ImageUrl);
+        pet.ImageFileName = NormalizeOptional(request.ImageFileName);
         pet.Status = request.Status;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -144,6 +149,19 @@ public sealed class PetService : IPetService
         return true;
     }
 
+    public async Task<IReadOnlyList<PetDto>> GetMyPetsAsync(
+        Guid ownerId,
+        CancellationToken cancellationToken)
+    {
+        return await _dbContext.Pets
+            .AsNoTracking()
+            .Include(p => p.Owner)
+            .Where(pet => pet.OwnerId == ownerId)
+            .OrderByDescending(pet => pet.CreatedAt)
+            .Select(pet => ToDto(pet))
+            .ToListAsync(cancellationToken);
+    }
+
     private Guid EnsureTenant()
     {
         return _tenantService.OrganizationId
@@ -160,6 +178,8 @@ public sealed class PetService : IPetService
         return new PetDto(
             pet.Id,
             pet.OrganizationId,
+            pet.OwnerId,
+            pet.Owner != null ? pet.Owner.FullName : null,
             pet.Name,
             pet.Breed,
             pet.Age,
@@ -167,6 +187,7 @@ public sealed class PetService : IPetService
             pet.Location,
             pet.Description,
             pet.ImageUrl,
+            pet.ImageFileName,
             pet.Status,
             pet.CreatedAt,
             pet.UpdatedAt);

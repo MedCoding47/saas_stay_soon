@@ -15,4 +15,8 @@ public sealed class Organization : BaseEntity
     public ICollection<Pet> Pets { get; set; } = [];
 
     public ICollection<Adoption> Adoptions { get; set; } = [];
+
+    public ICollection<Conversation> Conversations { get; set; } = [];
+
+    public ICollection<ContactRequest> ContactRequests { get; set; } = [];
 }

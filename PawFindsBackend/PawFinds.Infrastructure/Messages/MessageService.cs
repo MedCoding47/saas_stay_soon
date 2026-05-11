@@ -64,6 +64,59 @@ public sealed class MessageService : IMessageService
             recipient.FullName,
             message.Content,
             message.IsRead,
+            null,
+            message.CreatedAt);
+    }
+
+    public async Task<MessageDto> SendConversationMessageAsync(
+        Guid senderId,
+        Guid conversationId,
+        string content,
+        Guid organizationId,
+        CancellationToken cancellationToken)
+    {
+        var conversation = await _dbContext.Conversations
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(c => c.Id == conversationId && c.OrganizationId == organizationId, cancellationToken)
+            ?? throw new InvalidOperationException("Conversation not found.");
+
+        var recipientId = conversation.PetHolderId == senderId
+            ? conversation.AdopterId
+            : conversation.PetHolderId;
+
+        var message = new Message
+        {
+            Id = Guid.NewGuid(),
+            OrganizationId = organizationId,
+            ConversationId = conversationId,
+            SenderId = senderId,
+            RecipientId = recipientId,
+            Content = content,
+            IsRead = false,
+            CreatedAt = DateTimeOffset.UtcNow,
+            UpdatedAt = DateTimeOffset.UtcNow
+        };
+
+        _dbContext.Messages.Add(message);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        var sender = await _dbContext.Users
+            .IgnoreQueryFilters()
+            .FirstAsync(u => u.Id == senderId, cancellationToken);
+
+        var recipient = await _dbContext.Users
+            .IgnoreQueryFilters()
+            .FirstAsync(u => u.Id == recipientId, cancellationToken);
+
+        return new MessageDto(
+            message.Id,
+            sender.Id,
+            sender.FullName,
+            recipient.Id,
+            recipient.FullName,
+            message.Content,
+            message.IsRead,
+            conversationId,
             message.CreatedAt);
     }
 
@@ -97,6 +150,7 @@ public sealed class MessageService : IMessageService
                 m.Recipient!.FullName,
                 m.Content,
                 m.IsRead,
+                m.ConversationId,
                 m.CreatedAt))
             .ToListAsync(cancellationToken);
 
@@ -129,8 +183,14 @@ public sealed class MessageService : IMessageService
                     m.RecipientId == currentUserId && !m.IsRead);
 
                 return new ConversationDto(
+                    null,
                     otherUserId,
                     otherUser.FullName,
+                    null,
+                    null,
+                    null,
+                    null,
+                    true,
                     lastMessage.Content,
                     lastMessage.CreatedAt,
                     unreadCount);

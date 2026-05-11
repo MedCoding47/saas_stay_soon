@@ -11,6 +11,13 @@ public interface IMessageService
         Guid organizationId,
         CancellationToken cancellationToken);
 
+    Task<MessageDto> SendConversationMessageAsync(
+        Guid senderId,
+        Guid conversationId,
+        string content,
+        Guid organizationId,
+        CancellationToken cancellationToken);
+
     Task<PagedResult<MessageDto>> GetConversationAsync(
         Guid otherUserId,
         Guid currentUserId,

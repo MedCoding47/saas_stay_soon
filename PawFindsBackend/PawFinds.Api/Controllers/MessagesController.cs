@@ -47,6 +47,35 @@ public sealed class MessagesController : ControllerBase
         }
     }
 
+    [HttpPost("conversation/{conversationId:guid}")]
+    public async Task<ActionResult<MessageDto>> SendConversationMessage(
+        Guid conversationId,
+        SendConversationMessageRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (!TryGetCurrentUserId(out var senderId) ||
+            !TryGetCurrentOrganizationId(out var organizationId))
+        {
+            return Unauthorized();
+        }
+
+        try
+        {
+            var message = await _messageService.SendConversationMessageAsync(
+                senderId,
+                conversationId,
+                request.Content,
+                organizationId,
+                cancellationToken);
+
+            return CreatedAtAction(nameof(GetConversation), new { userId = message.RecipientId }, message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [HttpGet("conversations")]
     public async Task<ActionResult<IReadOnlyList<ConversationDto>>> GetConversations(
         CancellationToken cancellationToken)

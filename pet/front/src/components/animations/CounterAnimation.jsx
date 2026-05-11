@@ -7,7 +7,6 @@ gsap.registerPlugin(ScrollTrigger);
 export default function CounterAnimation({ end, suffix = '', label, color = 'text-coral' }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
-  const counterRef = useRef(null);
   const [animated, setAnimated] = useState(false);
 
   useEffect(() => {
@@ -34,7 +33,7 @@ export default function CounterAnimation({ end, suffix = '', label, color = 'tex
 
   return (
     <div ref={ref} className="text-center">
-      <div ref={counterRef} className={`text-4xl md:text-5xl font-bold ${color}`}>{count}{suffix}</div>
+      <div className={`text-4xl md:text-5xl font-bold ${color}`}>{count}{suffix}</div>
       <div className="text-gray-400 mt-1.5 text-sm font-medium uppercase tracking-wider">{label}</div>
     </div>
   );

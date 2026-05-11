@@ -30,6 +30,9 @@ public sealed class PetConfiguration : IEntityTypeConfiguration<Pet>
         builder.Property(pet => pet.ImageUrl)
             .HasMaxLength(500);
 
+        builder.Property(pet => pet.ImageFileName)
+            .HasMaxLength(260);
+
         builder.Property(pet => pet.Status)
             .HasConversion<string>()
             .HasMaxLength(80)
@@ -40,7 +43,13 @@ public sealed class PetConfiguration : IEntityTypeConfiguration<Pet>
             .HasForeignKey(pet => pet.OrganizationId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(pet => pet.Owner)
+            .WithMany(user => user.OwnedPets)
+            .HasForeignKey(pet => pet.OwnerId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         builder.HasIndex(pet => pet.OrganizationId);
+        builder.HasIndex(pet => pet.OwnerId);
         builder.HasIndex(pet => pet.Status);
         builder.HasIndex(pet => new { pet.OrganizationId, pet.Status });
         builder.HasIndex(pet => new { pet.OrganizationId, pet.Type });

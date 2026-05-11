@@ -6,7 +6,7 @@ const emojis = [
   { emoji: '🐈', label: 'Cat' },
   { emoji: '🐰', label: 'Rabbit' },
   { emoji: '🐦', label: 'Bird' },
-  { emoji: '🐾', label: 'Paw' },
+  { emoji: '🦜', label: 'Parrot' },
 ];
 
 export default function FloatingPets() {
@@ -24,11 +24,7 @@ export default function FloatingPets() {
         scale: gsap.utils.random(0.8, 1.2),
       });
       tl.to(el, {
-        y: -20,
-        rotation: 15,
-        duration: 2,
-        stagger: 0.4,
-        ease: 'power1.inOut',
+        y: -20, rotation: 10, duration: 2, ease: 'power1.inOut',
       }, i * 0.15);
     });
 
@@ -51,16 +47,12 @@ export default function FloatingPets() {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className="pet-float-container relative flex items-center justify-center gap-4 md:gap-6 text-6xl md:text-7xl lg:text-8xl"
-      style={{ perspective: '1000px' }}
-    >
+    <div ref={containerRef} className="flex items-center justify-center gap-4 md:gap-6 text-6xl md:text-7xl lg:text-8xl" style={{ perspective: '1000px' }}>
       {emojis.map((item, i) => (
         <span
           key={item.label}
           ref={(el) => (itemsRef.current[i] = el)}
-          className="pet-float inline-block drop-shadow-2xl cursor-pointer select-none hover:scale-110 transition-transform"
+          className="pet-float inline-block drop-shadow-2xl cursor-pointer select-none"
           style={{ filter: 'drop-shadow(0 0 30px rgba(216,90,48,0.3))' }}
         >
           {item.emoji}

@@ -9,7 +9,9 @@ public sealed class Message : BaseEntity
     public Guid RecipientId { get; set; }
     public string Content { get; set; } = string.Empty;
     public bool IsRead { get; set; }
+    public Guid? ConversationId { get; set; }
 
     public User? Sender { get; set; }
     public User? Recipient { get; set; }
+    public Conversation? Conversation { get; set; }
 }

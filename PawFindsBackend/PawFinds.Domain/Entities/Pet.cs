@@ -7,6 +7,8 @@ public sealed class Pet : BaseEntity
 {
     public Guid OrganizationId { get; set; }
 
+    public Guid? OwnerId { get; set; }
+
     public string Name { get; set; } = string.Empty;
 
     public string? Breed { get; set; }
@@ -21,7 +23,13 @@ public sealed class Pet : BaseEntity
 
     public string? ImageUrl { get; set; }
 
+    public string? ImageFileName { get; set; }
+
     public AdoptionStatus Status { get; set; } = AdoptionStatus.Available;
 
     public Organization? Organization { get; set; }
+
+    public User? Owner { get; set; }
+
+    public ICollection<Conversation> Conversations { get; set; } = [];
 }

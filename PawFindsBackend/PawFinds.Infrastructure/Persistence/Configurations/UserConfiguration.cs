@@ -29,6 +29,15 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(40)
             .IsRequired();
 
+        builder.Property(user => user.PhoneNumber)
+            .HasMaxLength(20);
+
+        builder.Property(user => user.About)
+            .HasMaxLength(1000);
+
+        builder.Property(user => user.ProfilePictureUrl)
+            .HasMaxLength(500);
+
         builder.HasOne(user => user.Organization)
             .WithMany(organization => organization.Users)
             .HasForeignKey(user => user.OrganizationId)

@@ -4,16 +4,14 @@ import api from '../api/client';
 export function useAdoptions() {
   const [adoptions, setAdoptions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const fetchAdoptions = useCallback(async () => {
     setLoading(true);
-    setError(null);
     try {
       const { data } = await api.get('/adoptions');
       setAdoptions(data.items || data.$values || []);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to load adoptions');
+    } catch {
+      setAdoptions([]);
     } finally {
       setLoading(false);
     }
@@ -22,10 +20,14 @@ export function useAdoptions() {
   useEffect(() => { fetchAdoptions(); }, [fetchAdoptions]);
 
   const updateStatus = async (id, status) => {
-    const { data } = await api.patch(`/adoptions/${id}/status`, { status });
-    setAdoptions((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)));
+    await api.patch(`/adoptions/${id}/status`, { status });
+    await fetchAdoptions();
+  };
+
+  const apply = async ({ petId, applicationMessage }) => {
+    const { data } = await api.post('/adoptions/apply', { petId, applicationMessage });
     return data;
   };
 
-  return { adoptions, loading, error, fetchAdoptions, updateStatus };
+  return { adoptions, loading, updateStatus, apply, refetch: fetchAdoptions };
 }

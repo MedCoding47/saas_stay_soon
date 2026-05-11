@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 
-export default function Card({ children, className = '', glass = false, ...props }) {
+export default function Card({ children, className = '', glass = false, hover = true, ...props }) {
   return (
     <motion.div
-      whileHover={{ y: -12, boxShadow: '0 30px 60px rgba(216,90,48,0.3)' }}
+      whileHover={hover ? { y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.08)' } : undefined}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      className={`${glass ? 'glass-card' : 'bg-white rounded-2xl shadow-card p-6'} transition-all duration-300 ${className}`}
+      className={`${glass ? 'glass-card' : 'card'} ${className}`}
       {...props}
     >
       {children}

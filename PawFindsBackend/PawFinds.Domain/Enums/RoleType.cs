@@ -9,5 +9,6 @@ public enum RoleType
     Admin = 1,
     Staff = 2,
     Adopter = 3,
-    Applicant = 4
+    Applicant = 4,
+    PetHolder = 5
 }

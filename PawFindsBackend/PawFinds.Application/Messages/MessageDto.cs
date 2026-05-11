@@ -8,4 +8,5 @@ public sealed record MessageDto(
     string RecipientName,
     string Content,
     bool IsRead,
+    Guid? ConversationId,
     DateTimeOffset CreatedAt);

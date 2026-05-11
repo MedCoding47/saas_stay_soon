@@ -29,6 +29,9 @@ public sealed class CreatePetRequest
     [MaxLength(500)]
     public string? ImageUrl { get; set; }
 
+    [MaxLength(260)]
+    public string? ImageFileName { get; set; }
+
     [EnumDataType(typeof(AdoptionStatus))]
     public AdoptionStatus Status { get; set; } = AdoptionStatus.Available;
 }

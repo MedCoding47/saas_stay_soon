@@ -31,6 +31,10 @@ public sealed class AppDbContext : DbContext
 
     public DbSet<Message> Messages => Set<Message>();
 
+    public DbSet<Conversation> Conversations => Set<Conversation>();
+
+    public DbSet<ContactRequest> ContactRequests => Set<ContactRequest>();
+
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var now = DateTimeOffset.UtcNow;
@@ -79,5 +83,15 @@ public sealed class AppDbContext : DbContext
             .HasQueryFilter(m =>
                 CurrentOrganizationId == null ||
                 m.OrganizationId == CurrentOrganizationId);
+
+        modelBuilder.Entity<Conversation>()
+            .HasQueryFilter(c =>
+                CurrentOrganizationId == null ||
+                c.OrganizationId == CurrentOrganizationId);
+
+        modelBuilder.Entity<ContactRequest>()
+            .HasQueryFilter(cr =>
+                CurrentOrganizationId == null ||
+                cr.OrganizationId == CurrentOrganizationId);
     }
 }

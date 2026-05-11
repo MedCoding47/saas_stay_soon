@@ -6,7 +6,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('pawfinds-token');
+  const token = localStorage.getItem('sh-token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
@@ -15,10 +15,10 @@ api.interceptors.response.use(
   (r) => r,
   (e) => {
     if (e.response?.status === 401) {
-      const hadToken = !!localStorage.getItem('pawfinds-token');
-      if (hadToken) {
-        localStorage.removeItem('pawfinds-token');
-        localStorage.removeItem('pawfinds-user');
+      if (localStorage.getItem('sh-token')) {
+        localStorage.removeItem('sh-token');
+        localStorage.removeItem('sh-role');
+        localStorage.removeItem('sh-user');
         window.location.href = '/';
       }
     }

@@ -29,7 +29,6 @@ public class AuthController : ControllerBase
         _passwordHasher = passwordHasher;
     }
 
-    // ✅ LOGIN (already exists)
     [HttpPost("login")]
     public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
     {
@@ -50,14 +49,20 @@ public class AuthController : ControllerBase
 
         var token = _jwtService.GenerateToken(user);
 
-        return Ok(new LoginResponse { Token = token, TokenType = "Bearer", UserId = user.Id, OrganizationId = user.OrganizationId, Role = user.Role.ToString() });
+        return Ok(new LoginResponse
+        {
+            Token = token,
+            TokenType = "Bearer",
+            UserId = user.Id,
+            OrganizationId = user.OrganizationId,
+            Role = user.Role.ToString(),
+            FullName = user.FullName
+        });
     }
 
-    // 🔴 REGISTER (NEW)
     [HttpPost("register")]
     public async Task<ActionResult<LoginResponse>> Register([FromBody] RegisterRequest request)
     {
-        // Check if email exists (IMPORTANT: IgnoreQueryFilters)
         var exists = await _context.Users
             .IgnoreQueryFilters()
             .AnyAsync(u => u.Email == request.Email);
@@ -65,48 +70,50 @@ public class AuthController : ControllerBase
         if (exists)
             return BadRequest("Email already exists");
 
-        // Create user
+        var role = request.Role?.ToLowerInvariant() switch
+        {
+            "petholder" => RoleType.PetHolder,
+            "adopter" => RoleType.Adopter,
+            _ => RoleType.Adopter
+        };
+
         var user = new User
         {
             Id = Guid.NewGuid(),
             Email = request.Email,
             FullName = request.FullName,
+            PhoneNumber = request.PhoneNumber,
             OrganizationId = request.OrganizationId,
-            Role = RoleType.Applicant,
+            Role = role,
             IsActive = true,
             CreatedAt = DateTimeOffset.UtcNow,
             UpdatedAt = DateTimeOffset.UtcNow
         };
 
-        // Hash password
         user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        // Generate token
         var token = _jwtService.GenerateToken(user);
 
-        return Ok(new LoginResponse { Token = token, TokenType = "Bearer", UserId = user.Id, OrganizationId = user.OrganizationId, Role = user.Role.ToString() });
+        return Ok(new LoginResponse
+        {
+            Token = token,
+            TokenType = "Bearer",
+            UserId = user.Id,
+            OrganizationId = user.OrganizationId,
+            Role = user.Role.ToString(),
+            FullName = user.FullName
+        });
     }
 
-    // 🔴 ME (NEW)
-    // 🟢 DEBUG USERS (TEMP)
-    [HttpGet("debug-users")]
-    public async Task<IActionResult> DebugUsers()
-    {
-        var users = await _context.Users
-            .IgnoreQueryFilters()
-            .Select(u => new { u.Email, u.Role, u.OrganizationId })
-            .ToListAsync();
-        return Ok(users);
-    }
     [Authorize]
     [HttpGet("me")]
-    public async Task<ActionResult<object>> Me()
+    public async Task<ActionResult<MeResponse>> Me()
     {
-        var userIdClaim = User.FindFirst("sub")?.Value 
-                       ?? User.FindFirst("user_id")?.Value;
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                       ?? User.FindFirstValue("user_id");
 
         if (userIdClaim == null)
             return Unauthorized();
@@ -120,13 +127,69 @@ public class AuthController : ControllerBase
         if (user == null)
             return NotFound();
 
-        return Ok(new
-        {
+        return Ok(new MeResponse(
             user.Id,
             user.Email,
             user.FullName,
-            user.Role,
-            user.OrganizationId
-        });
+            user.Role.ToString(),
+            user.OrganizationId,
+            user.PhoneNumber,
+            user.About,
+            user.ProfilePictureUrl));
+    }
+
+    [Authorize]
+    [HttpPut("profile")]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileRequest request)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                       ?? User.FindFirstValue("user_id");
+
+        if (userIdClaim == null)
+            return Unauthorized();
+
+        var userId = Guid.Parse(userIdClaim);
+
+        var user = await _context.Users
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user == null)
+            return NotFound();
+
+        if (!string.IsNullOrWhiteSpace(request.FullName))
+            user.FullName = request.FullName;
+
+        if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+            user.PhoneNumber = request.PhoneNumber;
+
+        if (request.About != null)
+            user.About = request.About;
+
+        if (request.ProfilePictureUrl != null)
+            user.ProfilePictureUrl = request.ProfilePictureUrl;
+
+        user.UpdatedAt = DateTimeOffset.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    [HttpGet("debug-users")]
+    public async Task<IActionResult> DebugUsers()
+    {
+        var users = await _context.Users
+            .IgnoreQueryFilters()
+            .Select(u => new { u.Email, u.Role, u.OrganizationId, u.PhoneNumber })
+            .ToListAsync();
+        return Ok(users);
+    }
+
+    private bool TryGetCurrentUserId(out Guid userId)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                       ?? User.FindFirstValue("user_id");
+        return Guid.TryParse(userIdClaim, out userId);
     }
 }

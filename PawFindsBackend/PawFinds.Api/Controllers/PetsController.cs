@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PawFinds.Application.Common;
@@ -38,19 +39,35 @@ public sealed class PetsController : ControllerBase
         return pet is null ? NotFound() : Ok(pet);
     }
 
+    [HttpGet("my")]
+    [Authorize(Roles = "PetHolder,Admin")]
+    public async Task<ActionResult<IReadOnlyList<PetDto>>> GetMyPets(
+        CancellationToken cancellationToken)
+    {
+        if (!TryGetCurrentUserId(out var ownerId))
+            return Unauthorized();
+
+        var pets = await _petService.GetMyPetsAsync(ownerId, cancellationToken);
+
+        return Ok(pets);
+    }
+
     [HttpPost]
-    [Authorize(Roles = "Admin,Staff")]
+    [Authorize(Roles = "PetHolder,Admin,Staff")]
     public async Task<ActionResult<PetDto>> CreatePet(
         CreatePetRequest request,
         CancellationToken cancellationToken)
     {
-        var pet = await _petService.CreatePetAsync(request, cancellationToken);
+        if (!TryGetCurrentUserId(out var ownerId))
+            return Unauthorized();
+
+        var pet = await _petService.CreatePetAsync(request, ownerId, cancellationToken);
 
         return CreatedAtAction(nameof(GetPet), new { id = pet.Id }, pet);
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "Admin,Staff")]
+    [Authorize(Roles = "PetHolder,Admin,Staff")]
     public async Task<IActionResult> UpdatePet(
         Guid id,
         UpdatePetRequest request,
@@ -62,7 +79,7 @@ public sealed class PetsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Admin,Staff")]
+    [Authorize(Roles = "PetHolder,Admin,Staff")]
     public async Task<IActionResult> DeletePet(
         Guid id,
         CancellationToken cancellationToken)
@@ -70,5 +87,12 @@ public sealed class PetsController : ControllerBase
         var deleted = await _petService.DeletePetAsync(id, cancellationToken);
 
         return deleted ? NoContent() : NotFound();
+    }
+
+    private bool TryGetCurrentUserId(out Guid userId)
+    {
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                       ?? User.FindFirstValue("user_id");
+        return Guid.TryParse(userIdClaim, out userId);
     }
 }
