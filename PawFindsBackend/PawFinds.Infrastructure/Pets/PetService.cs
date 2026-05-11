@@ -22,8 +22,6 @@ public sealed class PetService : IPetService
         PetQueryParameters query,
         CancellationToken cancellationToken)
     {
-        EnsureTenant();
-
         var petsQuery = _dbContext.Pets.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(query.Type))
@@ -64,8 +62,6 @@ public sealed class PetService : IPetService
         Guid id,
         CancellationToken cancellationToken)
     {
-        EnsureTenant();
-
         return await _dbContext.Pets
             .AsNoTracking()
             .Where(pet => pet.Id == id)

@@ -1,19 +1,64 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply font-sans text-gray-800 bg-dark-deep antialiased;
+  }
+  * { @apply border-gray-200; }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold
+      transition-all duration-300 outline-none;
+  }
+  .btn-primary {
+    @apply btn bg-coral text-white hover:bg-coral-dark shadow-md hover:shadow-glow;
+  }
+  .btn-teal {
+    @apply btn bg-teal text-white hover:bg-teal-dark shadow-md hover:shadow-lg;
+  }
+  .btn-outline {
+    @apply btn border-2 border-coral text-coral hover:bg-coral hover:text-white;
+  }
+  .btn-ghost {
+    @apply btn text-gray-600 hover:text-coral hover:bg-coral/5;
+  }
+  .glass {
+    @apply bg-white/10 backdrop-blur-xl border border-white/10;
+  }
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 transition-all duration-300;
+  }
+  .input {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-200 bg-white
+      focus:border-coral focus:ring-2 focus:ring-coral/20
+      outline-none transition-all duration-200 text-sm;
+  }
+  .input-error {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-500/20;
+  }
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border;
+  }
+  .badge-available {
+    @apply badge bg-teal/10 text-teal border-teal/20;
+  }
+  .badge-pending {
+    @apply badge bg-amber-100 text-amber-700 border-amber-200;
+  }
+  .badge-adopted {
+    @apply badge bg-blue-100 text-blue-700 border-blue-200;
+  }
+  .badge-rejected {
+    @apply badge bg-red-100 text-red-700 border-red-200;
+  }
+  .section-title {
+    @apply text-h2 text-white text-center;
+  }
 }
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-

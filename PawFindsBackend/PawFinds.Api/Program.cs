@@ -37,6 +37,7 @@ builder.Services
     {
         options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
         options.SaveToken = false;
+        options.MapInboundClaims = false;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -47,6 +48,7 @@ builder.Services
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey)),
             ValidateLifetime = true,
             RoleClaimType = "role",
+            NameClaimType = "sub",
             ClockSkew = TimeSpan.FromMinutes(2)
         };
     });

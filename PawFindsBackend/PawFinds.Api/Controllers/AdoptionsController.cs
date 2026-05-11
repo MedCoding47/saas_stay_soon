@@ -20,8 +20,31 @@ public sealed class AdoptionsController : ControllerBase
         _adoptionService = adoptionService;
     }
 
+    [HttpGet("mine")]
+    public async Task<ActionResult<PagedResult<AdoptionDto>>> GetMyAdoptions(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
+    {
+        if (!TryGetCurrentUserId(out var adopterId))
+        {
+            return Unauthorized(new { message = "User context is missing." });
+        }
+
+        var request = new GetAdoptionsRequest(
+            AdopterId: adopterId,
+            Page: page,
+            PageSize: pageSize);
+
+        var pagedResult = await _adoptionService.GetAdoptionsPagedAsync(
+            request,
+            cancellationToken);
+
+        return Ok(pagedResult);
+    }
+
     [HttpPost("apply")]
-    [Authorize(Roles = "Adopter")]
+    [Authorize(Roles = "Adopter,Applicant")]
     public async Task<ActionResult<AdoptionDto>> Apply(
         ApplyAdoptionRequest request,
         CancellationToken cancellationToken)
@@ -66,7 +89,7 @@ public sealed class AdoptionsController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/status")]
-    [Authorize(Roles = "Staff")]
+    [Authorize(Roles = "Admin,Staff")]
     public async Task<ActionResult<AdoptionDto>> UpdateStatus(
         Guid id,
         UpdateAdoptionStatusRequest request,

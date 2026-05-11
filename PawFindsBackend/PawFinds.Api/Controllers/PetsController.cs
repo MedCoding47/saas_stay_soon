@@ -6,7 +6,6 @@ using PawFinds.Application.Pets;
 namespace PawFinds.Api.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/pets")]
 public sealed class PetsController : ControllerBase
 {
@@ -18,6 +17,7 @@ public sealed class PetsController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<PagedResult<PetDto>>> GetPets(
         [FromQuery] PetQueryParameters query,
         CancellationToken cancellationToken)
@@ -28,6 +28,7 @@ public sealed class PetsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult<PetDto>> GetPet(
         Guid id,
         CancellationToken cancellationToken)
