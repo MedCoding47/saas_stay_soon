@@ -23,6 +23,7 @@ export default function Footer() {
               <li><Link to="/swipe" className="hover:text-coral transition-colors">Swipe Mode</Link></li>
               <li><Link to="/client/register" className="hover:text-coral transition-colors">Register</Link></li>
               <li><Link to="/client/login" className="hover:text-coral transition-colors">Sign In</Link></li>
+              <li><Link to="/admin" className="hover:text-coral transition-colors">Admin Login</Link></li>
             </ul>
           </div>
           <div>

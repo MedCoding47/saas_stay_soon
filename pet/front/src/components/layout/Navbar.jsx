@@ -55,12 +55,14 @@ export default function Navbar() {
           {(role === 'Admin' || role === 'SuperAdmin') && (
             <>
               <Link to="/admin/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
+              <Link to="/admin/conversations" className={`${textClass} ${textClassHover} transition-colors`}>Messages</Link>
               <button onClick={handleLogout} className="btn-primary text-sm px-4 py-2">Logout</button>
             </>
           )}
           {(role === 'Applicant' || role === 'PetHolder' || role === 'Adopter') && (
             <>
               <Link to="/client/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
+              <Link to="/client/messages" className={`${textClass} ${textClassHover} transition-colors`}>Messages</Link>
               <button onClick={handleLogout} className={`btn-outline text-sm px-4 py-2 ${scrolled ? 'border-coral/30 text-coral hover:bg-coral hover:text-white' : ''}`}>Logout</button>
             </>
           )}
@@ -68,6 +70,7 @@ export default function Navbar() {
             <>
               <Link to="/client/login" className={`${textClass} ${textClassHover} transition-colors`}>Sign In</Link>
               <Link to="/client/register" className="btn-primary text-sm px-4 py-2">Get Started</Link>
+              <Link to="/admin" className={`text-xs ${textClass} ${textClassHover} transition-colors opacity-50 hover:opacity-100`}>Admin</Link>
             </>
           )}
         </div>
@@ -84,10 +87,17 @@ export default function Navbar() {
             <Link to="/" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Home</Link>
             <Link to="/pets" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Browse</Link>
             <Link to="/swipe" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Swipe</Link>
+            {(role === 'Applicant' || role === 'PetHolder' || role === 'Adopter') && (
+              <Link to="/client/messages" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Messages</Link>
+            )}
+            {(role === 'Admin' || role === 'SuperAdmin') && (
+              <Link to="/admin/conversations" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Messages</Link>
+            )}
             {!user && (
               <>
                 <Link to="/client/login" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Sign In</Link>
                 <Link to="/client/register" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Get Started</Link>
+                <Link to="/admin" onClick={() => setMenuOpen(false)} className="block text-xs text-dark/40 hover:text-coral">Admin</Link>
               </>
             )}
           </motion.div>

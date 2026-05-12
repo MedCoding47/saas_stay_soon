@@ -5,6 +5,7 @@ const links = [
   { to: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
   { to: '/admin/pets', label: 'Pets', icon: '🐾' },
   { to: '/admin/adoptions', label: 'Adoptions', icon: '📋' },
+  { to: '/admin/conversations', label: 'Messages', icon: '💬' },
 ];
 
 export default function AdminSidebar() {

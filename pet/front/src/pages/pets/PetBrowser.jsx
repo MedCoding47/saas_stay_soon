@@ -57,8 +57,8 @@ export default function PetBrowser() {
   });
 
   const handleApply = async () => {
-    if (!token) { navigate('/client/register'); return; }
-    if (role !== 'Applicant') { setApplyError('Only applicants can submit adoption requests.'); return; }
+    if (!token) { navigate('/client/login'); return; }
+    if (role !== 'Applicant' && role !== 'Adopter') { setApplyError('Only applicants can submit adoption requests.'); return; }
     setApplying(true);
     setApplyError('');
     try {
@@ -119,8 +119,9 @@ export default function PetBrowser() {
                     </div>
                     <p className="text-gray-500 text-sm mb-1">{pet.breed || 'Mixed Breed'}</p>
                     {pet.age != null && <p className="text-gray-400 text-xs mb-4">{pet.age} year{pet.age !== 1 ? 's' : ''} old</p>}
-                    <div className="mt-auto">
-                      <Button variant="teal" className="w-full text-sm" onClick={() => setApplyPet(pet)}>Adopt Me</Button>
+                    <div className="mt-auto flex gap-2">
+                      <Button variant="outline" className="flex-1 text-sm" onClick={() => navigate(`/pets/${pet.id}`)}>Details</Button>
+                      <Button variant="teal" className="flex-1 text-sm" onClick={() => setApplyPet(pet)}>Adopt Me</Button>
                     </div>
                   </motion.div>
                 </motion.div>

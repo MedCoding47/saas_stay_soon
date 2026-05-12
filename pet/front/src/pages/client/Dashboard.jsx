@@ -35,13 +35,12 @@ export default function ClientDashboard() {
 
   useEffect(() => {
     let cancelled = false;
-    api.get('/adoptions').then(({ data }) => {
+    api.get('/adoptions/mine').then(({ data }) => {
       if (cancelled) return;
-      const list = data.items || data.$values || [];
-      setRequests(list.filter((a) => a.userId === user.id || a.applicantEmail === user.email));
+      setRequests(data.items || data.$values || []);
     }).catch(() => {}).finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [user.id, user.email]);
+  }, []);
 
   const pendingCount = requests.filter((r) => [2, 3].includes(r.status) || ['ApplicationReceived', 'UnderReview'].includes(r.status)).length;
   const approvedCount = requests.filter((r) => r.status === 4 || r.status === 'Approved').length;

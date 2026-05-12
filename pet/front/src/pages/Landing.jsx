@@ -10,6 +10,8 @@ import Button from '../components/ui/Button';
 import FloatingPets from '../components/animations/FloatingPets';
 import CounterAnimation from '../components/animations/CounterAnimation';
 import PageTransition from '../components/animations/PageTransition';
+import Floating, { FloatingElement } from '../components/ui/parallax-floating';
+import { TextRotate } from '../components/ui/text-rotate';
 
 const stagger = { initial: {}, animate: { transition: { staggerChildren: 0.08 } } };
 const fadeUp = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
@@ -29,6 +31,19 @@ const people = [
   { name: 'Amira & Simba', img: '/images/person1.jpg', quote: 'I found Simba through PawFinds and it was love at first sight. He\'s been my shadow ever since.' },
   { name: 'Omar & Bella', img: '/images/person2.jpg', quote: 'Bella was rescued from the streets. Now she sleeps on my pillow every night. Best decision I ever made.' },
   { name: 'Nadia & Max', img: '/images/person3.jpg', quote: 'The swipe feature made it so easy to find the perfect match. Max and I are inseparable now!' },
+];
+
+const petImages = [
+  { url: '/images/bella.jpg', alt: 'Bella the dog', cls: 'w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 rotate-6 shadow-2xl' },
+  { url: '/images/charlie.jpg', alt: 'Charlie the cat', cls: 'w-36 h-28 sm:w-44 sm:h-36 md:w-48 md:h-40 -rotate-3 shadow-2xl' },
+  { url: '/images/coco.jpg', alt: 'Coco the dog', cls: 'w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 -rotate-12 shadow-2xl' },
+  { url: '/images/daisy.jpg', alt: 'Daisy the dog', cls: 'w-40 h-32 sm:w-48 sm:h-40 md:w-56 md:h-48 rotate-12 shadow-2xl' },
+  { url: '/images/leo.jpg', alt: 'Leo the cat', cls: 'w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 rotate-[19deg] shadow-2xl' },
+  { url: '/images/luna.jpg', alt: 'Luna the dog', cls: 'w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 -rotate-6 shadow-2xl' },
+  { url: '/images/max.jpg', alt: 'Max the dog', cls: 'w-20 h-16 sm:w-24 sm:h-20 md:w-28 md:h-24 rotate-3 shadow-2xl' },
+  { url: '/images/milo.jpg', alt: 'Milo the cat', cls: 'w-52 h-52 sm:w-60 sm:h-60 md:w-72 md:h-72 rotate-3 shadow-2xl' },
+  { url: '/images/oreo.jpg', alt: 'Oreo the dog', cls: 'w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 -rotate-8 shadow-2xl' },
+  { url: '/images/rocky.jpg', alt: 'Rocky the dog', cls: 'w-36 h-28 sm:w-44 sm:h-36 md:w-48 md:h-40 rotate-2 shadow-2xl' },
 ];
 
 export default function Landing() {
@@ -57,22 +72,6 @@ export default function Landing() {
     return () => { cancelled = true; };
   }, []);
 
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-    const handleMove = (e) => {
-      const rect = hero.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
-      gsap.to(hero.querySelector('.hero-3d'), { rotateY: x * 8, rotateX: -y * 8, duration: 0.6, ease: 'power2.out' });
-    };
-    hero.addEventListener('mousemove', handleMove);
-    hero.addEventListener('mouseleave', () => {
-      gsap.to(hero.querySelector('.hero-3d'), { rotateY: 0, rotateX: 0, duration: 0.8, ease: 'power2.out' });
-    });
-    return () => { hero.removeEventListener('mousemove', handleMove); };
-  }, []);
-
   const petStatus = (s) => {
     if (typeof s === 'number') return ({ 1: 'Available', 2: 'Adopted', 3: 'Pending' })[s] || 'Available';
     const map = { Available: 'Available', ApplicationReceived: 'Pending', UnderReview: 'Pending', Approved: 'Pending', Completed: 'Adopted' };
@@ -84,42 +83,103 @@ export default function Landing() {
       <Navbar />
 
       {/* Hero */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #0F0C29, #302B63, #24243e)' }}>
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #0F0C29, #302B63, #24243e)' }}>
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(232,99,74,0.25), transparent 70%)', filter: 'blur(80px)' }} />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-teal/5 rounded-full blur-[100px]" />
-        <div className="absolute top-10 left-10 w-64 h-64 bg-amber/5 rounded-full blur-[80px]" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 w-full">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div variants={stagger} initial="initial" animate="animate">
-              <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-sm mb-6">
-                <span className="w-2 h-2 rounded-full bg-teal animate-pulse-soft" />
-                Now accepting new pet listings
-              </motion.div>
-              <motion.h1 variants={fadeUp} className="text-hero text-white leading-tight tracking-tight">
-                Find Your <span className="text-gradient-coral">Perfect</span><br />
-                <span className="text-gradient-teal">Companion</span>
-              </motion.h1>
-              <motion.p variants={fadeUp} className="mt-6 text-2xl text-white/50 font-light tracking-wider">
-                Swipe. Match. Adopt.
-              </motion.p>
-              <motion.p variants={fadeUp} className="mt-2 text-lg text-white/30 max-w-lg leading-relaxed">
-                Connect with pet lovers. Change a life. Every pet deserves a loving home.
-              </motion.p>
-              <motion.div variants={fadeUp} className="mt-10 flex flex-wrap gap-4">
-                <Link to="/swipe"><Button variant="primary" className="text-base px-8 py-4">Start Swiping 🐾</Button></Link>
-                <Link to="/client/register"><Button variant="outline-white" className="text-base px-8 py-4">List a Pet</Button></Link>
-              </motion.div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="hero-3d"
-              style={{ perspective: '1000px' }}
-            >
-              <FloatingPets />
-            </motion.div>
-          </div>
+
+        <Floating sensitivity={-0.5} className="h-full w-full">
+          <FloatingElement depth={0.5} className="top-[15%] left-[3%] md:top-[22%] md:left-[5%]">
+            <img src={petImages[0].url} alt={petImages[0].alt} className={`${petImages[0].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
+          </FloatingElement>
+          <FloatingElement depth={1} className="top-[3%] left-[9%] md:top-[6%] md:left-[12%]">
+            <img src={petImages[1].url} alt={petImages[1].alt} className={`${petImages[1].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
+          </FloatingElement>
+          <FloatingElement depth={4} className="top-[88%] left-[6%] md:top-[78%] md:left-[8%]">
+            <img src={petImages[2].url} alt={petImages[2].alt} className={`${petImages[2].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
+          </FloatingElement>
+          <FloatingElement depth={2} className="top-[2%] left-[82%] md:top-[4%] md:left-[82%]">
+            <img src={petImages[3].url} alt={petImages[3].alt} className={`${petImages[3].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
+          </FloatingElement>
+          <FloatingElement depth={1} className="top-[75%] left-[80%] md:top-[65%] md:left-[82%]">
+            <img src={petImages[4].url} alt={petImages[4].alt} className={`${petImages[4].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
+          </FloatingElement>
+          <FloatingElement depth={3} className="top-[45%] left-[1%] md:top-[48%] md:left-[2%]">
+            <img src={petImages[5].url} alt={petImages[5].alt} className={`${petImages[5].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
+          </FloatingElement>
+          <FloatingElement depth={2} className="top-[10%] left-[72%] md:top-[14%] md:left-[75%]">
+            <img src={petImages[6].url} alt={petImages[6].alt} className={`${petImages[6].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
+          </FloatingElement>
+          <FloatingElement depth={5} className="top-[60%] left-[70%] md:top-[55%] md:left-[72%]">
+            <img src={petImages[7].url} alt={petImages[7].alt} className={`${petImages[7].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
+          </FloatingElement>
+          <FloatingElement depth={3} className="top-[82%] left-[50%] md:top-[85%] md:left-[52%]">
+            <img src={petImages[8].url} alt={petImages[8].alt} className={`${petImages[8].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
+          </FloatingElement>
+        </Floating>
+
+        <div className="relative z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col items-center text-center pointer-events-auto">
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2, ease: 'easeOut', delay: 0.3 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-sm mb-6"
+          >
+            <span className="w-2 h-2 rounded-full bg-teal animate-pulse-soft" />
+            Now accepting new pet listings
+          </motion.div>
+          <motion.h1
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl text-white leading-tight tracking-tight flex flex-col items-center"
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2, ease: 'easeOut', delay: 0.3 }}
+          >
+            <span>Find Your Perfect</span>
+            <span className="inline-flex items-center gap-3 flex-wrap justify-center">
+              <span className="text-gradient-teal">Companion</span>
+              <TextRotate
+                texts={[
+                  '🐕 woof',
+                  '🐈 meow',
+                  '🐰 hop',
+                  '🐦 chirp',
+                  '🐹 squeak',
+                  '❤️ love',
+                  '🏡 home',
+                  '✨ magic',
+                ]}
+                mainClassName="overflow-hidden text-coral py-0 pb-2 md:pb-4 rounded-xl"
+                staggerDuration={0.03}
+                staggerFrom="last"
+                rotationInterval={2500}
+                transition={{ type: 'spring', damping: 30, stiffness: 400 }}
+              />
+            </span>
+          </motion.h1>
+          <motion.p
+            className="mt-6 text-2xl text-white/50 font-light tracking-wider"
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2, ease: 'easeOut', delay: 0.5 }}
+          >
+            Swipe. Match. Adopt.
+          </motion.p>
+          <motion.p
+            className="mt-2 text-lg text-white/30 max-w-lg"
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2, ease: 'easeOut', delay: 0.5 }}
+          >
+            Connect with pet lovers. Change a life. Every pet deserves a loving home.
+          </motion.p>
+          <motion.div
+            className="mt-10 flex flex-wrap gap-4 justify-center"
+            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2, ease: 'easeOut', delay: 0.7 }}
+          >
+            <Link to="/swipe"><Button variant="primary" className="text-base px-8 py-4">Start Swiping 🐾</Button></Link>
+            <Link to="/client/register"><Button variant="outline-white" className="text-base px-8 py-4">List a Pet</Button></Link>
+          </motion.div>
         </div>
       </section>
 

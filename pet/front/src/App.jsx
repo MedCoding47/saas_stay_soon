@@ -2,14 +2,17 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { AnimatePresence } from 'framer-motion';
 import Landing from './pages/Landing';
 import PetBrowser from './pages/pets/PetBrowser';
+import PetDetails from './pages/pets/PetDetails';
 import SwipeMode from './pages/swipe/SwipeMode';
 import AdminLogin from './pages/admin/Login';
 import AdminDashboard from './pages/admin/Dashboard';
 import PetManagement from './pages/admin/PetManagement';
 import AdminAdoptions from './pages/admin/Adoptions';
+import AdminConversations from './pages/admin/Conversations';
 import ClientLogin from './pages/client/Login';
 import ClientRegister from './pages/client/Register';
 import ClientDashboard from './pages/client/Dashboard';
+import ClientMessages from './pages/client/Messages';
 
 function ProtectedRoute({ children, roles }) {
   const user = JSON.parse(localStorage.getItem('sh-user') || 'null');
@@ -27,14 +30,17 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Landing />} />
         <Route path="/pets" element={<PetBrowser />} />
+        <Route path="/pets/:id" element={<PetDetails />} />
         <Route path="/swipe" element={<SwipeMode />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<ProtectedRoute roles={['Admin', 'SuperAdmin']}><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/pets" element={<ProtectedRoute roles={['Admin', 'SuperAdmin']}><PetManagement /></ProtectedRoute>} />
         <Route path="/admin/adoptions" element={<ProtectedRoute roles={['Admin', 'SuperAdmin']}><AdminAdoptions /></ProtectedRoute>} />
+        <Route path="/admin/conversations" element={<ProtectedRoute roles={['Admin', 'SuperAdmin']}><AdminConversations /></ProtectedRoute>} />
         <Route path="/client/login" element={<ClientLogin />} />
         <Route path="/client/register" element={<ClientRegister />} />
-        <Route path="/client/dashboard" element={<ProtectedRoute roles={['Applicant', 'Admin', 'SuperAdmin']}><ClientDashboard /></ProtectedRoute>} />
+        <Route path="/client/dashboard" element={<ProtectedRoute roles={['Applicant', 'Adopter', 'Admin', 'SuperAdmin']}><ClientDashboard /></ProtectedRoute>} />
+        <Route path="/client/messages" element={<ProtectedRoute roles={['Applicant', 'Adopter', 'Admin', 'SuperAdmin']}><ClientMessages /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
