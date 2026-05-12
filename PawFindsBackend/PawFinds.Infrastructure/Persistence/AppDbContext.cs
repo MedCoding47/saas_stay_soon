@@ -35,6 +35,20 @@ public sealed class AppDbContext : DbContext
 
     public DbSet<ContactRequest> ContactRequests => Set<ContactRequest>();
 
+    public DbSet<CompanyProfile> CompanyProfiles => Set<CompanyProfile>();
+
+    public DbSet<Product> Products => Set<Product>();
+
+    public DbSet<Favorite> Favorites => Set<Favorite>();
+
+    public DbSet<VeterinaireProfile> VeterinaireProfiles => Set<VeterinaireProfile>();
+
+    public DbSet<Advice> Advice => Set<Advice>();
+
+    public DbSet<Booking> Bookings => Set<Booking>();
+
+    public DbSet<AdoptRequest> AdoptRequests => Set<AdoptRequest>();
+
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var now = DateTimeOffset.UtcNow;
@@ -93,5 +107,30 @@ public sealed class AppDbContext : DbContext
             .HasQueryFilter(cr =>
                 CurrentOrganizationId == null ||
                 cr.OrganizationId == CurrentOrganizationId);
+
+        modelBuilder.Entity<Product>()
+            .HasQueryFilter(p =>
+                CurrentOrganizationId == null ||
+                p.OrganizationId == CurrentOrganizationId);
+
+        modelBuilder.Entity<CompanyProfile>()
+            .HasQueryFilter(cp =>
+                CurrentOrganizationId == null ||
+                cp.OrganizationId == CurrentOrganizationId);
+
+        modelBuilder.Entity<VeterinaireProfile>()
+            .HasQueryFilter(vp =>
+                CurrentOrganizationId == null ||
+                vp.OrganizationId == CurrentOrganizationId);
+
+        modelBuilder.Entity<AdoptRequest>()
+            .HasQueryFilter(ar =>
+                CurrentOrganizationId == null ||
+                ar.OrganizationId == CurrentOrganizationId);
+
+        modelBuilder.Entity<Booking>()
+            .HasQueryFilter(b =>
+                CurrentOrganizationId == null ||
+                b.VeterinaireProfile!.OrganizationId == CurrentOrganizationId);
     }
 }

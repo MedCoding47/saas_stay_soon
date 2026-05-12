@@ -16,7 +16,9 @@ export default function ClientLogin() {
     e.preventDefault();
     try {
       const user = await login(email, password);
-      if (user.role === 'Admin' || user.role === 'SuperAdmin') navigate('/admin/dashboard');
+      if (user.role === 'SuperAdmin') navigate('/superadmin/dashboard');
+      else if (user.role === 'Enterprise') navigate('/enterprise/dashboard');
+      else if (user.role === 'Veterinaire') navigate('/veterinaire/dashboard');
       else navigate('/client/dashboard');
     } catch {}
   };

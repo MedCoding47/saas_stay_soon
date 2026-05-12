@@ -13,7 +13,7 @@ public sealed class User : BaseEntity
 
     public string PasswordHash { get; set; } = string.Empty;
 
-    public RoleType Role { get; set; } = RoleType.Adopter;
+    public RoleType Role { get; set; } = RoleType.Client;
 
     public bool IsActive { get; set; } = true;
 
@@ -30,4 +30,14 @@ public sealed class User : BaseEntity
     public ICollection<Conversation> ConversationsAsAdopter { get; set; } = [];
 
     public ICollection<Pet> OwnedPets { get; set; } = [];
+
+    public CompanyProfile? CompanyProfile { get; set; }
+
+    public VeterinaireProfile? VeterinaireProfile { get; set; }
+
+    public ICollection<Favorite> Favorites { get; set; } = [];
+
+    public ICollection<Booking> Bookings { get; set; } = [];
+
+    public ICollection<AdoptRequest> AdoptRequests { get; set; } = [];
 }

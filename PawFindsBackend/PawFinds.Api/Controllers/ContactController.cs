@@ -39,7 +39,7 @@ public sealed class ContactController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin,SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin,Enterprise")]
     public async Task<ActionResult<IReadOnlyList<ContactRequestDto>>> GetContactRequests(
         CancellationToken cancellationToken)
     {
@@ -54,7 +54,7 @@ public sealed class ContactController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/read")]
-    [Authorize(Roles = "Admin,SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin,Enterprise")]
     public async Task<IActionResult> MarkAsRead(
         Guid id,
         CancellationToken cancellationToken)

@@ -43,26 +43,36 @@ export default function Navbar() {
           <span className="text-coral">Finds</span>
         </Link>
 
-        <button className="lg:hidden text-2xl ${textClass}" onClick={() => setMenuOpen(!menuOpen)}>
+        <button className="lg:hidden text-2xl" onClick={() => setMenuOpen(!menuOpen)} style={{ color: scrolled ? '#1a1a2e' : 'rgba(255,255,255,0.8)' }}>
           {menuOpen ? '✕' : '☰'}
         </button>
 
         <div className="hidden lg:flex items-center gap-6 text-sm font-medium">
           <Link to="/" className={`${textClass} ${textClassHover} transition-colors`}>Home</Link>
           <Link to="/pets" className={`${textClass} ${textClassHover} transition-colors`}>Browse</Link>
-          <Link to="/swipe" className={`${textClass} ${textClassHover} transition-colors`}>Swipe</Link>
+          <Link to="/pets/adopted" className={`${textClass} ${textClassHover} transition-colors`}>Adopted</Link>
 
-          {(role === 'Admin' || role === 'SuperAdmin') && (
+          {role === 'SuperAdmin' && (
             <>
-              <Link to="/admin/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
-              <Link to="/admin/conversations" className={`${textClass} ${textClassHover} transition-colors`}>Messages</Link>
+              <Link to="/superadmin/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
               <button onClick={handleLogout} className="btn-primary text-sm px-4 py-2">Logout</button>
             </>
           )}
-          {(role === 'Applicant' || role === 'PetHolder' || role === 'Adopter') && (
+          {role === 'Enterprise' && (
+            <>
+              <Link to="/enterprise/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
+              <button onClick={handleLogout} className={`btn-outline text-sm px-4 py-2 ${scrolled ? 'border-coral/30 text-coral hover:bg-coral hover:text-white' : ''}`}>Logout</button>
+            </>
+          )}
+          {role === 'Veterinaire' && (
+            <>
+              <Link to="/veterinaire/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
+              <button onClick={handleLogout} className={`btn-outline text-sm px-4 py-2 ${scrolled ? 'border-coral/30 text-coral hover:bg-coral hover:text-white' : ''}`}>Logout</button>
+            </>
+          )}
+          {role === 'Client' && (
             <>
               <Link to="/client/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
-              <Link to="/client/messages" className={`${textClass} ${textClassHover} transition-colors`}>Messages</Link>
               <button onClick={handleLogout} className={`btn-outline text-sm px-4 py-2 ${scrolled ? 'border-coral/30 text-coral hover:bg-coral hover:text-white' : ''}`}>Logout</button>
             </>
           )}
@@ -86,12 +96,18 @@ export default function Navbar() {
           >
             <Link to="/" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Home</Link>
             <Link to="/pets" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Browse</Link>
-            <Link to="/swipe" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Swipe</Link>
-            {(role === 'Applicant' || role === 'PetHolder' || role === 'Adopter') && (
-              <Link to="/client/messages" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Messages</Link>
+            <Link to="/pets/adopted" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Adopted</Link>
+            {role === 'SuperAdmin' && (
+              <Link to="/superadmin/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>
             )}
-            {(role === 'Admin' || role === 'SuperAdmin') && (
-              <Link to="/admin/conversations" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Messages</Link>
+            {role === 'Enterprise' && (
+              <Link to="/enterprise/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>
+            )}
+            {role === 'Veterinaire' && (
+              <Link to="/veterinaire/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>
+            )}
+            {role === 'Client' && (
+              <Link to="/client/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>
             )}
             {!user && (
               <>

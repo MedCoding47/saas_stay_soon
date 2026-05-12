@@ -106,12 +106,12 @@ public sealed class ConversationService : IConversationService
 
             return new ConversationDto(
                 c.Id,
-                otherUser.Id,
-                otherUser.FullName,
-                otherUser.ProfilePictureUrl,
-                c.Pet.Id,
-                c.Pet.Name,
-                c.Pet.ImageUrl,
+                otherUser!.Id,
+                otherUser!.FullName,
+                otherUser!.ProfilePictureUrl,
+                c.Pet!.Id,
+                c.Pet!.Name,
+                c.Pet!.ImageUrl,
                 c.IsOpen,
                 lastMessage?.Content ?? string.Empty,
                 lastMessage?.CreatedAt ?? c.CreatedAt,

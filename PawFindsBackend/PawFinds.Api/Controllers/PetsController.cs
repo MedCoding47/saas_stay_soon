@@ -40,7 +40,7 @@ public sealed class PetsController : ControllerBase
     }
 
     [HttpGet("my")]
-    [Authorize(Roles = "PetHolder,Admin")]
+    [Authorize(Roles = "Enterprise")]
     public async Task<ActionResult<IReadOnlyList<PetDto>>> GetMyPets(
         CancellationToken cancellationToken)
     {
@@ -53,7 +53,7 @@ public sealed class PetsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "PetHolder,Admin,Staff")]
+    [Authorize(Roles = "Enterprise")]
     public async Task<ActionResult<PetDto>> CreatePet(
         CreatePetRequest request,
         CancellationToken cancellationToken)
@@ -67,7 +67,7 @@ public sealed class PetsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "PetHolder,Admin,Staff")]
+    [Authorize(Roles = "Enterprise")]
     public async Task<IActionResult> UpdatePet(
         Guid id,
         UpdatePetRequest request,
@@ -79,7 +79,7 @@ public sealed class PetsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "PetHolder,Admin,Staff")]
+    [Authorize(Roles = "Enterprise")]
     public async Task<IActionResult> DeletePet(
         Guid id,
         CancellationToken cancellationToken)

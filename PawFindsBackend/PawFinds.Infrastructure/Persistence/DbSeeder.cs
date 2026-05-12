@@ -15,44 +15,95 @@ public static class DbSeeder
         // Seed SuperAdmin user (global, not tied to any organization)
         await SeedSuperAdminAsync(context, passwordHasher, cancellationToken);
 
-        // Seed demo organization + admin + staff (only if no organizations exist)
-        if (await context.Organizations.IgnoreQueryFilters().AnyAsync(o => o.Slug != "platform", cancellationToken))
+        // Seed demo organizations + users (only if SlackEnterprise doesn't exist)
+        if (await context.Organizations.IgnoreQueryFilters().AnyAsync(o => o.Slug == "demo-enterprise", cancellationToken))
         {
             return;
         }
 
-        var organization = new Organization
+        var enterpriseOrg = new Organization
         {
-            Name = "PawFinds Demo",
-            Slug = "pawfinds-demo",
+            Name = "Demo Enterprise SARL",
+            Slug = "demo-enterprise",
             IsActive = true
         };
+        context.Organizations.Add(enterpriseOrg);
 
-        context.Organizations.Add(organization);
+        var vetOrg = new Organization
+        {
+            Name = "Demo Vet Clinic",
+            Slug = "demo-vet",
+            IsActive = true
+        };
+        context.Organizations.Add(vetOrg);
+
         await context.SaveChangesAsync(cancellationToken);
 
-        var admin = new User
+        var enterprise = new User
         {
-            OrganizationId = organization.Id,
-            Email = "admin@pawfinds.com",
-            FullName = "Organization Admin",
-            Role = RoleType.Admin,
-            IsActive = true
+            OrganizationId = enterpriseOrg.Id,
+            Email = "enterprise@pawfinds.com",
+            FullName = "Enterprise Manager",
+            Role = RoleType.Enterprise,
+            IsActive = true,
+            PhoneNumber = "+212 6XX XX XX XX"
         };
-        admin.PasswordHash = passwordHasher.HashPassword(admin, "Admin@123");
+        enterprise.PasswordHash = passwordHasher.HashPassword(enterprise, "Enterprise@123");
 
-        var staff = new User
+        var veterinaire = new User
         {
-            OrganizationId = organization.Id,
-            Email = "staff@pawfinds.com",
-            FullName = "Organization Staff",
-            Role = RoleType.Staff,
-            IsActive = true
+            OrganizationId = vetOrg.Id,
+            Email = "vet@pawfinds.com",
+            FullName = "Dr. Vet Clinic",
+            Role = RoleType.Veterinaire,
+            IsActive = true,
+            PhoneNumber = "+212 6XX XX XX XX"
         };
-        staff.PasswordHash = passwordHasher.HashPassword(staff, "Staff@123");
+        veterinaire.PasswordHash = passwordHasher.HashPassword(veterinaire, "Vet@123");
 
-        context.Users.Add(admin);
-        context.Users.Add(staff);
+        var client = new User
+        {
+            OrganizationId = enterpriseOrg.Id,
+            Email = "client@pawfinds.com",
+            FullName = "Client User",
+            Role = RoleType.Client,
+            IsActive = true,
+            PhoneNumber = "+212 6XX XX XX XX"
+        };
+        client.PasswordHash = passwordHasher.HashPassword(client, "Client@123");
+
+        context.Users.Add(enterprise);
+        context.Users.Add(veterinaire);
+        context.Users.Add(client);
+
+        await context.SaveChangesAsync(cancellationToken);
+
+        // Seed CompanyProfile for enterprise
+        var companyProfile = new CompanyProfile
+        {
+            OrganizationId = enterpriseOrg.Id,
+            CompanyName = "Demo Enterprise SARL",
+            Description = "A responsible pet adoption company.",
+            Location = "Casablanca, Morocco",
+            Phone = "+212 5XX XX XX XX",
+            Email = "contact@demoenterprise.ma"
+        };
+        context.CompanyProfiles.Add(companyProfile);
+
+        // Seed VeterinaireProfile
+        var vetProfile = new VeterinaireProfile
+        {
+            UserId = veterinaire.Id,
+            OrganizationId = vetOrg.Id,
+            ClinicName = "Demo Vet Clinic",
+            Location = "Rabat, Morocco",
+            Phone = "+212 5XX XX XX XX",
+            Description = "Comprehensive veterinary services for your pets.",
+            Latitude = 34.0209,
+            Longitude = -6.8416,
+            IsAvailable = true
+        };
+        context.VeterinaireProfiles.Add(vetProfile);
 
         await context.SaveChangesAsync(cancellationToken);
     }

@@ -28,7 +28,9 @@ export default function AdminLogin() {
     e.preventDefault();
     try {
       const user = await login(email, password);
-      if (user.role === 'Admin' || user.role === 'SuperAdmin') navigate('/admin/dashboard');
+      if (user.role === 'SuperAdmin') navigate('/superadmin/dashboard');
+      else if (user.role === 'Enterprise') navigate('/enterprise/dashboard');
+      else if (user.role === 'Veterinaire') navigate('/veterinaire/dashboard');
       else navigate('/client/dashboard');
     } catch {}
   };
@@ -70,15 +72,15 @@ export default function AdminLogin() {
                   roleTab === 'admin' ? 'bg-white text-coral shadow-sm' : 'text-gray-500'
                 }`}
               >
-                Admin / Staff
+                Admin
               </button>
               <button
-                onClick={() => setRoleTab('adopter')}
+                onClick={() => setRoleTab('client')}
                 className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
-                  roleTab === 'adopter' ? 'bg-white text-coral shadow-sm' : 'text-gray-500'
+                  roleTab === 'client' ? 'bg-white text-coral shadow-sm' : 'text-gray-500'
                 }`}
               >
-                Adopter
+                Client
               </button>
             </div>
 

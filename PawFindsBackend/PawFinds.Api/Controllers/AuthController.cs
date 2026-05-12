@@ -70,12 +70,7 @@ public class AuthController : ControllerBase
         if (exists)
             return BadRequest("Email already exists");
 
-        var role = request.Role?.ToLowerInvariant() switch
-        {
-            "petholder" => RoleType.PetHolder,
-            "adopter" => RoleType.Adopter,
-            _ => RoleType.Adopter
-        };
+        var role = RoleType.Client;
 
         var user = new User
         {

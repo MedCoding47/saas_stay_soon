@@ -32,4 +32,10 @@ public sealed class Pet : BaseEntity
     public User? Owner { get; set; }
 
     public ICollection<Conversation> Conversations { get; set; } = [];
+
+    public ICollection<Product> Products { get; set; } = [];
+
+    public ICollection<Favorite> Favorites { get; set; } = [];
+
+    public ICollection<Booking> Bookings { get; set; } = [];
 }

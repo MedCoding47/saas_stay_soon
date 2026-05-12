@@ -44,7 +44,7 @@ public sealed class AdoptionsController : ControllerBase
     }
 
     [HttpPost("apply")]
-    [Authorize(Roles = "Adopter,Applicant")]
+    [Authorize(Roles = "Client")]
     public async Task<ActionResult<AdoptionDto>> Apply(
         ApplyAdoptionRequest request,
         CancellationToken cancellationToken)
@@ -76,7 +76,7 @@ public sealed class AdoptionsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin,Staff")]
+    [Authorize(Roles = "Enterprise,SuperAdmin")]
     public async Task<ActionResult<PagedResult<AdoptionDto>>> GetAdoptions(
         [FromQuery] GetAdoptionsRequest request,
         CancellationToken cancellationToken)
@@ -89,7 +89,7 @@ public sealed class AdoptionsController : ControllerBase
     }
 
     [HttpPatch("{id:guid}/status")]
-    [Authorize(Roles = "Admin,Staff")]
+    [Authorize(Roles = "Enterprise,SuperAdmin")]
     public async Task<ActionResult<AdoptionDto>> UpdateStatus(
         Guid id,
         UpdateAdoptionStatusRequest request,

@@ -6,9 +6,7 @@ namespace PawFinds.Domain.Enums;
 public enum RoleType
 {
     SuperAdmin = 0,
-    Admin = 1,
-    Staff = 2,
-    Adopter = 3,
-    Applicant = 4,
-    PetHolder = 5
+    Enterprise = 1,
+    Client = 2,
+    Veterinaire = 3
 }

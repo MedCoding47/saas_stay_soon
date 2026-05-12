@@ -1,0 +1,7 @@
+Utilisation des paramètres de lancement à partir de D:\DATA MOHAMED AYAT\Doc_Passation\my_project\PawFindsBackend\PawFinds.Api\Properties\launchSettings.json...
+Génération...
+Security Warning: The negotiated TLS 1.0 is an insecure protocol and is supported for backward compatibility only. The recommended protocol version is TLS 1.2 and later.
+Security Warning: The negotiated TLS 1.0 is an insecure protocol and is supported for backward compatibility only. The recommended protocol version is TLS 1.2 and later.
+fail: Microsoft.EntityFrameworkCore.Database.Command[20102]
+      Failed executing DbCommand (22ms) [Parameters=[], CommandType='Text', CommandTimeout='60']
+      CREATE DATABASE [PawFindsDb];

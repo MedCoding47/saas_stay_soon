@@ -7,7 +7,7 @@ using PawFinds.Application.Organizations;
 namespace PawFinds.Api.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = "SuperAdmin")]
 [Route("api/organizations")]
 public sealed class OrganizationsController : ControllerBase
 {
