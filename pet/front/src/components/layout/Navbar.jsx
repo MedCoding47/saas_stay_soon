@@ -55,6 +55,7 @@ export default function Navbar() {
           {role === 'SuperAdmin' && (
             <>
               <Link to="/superadmin/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
+              <Link to="/superadmin/create-account" className={`${textClass} ${textClassHover} transition-colors`}>Create Account</Link>
               <button onClick={handleLogout} className="btn-primary text-sm px-4 py-2">Logout</button>
             </>
           )}
@@ -98,7 +99,10 @@ export default function Navbar() {
             <Link to="/pets" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Browse</Link>
             <Link to="/pets/adopted" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Adopted</Link>
             {role === 'SuperAdmin' && (
-              <Link to="/superadmin/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>
+              <>
+                <Link to="/superadmin/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>
+                <Link to="/superadmin/create-account" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Create Account</Link>
+              </>
             )}
             {role === 'Enterprise' && (
               <Link to="/enterprise/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '../../api/client';
 import Navbar from '../../components/layout/Navbar';
@@ -8,6 +9,7 @@ import Button from '../../components/ui/Button';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 export default function SuperAdminDashboard() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
   const [orgs, setOrgs] = useState([]);
@@ -88,8 +90,12 @@ export default function SuperAdminDashboard() {
             </div>
           )}
 
-          {tab === 'users' && (
+            {tab === 'users' && (
             <div className="bg-white rounded-2xl shadow-card overflow-hidden">
+              <div className="p-4 border-b border-warm-dark/20 flex justify-between items-center">
+                <span className="text-sm text-muted">{users.length} users</span>
+                <Link to="/superadmin/create-account" className="text-sm text-coral font-medium hover:underline">+ Create Account</Link>
+              </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="bg-warm">
@@ -103,8 +109,8 @@ export default function SuperAdminDashboard() {
                   </thead>
                   <tbody>
                     {users.map((u) => (
-                      <tr key={u.id} className="border-t border-warm-dark/50">
-                        <td className="p-4 font-medium">{u.fullName}</td>
+                      <tr key={u.id} className="border-t border-warm-dark/50 hover:bg-warm/50 transition-colors">
+                        <td className="p-4"><Link to={`/superadmin/users/${u.id}`} className="font-medium text-coral hover:underline">{u.fullName}</Link></td>
                         <td className="p-4 text-muted">{u.email}</td>
                         <td className="p-4"><span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-coral-light text-coral">{u.role}</span></td>
                         <td className="p-4 text-muted">{u.orgName}</td>
@@ -123,7 +129,7 @@ export default function SuperAdminDashboard() {
                 <motion.div key={o.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   className="bg-white rounded-xl shadow-card p-4 flex items-center justify-between">
                   <div>
-                    <h3 className="font-bold text-gray-900">{o.name}</h3>
+                      <h3 className="font-bold text-gray-900"><button onClick={() => navigate(`/superadmin/organizations/${o.id}`)} className="hover:text-coral transition-colors text-left">{o.name}</button></h3>
                     <p className="text-xs text-muted">Slug: {o.slug} · {o.userCount} users · {o.petCount} pets</p>
                   </div>
                   <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${o.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{o.isActive ? 'Active' : 'Inactive'}</span>

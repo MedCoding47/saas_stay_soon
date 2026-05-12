@@ -17,6 +17,9 @@ import ClientMessages from './pages/client/Messages';
 import EnterpriseDashboard from './pages/enterprise/Dashboard';
 import VeterinaireDashboard from './pages/veterinaire/Dashboard';
 import SuperAdminDashboard from './pages/superadmin/Dashboard';
+import SuperAdminUserDetails from './pages/superadmin/UserDetails';
+import SuperAdminCreateAccount from './pages/superadmin/CreateAccount';
+import SuperAdminOrganizationDetail from './pages/superadmin/OrganizationDetail';
 
 function ProtectedRoute({ children, roles }) {
   const user = JSON.parse(localStorage.getItem('sh-user') || 'null');
@@ -49,6 +52,9 @@ function AnimatedRoutes() {
         <Route path="/enterprise/dashboard" element={<ProtectedRoute roles={['Enterprise']}><EnterpriseDashboard /></ProtectedRoute>} />
         <Route path="/veterinaire/dashboard" element={<ProtectedRoute roles={['Veterinaire']}><VeterinaireDashboard /></ProtectedRoute>} />
         <Route path="/superadmin/dashboard" element={<ProtectedRoute roles={['SuperAdmin']}><SuperAdminDashboard /></ProtectedRoute>} />
+        <Route path="/superadmin/users/:id" element={<ProtectedRoute roles={['SuperAdmin']}><SuperAdminUserDetails /></ProtectedRoute>} />
+        <Route path="/superadmin/create-account" element={<ProtectedRoute roles={['SuperAdmin']}><SuperAdminCreateAccount /></ProtectedRoute>} />
+        <Route path="/superadmin/organizations/:id" element={<ProtectedRoute roles={['SuperAdmin']}><SuperAdminOrganizationDetail /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>

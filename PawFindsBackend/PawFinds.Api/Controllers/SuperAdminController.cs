@@ -95,6 +95,108 @@ public sealed class SuperAdminController : ControllerBase
         return updated ? NoContent() : NotFound();
     }
 
+    [HttpGet("users/{id:guid}")]
+    public async Task<ActionResult<SuperAdminUserDetailDto>> GetUserDetails(Guid id, CancellationToken ct)
+    {
+        var user = await _service.GetUserDetailsAsync(id, ct);
+        if (user is null) return NotFound();
+        return Ok(user);
+    }
+
+    [HttpPost("create-enterprise")]
+    public async Task<ActionResult<CreateAccountResultDto>> CreateEnterprise(
+        [FromBody] CreateEnterpriseRequest request, CancellationToken ct)
+    {
+        try
+        {
+            var result = await _service.CreateEnterpriseAccountAsync(request, ct);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("create-veterinaire")]
+    public async Task<ActionResult<CreateAccountResultDto>> CreateVeterinaire(
+        [FromBody] CreateVeterinaireRequest request, CancellationToken ct)
+    {
+        try
+        {
+            var result = await _service.CreateVeterinaireAccountAsync(request, ct);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPut("users/{id:guid}")]
+    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequest request, CancellationToken ct)
+    {
+        try
+        {
+            await _service.UpdateUserAsync(id, request, ct);
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("users/{id:guid}")]
+    public async Task<IActionResult> DeleteUser(Guid id, CancellationToken ct)
+    {
+        try
+        {
+            await _service.DeleteUserAsync(id, ct);
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPut("companies/{orgId:guid}")]
+    public async Task<IActionResult> UpdateCompanyProfile(Guid orgId, [FromBody] UpdateCompanyProfileRequest request, CancellationToken ct)
+    {
+        try
+        {
+            await _service.UpdateCompanyProfileAsync(orgId, request, ct);
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPut("veterinaires/{userId:guid}")]
+    public async Task<IActionResult> UpdateVeterinaireProfile(Guid userId, [FromBody] UpdateVeterinaireProfileRequest request, CancellationToken ct)
+    {
+        try
+        {
+            await _service.UpdateVeterinaireProfileAsync(userId, request, ct);
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("organizations/{id:guid}")]
+    public async Task<ActionResult<OrganizationDetailDto>> GetOrganizationDetails(Guid id, CancellationToken ct)
+    {
+        var org = await _service.GetOrganizationDetailsAsync(id, ct);
+        if (org is null) return NotFound();
+        return Ok(org);
+    }
+
     private Guid GetUserId()
     {
         var claim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("user_id");
