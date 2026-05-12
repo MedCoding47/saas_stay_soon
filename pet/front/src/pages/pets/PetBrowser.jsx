@@ -1,152 +1,253 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import api from '../../api/client';
+import samplePets from '../../data/samplePets';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-import Badge from '../../components/ui/Badge';
-import Button from '../../components/ui/Button';
-import Modal from '../../components/ui/Modal';
-import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import PageTransition from '../../components/animations/PageTransition';
+import AdoptionTypeCard from '../../components/pets/AdoptionTypeCard';
+import CounterBar from '../../components/pets/CounterBar';
+import FilterSidebar from '../../components/pets/FilterSidebar';
+import PetCardGrid from '../../components/pets/PetCardGrid';
+import Pagination from '../../components/ui/Pagination';
+import DonationCard from '../../components/pets/DonationCard';
+import Button from '../../components/ui/Button';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
-const speciesEmoji = {
-  Dog: '🐕', Cat: '🐈', Rabbit: '🐰', Bird: '🐦', Parrot: '🦜',
-  Hamster: '🐹', Fish: '🐟', Turtle: '🐢', Horse: '🐴',
-};
+const PAGE_SIZE = 9;
 
-const petStatus = (s) => {
-  if (typeof s === 'number') return ({ 1: 'Available', 2: 'Adopted', 3: 'Pending' })[s] || 'Available';
-  const map = { Available: 'Available', ApplicationReceived: 'Pending', UnderReview: 'Pending', Approved: 'Pending', Completed: 'Adopted' };
-  return map[s] || s || 'Available';
-};
+const defaultFilters = { species: '', age: '', size: '', gender: '', status: '' };
 
-const stagger = { initial: {}, animate: { transition: { staggerChildren: 0.06 } } };
-const fadeUp = { initial: { opacity: 0, y: 24 }, animate: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
+const sortOptions = [
+  { value: 'recent', label: 'Recent' },
+  { value: 'name', label: 'Name A-Z' },
+  { value: 'age', label: 'Age' },
+];
+
+function matchesAge(pet, filter) {
+  if (!filter) return true;
+  const m = pet.ageMonths;
+  if (m == null) return false;
+  switch (filter) {
+    case 'baby': return m <= 12;
+    case 'young': return m > 12 && m <= 36;
+    case 'adult': return m > 36 && m <= 84;
+    case 'senior': return m > 84;
+    default: return true;
+  }
+}
+
+function matchesSize(pet, filter) {
+  if (!filter) return true;
+  return pet.size === filter;
+}
+
+function matchesGender(pet, filter) {
+  if (!filter) return true;
+  return pet.gender === filter;
+}
+
+function matchesStatus(pet, filter) {
+  if (!filter) return true;
+  const s = typeof pet.status === 'string' ? pet.status : '';
+  return s === filter;
+}
 
 export default function PetBrowser() {
-  const navigate = useNavigate();
-  const [pets, setPets] = useState([]);
+  const [allPets, setAllPets] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [speciesFilter, setSpeciesFilter] = useState('All');
-  const [applyPet, setApplyPet] = useState(null);
-  const [message, setMessage] = useState('');
-  const [applying, setApplying] = useState(false);
-  const [applyError, setApplyError] = useState('');
-
-  const token = localStorage.getItem('sh-token');
-  const role = localStorage.getItem('sh-role');
+  const [filters, setFilters] = useState(defaultFilters);
+  const [sort, setSort] = useState('recent');
+  const [page, setPage] = useState(1);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    api.get('/pets').then(({ data }) => {
-      if (cancelled) return;
-      setPets(data.items || data.$values || []);
-    }).catch(() => {}).finally(() => { if (!cancelled) setLoading(false); });
+    api.get('/pets')
+      .then(({ data }) => {
+        if (!cancelled) {
+          const list = Array.isArray(data) ? data : data.data || data.items || data.records || [];
+          setAllPets(list);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setAllPets(samplePets);
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, []);
 
-  const species = ['All', ...new Set(pets.map((p) => p.type || 'Other').filter(Boolean))];
+  const filtered = useMemo(() => {
+    let list = allPets.filter((pet) => {
+      if (filters.species && pet.type !== filters.species) return false;
+      if (!matchesAge(pet, filters.age)) return false;
+      if (!matchesSize(pet, filters.size)) return false;
+      if (!matchesGender(pet, filters.gender)) return false;
+      if (!matchesStatus(pet, filters.status)) return false;
+      return true;
+    });
 
-  const filtered = pets.filter((p) => {
-    const matchesSearch = !search || p.name?.toLowerCase().includes(search.toLowerCase()) || p.breed?.toLowerCase().includes(search.toLowerCase());
-    const matchesSpecies = speciesFilter === 'All' || (p.type || 'Other') === speciesFilter;
-    return matchesSearch && matchesSpecies;
-  });
-
-  const handleApply = async () => {
-    if (!token) { navigate('/client/login'); return; }
-    if (role !== 'Applicant' && role !== 'Adopter') { setApplyError('Only applicants can submit adoption requests.'); return; }
-    setApplying(true);
-    setApplyError('');
-    try {
-      await api.post('/adoptions/apply', { petId: applyPet.id, applicationMessage: message });
-      setApplyPet(null);
-      setMessage('');
-    } catch (err) {
-      setApplyError(err.response?.data?.message || 'Failed to submit');
-    } finally {
-      setApplying(false);
+    switch (sort) {
+      case 'name':
+        list = [...list].sort((a, b) => a.name?.localeCompare(b.name));
+        break;
+      case 'age':
+        list = [...list].sort((a, b) => (a.ageMonths || 0) - (b.ageMonths || 0));
+        break;
+      default:
+        break;
     }
+
+    return list;
+  }, [allPets, filters, sort]);
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  const handleReset = () => {
+    setFilters(defaultFilters);
+    setPage(1);
   };
+
+  if (loading) {
+    return (
+      <PageTransition>
+        <Navbar />
+        <div className="min-h-screen pt-24 flex items-center justify-center bg-warm">
+          <LoadingSpinner text="Loading animals..." />
+        </div>
+        <Footer />
+      </PageTransition>
+    );
+  }
 
   return (
     <PageTransition>
       <Navbar />
-      <div className="min-h-screen bg-gray-50 pt-24 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">Browse Pets</h1>
-            <p className="mt-3 text-gray-500">Find your perfect companion among our furry friends</p>
-          </motion.div>
+      <main className="min-h-screen bg-warm">
+        {/* Hero */}
+        <section className="pt-28 pb-16 px-4" style={{ background: 'linear-gradient(135deg, #0F0C29, #302B63, #24243e)' }}>
+          <div className="max-w-7xl mx-auto text-center">
+            <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl md:text-5xl font-bold text-white max-w-3xl mx-auto leading-tight">
+              Responsible adoption changes the life of the animal as much as yours
+            </motion.h1>
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mt-4 text-coral text-lg md:text-xl">
+              Empathetic, intelligent & companion animal, each has a story to tell
+            </motion.p>
+          </div>
+          <div className="max-w-6xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
+            <AdoptionTypeCard emoji="🐕" title="Responsible Adoption" description="Give a second chance to a dog in need" delay={0.2} />
+            <AdoptionTypeCard emoji="🐈" title="Foster Adoption" description="Open your home temporarily to a cat" delay={0.3} />
+            <AdoptionTypeCard emoji="🐰" title="Distance Adoption" description="Sponsor an animal from afar" delay={0.4} />
+          </div>
+        </section>
 
-          <div className="flex flex-col sm:flex-row gap-4 mb-10 max-w-2xl mx-auto">
-            <input
-              type="text"
-              placeholder="Search by name or breed..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="input flex-1"
-            />
-            <select
-              value={speciesFilter}
-              onChange={(e) => setSpeciesFilter(e.target.value)}
-              className="input sm:w-44"
-            >
-              {species.map((s) => <option key={s} value={s}>{s}</option>)}
-            </select>
+        {/* Counter */}
+        <CounterBar count={allPets.length} />
+
+        {/* Main content */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          {/* Mobile filter toggle */}
+          <div className="lg:hidden mb-4">
+            <Button variant="outline" className="!rounded-pill !border-coral/50 !text-coral w-full" onClick={() => setMobileFilterOpen(true)}>
+              Filters
+            </Button>
           </div>
 
-          {loading ? <LoadingSpinner text="Finding pets..." />
-          : filtered.length === 0 ? (
-            <p className="text-center text-gray-400 py-16">No pets found</p>
-          ) : (
-            <motion.div variants={stagger} initial="initial" animate="animate" className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filtered.map((pet) => (
-                <motion.div key={pet.id} variants={fadeUp}>
-                  <motion.div
-                    whileHover={{ y: -8, boxShadow: '0 20px 40px rgba(216,90,48,0.2)' }}
-                    className="bg-white rounded-2xl shadow-card p-6 border border-gray-100 h-full flex flex-col transition-all duration-300"
-                  >
-                    <div className="h-48 bg-warm rounded-xl mb-5 flex items-center justify-center text-6xl overflow-hidden">
-                      {pet.imageUrl ? <img src={pet.imageUrl} alt={pet.name} className="w-full h-full object-cover" /> : <span>{speciesEmoji[pet.type] || '🐾'}</span>}
-                    </div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-xl font-bold text-gray-900">{pet.name}</h3>
-                      <Badge status={petStatus(pet.status)} />
-                    </div>
-                    <p className="text-gray-500 text-sm mb-1">{pet.breed || 'Mixed Breed'}</p>
-                    {pet.age != null && <p className="text-gray-400 text-xs mb-4">{pet.age} year{pet.age !== 1 ? 's' : ''} old</p>}
-                    <div className="mt-auto flex gap-2">
-                      <Button variant="outline" className="flex-1 text-sm" onClick={() => navigate(`/pets/${pet.id}`)}>Details</Button>
-                      <Button variant="teal" className="flex-1 text-sm" onClick={() => setApplyPet(pet)}>Adopt Me</Button>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-        </div>
-      </div>
-
-      <Modal isOpen={!!applyPet} onClose={() => { setApplyPet(null); setMessage(''); setApplyError(''); }}>
-        {applyPet && (
-          <div>
-            <div className="text-5xl text-center mb-4">{speciesEmoji[applyPet.type] || '🐾'}</div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2 text-center">Apply to Adopt {applyPet.name}</h2>
-            <p className="text-sm text-gray-500 mb-5 text-center">{applyPet.breed || 'Pet'} &middot; {petStatus(applyPet.status)}</p>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Message to Shelter (optional)</label>
-              <textarea value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Tell us why you'd be a great pet parent..." rows={4} className="input" />
+          <div className="flex gap-8">
+            {/* Sidebar */}
+            <div className="w-full lg:w-64 flex-shrink-0">
+              <FilterSidebar
+                filters={filters}
+                onFilterChange={(f) => { setFilters(f); setPage(1); }}
+                onReset={handleReset}
+                mobileOpen={mobileFilterOpen}
+                onMobileClose={() => setMobileFilterOpen(false)}
+              />
             </div>
-            {applyError && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-lg">{applyError}</p>}
-            <Button className="w-full" onClick={handleApply} disabled={applying}>{applying ? 'Submitting...' : 'Submit Request'}</Button>
-          </div>
-        )}
-      </Modal>
 
+            {/* Results */}
+            <div className="flex-1 min-w-0">
+              {/* Top bar */}
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <p className="text-sm text-muted">
+                  <strong className="text-gray-900">{filtered.length}</strong> animals found
+                </p>
+                <select
+                  value={sort}
+                  onChange={(e) => { setSort(e.target.value); setPage(1); }}
+                  className="px-3 py-2 rounded-xl border border-warm-dark bg-white text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-coral/30"
+                >
+                  {sortOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Grid */}
+              <PetCardGrid pets={paged} emptyMessage="No animals match your criteria." />
+
+              {/* Pagination */}
+              <Pagination current={page} total={totalPages} onChange={setPage} />
+            </div>
+          </div>
+        </section>
+
+        {/* Map + Shelters */}
+        <section className="bg-white py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <div className="bg-gray-200 rounded-3xl h-72 flex items-center justify-center text-gray-400 text-6xl">
+                  🗺️
+                </div>
+                <p className="text-sm text-muted mt-4">Find a shelter near you</p>
+                <Button variant="primary" className="!rounded-pill mt-3">Get directions</Button>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Our shelters</h3>
+                <div className="space-y-3">
+                  {['SPA Casablanca', 'Refuge Rabat', 'Refuge Marrakech', 'Refuge Fès', 'Refuge Tanger'].map((name) => (
+                    <label key={name} className="flex items-center gap-2 cursor-pointer text-sm text-gray-700 hover:text-coral transition-colors">
+                      <input type="checkbox" className="accent-coral" />
+                      {name}
+                    </label>
+                  ))}
+                </div>
+                <Button variant="primary" className="!rounded-pill mt-4">Filter by shelter</Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Responsible Adoption Banner */}
+        <section className="bg-coral py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-8">
+            <div className="text-8xl">🐾</div>
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-3xl font-bold text-white">Responsible Adoption</h2>
+              <p className="text-white/80 mt-2 max-w-lg">Learn more about what it means to adopt responsibly and give an animal a loving home.</p>
+              <Button variant="outline" className="!rounded-pill mt-4 !border-white !text-white hover:!bg-white hover:!text-coral">
+                Read our blog
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Donation Section */}
+        <section className="py-16 bg-warm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl font-bold text-gray-900">Give for animals</h2>
+            <p className="text-muted mt-2 mb-10">Your donation helps us rescue and care for more animals</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+              <DonationCard amount="60 MAD" taxInfo="Tax deductible" delay={0} />
+              <DonationCard amount="120 MAD" taxInfo="Tax deductible" delay={0.1} />
+              <DonationCard amount="200 MAD" taxInfo="Tax deductible" delay={0.2} />
+            </div>
+          </div>
+        </section>
+      </main>
       <Footer />
     </PageTransition>
   );

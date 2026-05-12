@@ -4,11 +4,12 @@
 
 @layer base {
   :root {
-    --sh-coral: #e8634a;
+    --sh-coral: #D85A30;
     --sh-coral-light: #fef2ef;
     --sh-teal: #1a8a7a;
+    --sh-teal-dark: #0F6E56;
     --sh-teal-light: #e6f7f4;
-    --sh-warm: #fcf7f2;
+    --sh-warm: #FAEEDA;
     --sh-warm-alt: #f5ede4;
     --sh-muted: #8c7e74;
     --sh-dark: #1a1a2e;
@@ -66,11 +67,13 @@
     @apply btn text-muted hover:text-coral bg-transparent;
   }
   .glass {
-    @apply bg-white/70 backdrop-blur-xl border border-white/30 shadow-glass;
+    @apply bg-white/70 backdrop-blur-xl border border-white/30;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.06);
   }
   .glass-card {
-    @apply bg-white/60 backdrop-blur-xl border border-white/30 rounded-3xl p-6 shadow-glass
+    @apply bg-white/60 backdrop-blur-xl border border-white/30 rounded-3xl p-6
       transition-all duration-300;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.06);
   }
   .glass-card:hover {
     @apply bg-white/80 shadow-card-hover;
