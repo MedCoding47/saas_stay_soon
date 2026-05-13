@@ -24,7 +24,7 @@ export default function HeroSection({ stats }) {
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="mt-8 flex flex-wrap gap-4">
             <Link to="/pets"><Button variant="primary" className="text-base px-8 py-4">Voir les animaux</Button></Link>
-            <Link to="/client/register"><Button variant="outline-white" className="text-base px-8 py-4">Créer un compte</Button></Link>
+            <Link to="/login/client"><Button variant="outline-white" className="text-base px-8 py-4">Créer un compte</Button></Link>
           </motion.div>
 
           {/* Stats */}

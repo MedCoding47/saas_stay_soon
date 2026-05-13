@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using PawFinds.Application.Client;
 using PawFinds.Domain.Entities;
@@ -85,7 +86,10 @@ public sealed class ClientService : IClientService
             Description = request.Description?.Trim(),
             ContactPhone = request.ContactPhone.Trim(),
             ContactEmail = request.ContactEmail.Trim(),
-            Status = AdoptRequestStatus.Pending
+            Status = AdoptRequestStatus.Pending,
+            ImageUrls = request.ImageUrls is { Count: > 0 }
+                ? JsonSerializer.Serialize(request.ImageUrls)
+                : null
         };
 
         _db.AdoptRequests.Add(entity);
@@ -107,5 +111,13 @@ public sealed class ClientService : IClientService
     private static AdoptRequestDto ToDto(AdoptRequest ar) => new(
         ar.Id, ar.PetName, ar.Species, ar.Breed, ar.Age, ar.Reason,
         ar.Description, ar.ContactPhone, ar.ContactEmail,
+        DeserializeImageUrls(ar.ImageUrls),
         ar.Status.ToString(), ar.AdminResponse, ar.RespondedAt, ar.CreatedAt);
+
+    private static List<string>? DeserializeImageUrls(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return null;
+        try { return JsonSerializer.Deserialize<List<string>>(json); }
+        catch { return null; }
+    }
 }

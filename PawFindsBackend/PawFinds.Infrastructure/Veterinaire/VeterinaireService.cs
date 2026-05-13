@@ -41,6 +41,8 @@ public sealed class VeterinaireService : IVeterinaireService
         profile.Latitude = request.Latitude;
         profile.Longitude = request.Longitude;
         profile.IsAvailable = request.IsAvailable;
+        profile.GoogleMapsUrl = request.GoogleMapsUrl;
+        profile.Formation = request.Formation;
         profile.UpdatedAt = DateTimeOffset.UtcNow;
 
         await _db.SaveChangesAsync(ct);
@@ -140,5 +142,6 @@ public sealed class VeterinaireService : IVeterinaireService
 
     private static VeterinaireProfileDto ToProfileDto(VeterinaireProfile vp) => new(
         vp.Id, vp.ClinicName, vp.Location, vp.Phone, vp.Description,
-        vp.Latitude, vp.Longitude, vp.IsAvailable);
+        vp.Latitude, vp.Longitude, vp.IsAvailable,
+        vp.GoogleMapsUrl, vp.Formation);
 }

@@ -13,11 +13,13 @@ public interface IVeterinaireService
 
 public sealed record VeterinaireProfileDto(
     Guid Id, string ClinicName, string Location, string? Phone,
-    string? Description, double? Latitude, double? Longitude, bool IsAvailable);
+    string? Description, double? Latitude, double? Longitude, bool IsAvailable,
+    string? GoogleMapsUrl, string? Formation);
 
 public sealed record UpdateVeterinaireProfileRequest(
     string ClinicName, string Location, string? Phone,
-    string? Description, double? Latitude, double? Longitude, bool IsAvailable);
+    string? Description, double? Latitude, double? Longitude, bool IsAvailable,
+    string? GoogleMapsUrl, string? Formation);
 
 public sealed record CreateAdviceRequest(string Title, string Content);
 

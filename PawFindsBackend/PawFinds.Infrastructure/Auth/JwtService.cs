@@ -29,9 +29,13 @@ public sealed class JwtService : IJwtService
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new("user_id", user.Id.ToString()),
-            new("organization_id", user.OrganizationId.ToString()),
-            new("role", user.Role.ToString())
+            new("role", user.Role.ToString()),
         };
+
+        if (user.OrganizationId.HasValue)
+        {
+            claims.Add(new("organization_id", user.OrganizationId.Value.ToString()));
+        }
 
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SigningKey));
         var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);

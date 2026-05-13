@@ -1,7 +1,9 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PawFinds.Application.Client;
+using PawFinds.Infrastructure.Persistence;
 
 namespace PawFinds.Api.Controllers;
 
@@ -11,10 +13,12 @@ namespace PawFinds.Api.Controllers;
 public sealed class ClientController : ControllerBase
 {
     private readonly IClientService _service;
+    private readonly AppDbContext _db;
 
-    public ClientController(IClientService service)
+    public ClientController(IClientService service, AppDbContext db)
     {
         _service = service;
+        _db = db;
     }
 
     [HttpGet("favorites")]
@@ -58,7 +62,7 @@ public sealed class ClientController : ControllerBase
     public async Task<ActionResult<AdoptRequestDto>> SubmitAdoptRequest(SubmitAdoptRequest request, CancellationToken ct)
     {
         var userId = GetUserId();
-        var orgId = GetOrgId();
+        var orgId = await GetOrgIdAsync();
         var result = await _service.SubmitAdoptRequestAsync(userId, orgId, request, ct);
         return Ok(result);
     }
@@ -76,9 +80,14 @@ public sealed class ClientController : ControllerBase
         return Guid.Parse(claim!);
     }
 
-    private Guid GetOrgId()
+    private async Task<Guid> GetOrgIdAsync()
     {
         var claim = User.FindFirstValue("organization_id");
-        return Guid.Parse(claim!);
+        if (claim is not null && Guid.TryParse(claim, out var orgId))
+            return orgId;
+        var platform = await _db.Organizations
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(o => o.Slug == "platform");
+        return platform?.Id ?? Guid.Empty;
     }
 }

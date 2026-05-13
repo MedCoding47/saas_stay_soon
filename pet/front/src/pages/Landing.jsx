@@ -49,6 +49,7 @@ const petImages = [
 export default function Landing() {
   const [pets, setPets] = useState([]);
   const [stats, setStats] = useState({ total: 0, shelters: 12, families: 0 });
+  const [locations, setLocations] = useState({ companies: [], vets: [] });
   const heroRef = useRef(null);
   const gsapRef = useRef(null);
 
@@ -68,6 +69,18 @@ export default function Landing() {
       const list = data.items || data.$values || [];
       setPets(list.slice(0, 3));
       setStats((s) => ({ ...s, total: list.length }));
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([
+      api.get('/public/companies'),
+      api.get('/public/veterinaires'),
+    ]).then(([companiesRes, vetsRes]) => {
+      if (cancelled) return;
+      setLocations({ companies: companiesRes.data || [], vets: vetsRes.data || [] });
     }).catch(() => {});
     return () => { cancelled = true; };
   }, []);
@@ -280,6 +293,66 @@ export default function Landing() {
           )}
         </motion.div>
         <div className="text-center mt-10"><Link to="/pets"><Button variant="primary" className="px-10">View All Pets &rarr;</Button></Link></div>
+        </div>
+      </section>
+
+      {/* Find Us — Geolocation */}
+      <section className="py-28" style={{ background: '#1A1A2E' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
+            <h2 className="section-title">Find Us</h2>
+            <p className="section-sub">Visit our partner shelters and clinics near you</p>
+          </motion.div>
+
+          {locations.companies.length > 0 && (
+            <div className="mb-12">
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <span>🏪</span> Partner Shelters
+              </h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {locations.companies.map((c, i) => (
+                  <motion.div key={c.companyName + i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                    className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
+                    <h4 className="font-bold text-white mb-1">{c.companyName}</h4>
+                    <p className="text-sm text-white/50 mb-3">{c.location}{c.phone ? ` — ${c.phone}` : ''}</p>
+                    {c.googleMapsUrl && (
+                      <a href={c.googleMapsUrl} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-teal hover:text-teal-light transition-colors">
+                        View on Google Maps &rarr;
+                      </a>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {locations.vets.length > 0 && (
+            <div>
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <span>🏥</span> Veterinary Clinics
+              </h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {locations.vets.map((v, i) => (
+                  <motion.div key={v.clinicName + i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                    className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
+                    <h4 className="font-bold text-white mb-1">{v.clinicName}</h4>
+                    <p className="text-sm text-white/50 mb-3">{v.location}{v.phone ? ` — ${v.phone}` : ''}</p>
+                    {v.googleMapsUrl && (
+                      <a href={v.googleMapsUrl} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs text-teal hover:text-teal-light transition-colors">
+                        View on Google Maps &rarr;
+                      </a>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {locations.companies.length === 0 && locations.vets.length === 0 && (
+            <p className="text-center text-white/30">No locations listed yet. Check back soon!</p>
+          )}
         </div>
       </section>
 

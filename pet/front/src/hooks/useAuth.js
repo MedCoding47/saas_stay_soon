@@ -16,8 +16,51 @@ export function useAuth() {
       localStorage.setItem('sh-user', JSON.stringify(user));
       return user;
     } catch (err) {
-      const msg = err.response?.data?.message || err.response?.data?.title || 'Invalid credentials';
-      setError(msg);
+      if (!err.response) {
+        setError('Cannot connect to server. Make sure the backend is running.');
+      } else {
+        const msg = err.response?.data?.message || err.response?.data?.title || 'Invalid credentials';
+        setError(msg);
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const uploadImage = async (file) => {
+    setLoading(true);
+    setError('');
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const { data } = await api.post('/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return data.url;
+    } catch (err) {
+      if (!err.response) {
+        setError('Cannot connect to server.');
+      } else {
+        setError(err.response?.data?.message || 'Upload failed');
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateProfile = async (profileData) => {
+    setLoading(true);
+    setError('');
+    try {
+      await api.put('/auth/profile', profileData);
+    } catch (err) {
+      if (!err.response) {
+        setError('Cannot connect to server.');
+      } else {
+        setError(err.response?.data?.message || err.response?.data?.title || 'Update failed');
+      }
       throw err;
     } finally {
       setLoading(false);
@@ -31,13 +74,18 @@ export function useAuth() {
       const { data } = await api.post('/auth/register', form);
       return data;
     } catch (err) {
-      const msg = err.response?.data?.message || err.response?.data?.title || 'Registration failed';
-      setError(msg);
+      if (!err.response) {
+        setError('Cannot connect to server. Make sure the backend is running.');
+      } else {
+        const body = err.response.data;
+        const msg = typeof body === 'string' ? body : body?.message || body?.title || 'Registration failed';
+        setError(msg);
+      }
       throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  return { login, register, loading, error };
+  return { login, register, uploadImage, updateProfile, loading, error };
 }

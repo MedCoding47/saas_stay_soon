@@ -86,7 +86,8 @@ public static class DbSeeder
             Description = "A responsible pet adoption company.",
             Location = "Casablanca, Morocco",
             Phone = "+212 5XX XX XX XX",
-            Email = "contact@demoenterprise.ma"
+            Email = "contact@demoenterprise.ma",
+            GoogleMapsUrl = "https://maps.google.com/maps?q=33.5731,-7.5898&z=15"
         };
         context.CompanyProfiles.Add(companyProfile);
 
@@ -101,6 +102,8 @@ public static class DbSeeder
             Description = "Comprehensive veterinary services for your pets.",
             Latitude = 34.0209,
             Longitude = -6.8416,
+            GoogleMapsUrl = "https://maps.google.com/maps?q=34.0209,-6.8416&z=15",
+            Formation = "Doctorate in Veterinary Medicine",
             IsAvailable = true
         };
         context.VeterinaireProfiles.Add(vetProfile);

@@ -20,6 +20,10 @@ public sealed class VeterinaireProfile : BaseEntity
 
     public double? Longitude { get; set; }
 
+    public string? GoogleMapsUrl { get; set; }
+
+    public string? Formation { get; set; }
+
     public bool IsAvailable { get; set; } = true;
 
     public User? User { get; set; }

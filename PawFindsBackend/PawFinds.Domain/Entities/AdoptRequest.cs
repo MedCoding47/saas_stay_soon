@@ -21,9 +21,11 @@ public sealed class AdoptRequest : BaseEntity
     public string? Description { get; set; }
 
     public string ContactPhone { get; set; } = string.Empty;
-
+    
     public string ContactEmail { get; set; } = string.Empty;
 
+    public string? ImageUrls { get; set; }
+    
     public AdoptRequestStatus Status { get; set; } = AdoptRequestStatus.Pending;
 
     public string? AdminResponse { get; set; }

@@ -46,6 +46,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(user => user.OrganizationId);
 
         builder.HasIndex(user => new { user.OrganizationId, user.Email })
-            .IsUnique();
+            .IsUnique()
+            .HasFilter("[OrganizationId] IS NOT NULL");
     }
 }

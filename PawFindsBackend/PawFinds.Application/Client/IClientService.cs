@@ -14,9 +14,11 @@ public sealed record FavoriteDto(Guid Id, Guid PetId, string? PetName, string? P
 
 public sealed record SubmitAdoptRequest(
     string PetName, string Species, string? Breed, int Age,
-    string Reason, string? Description, string ContactPhone, string ContactEmail);
+    string Reason, string? Description, string ContactPhone, string ContactEmail,
+    List<string>? ImageUrls = null);
 
 public sealed record AdoptRequestDto(
     Guid Id, string PetName, string Species, string? Breed, int Age,
     string Reason, string? Description, string ContactPhone, string ContactEmail,
+    List<string>? ImageUrls,
     string Status, string? AdminResponse, DateTimeOffset? RespondedAt, DateTimeOffset CreatedAt);

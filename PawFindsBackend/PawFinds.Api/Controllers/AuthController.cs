@@ -171,16 +171,6 @@ public class AuthController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("debug-users")]
-    public async Task<IActionResult> DebugUsers()
-    {
-        var users = await _context.Users
-            .IgnoreQueryFilters()
-            .Select(u => new { u.Email, u.Role, u.OrganizationId, u.PhoneNumber })
-            .ToListAsync();
-        return Ok(users);
-    }
-
     private bool TryGetCurrentUserId(out Guid userId)
     {
         var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier)

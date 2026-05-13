@@ -22,6 +22,8 @@ public interface ISuperAdminService
     Task UpdateCompanyProfileAsync(Guid orgId, UpdateCompanyProfileRequest request, CancellationToken ct);
     Task UpdateVeterinaireProfileAsync(Guid userId, UpdateVeterinaireProfileRequest request, CancellationToken ct);
     Task<OrganizationDetailDto?> GetOrganizationDetailsAsync(Guid orgId, CancellationToken ct);
+    Task DeleteOrganizationAsync(Guid orgId, CancellationToken ct);
+    Task DeleteVeterinaireAsync(Guid userId, CancellationToken ct);
 }
 
 public sealed record SuperAdminUserDto(Guid Id, string Email, string FullName, string Role, string? Phone, bool IsActive, string? OrgName);
@@ -34,7 +36,7 @@ public sealed record DashboardStatsDto(int TotalUsers, int TotalOrgs, int TotalP
 public sealed record SuperAdminUserDetailDto(
     Guid Id, string Email, string FullName, string Role, string? Phone,
     bool IsActive, string? About, string? ProfilePictureUrl,
-    Guid OrganizationId, string? OrgName, string? OrgSlug,
+    Guid? OrganizationId, string? OrgName, string? OrgSlug,
     DateTimeOffset CreatedAt, DateTimeOffset? UpdatedAt,
     CompanyDetailDto? CompanyProfile,
     VeterinaireDetailDto? VeterinaireProfile,
@@ -44,18 +46,19 @@ public sealed record SuperAdminUserDetailDto(
 public sealed record CompanyDetailDto(
     Guid Id, string CompanyName, string? Description,
     string? LogoUrl, string Location, string? Phone,
-    string? Email, string? Website
+    string? Email, string? Website, string? GoogleMapsUrl
 );
 
 public sealed record VeterinaireDetailDto(
     Guid Id, string ClinicName, string Location, string? Phone,
-    string? Description, bool IsAvailable
+    string? Description, bool IsAvailable,
+    string? GoogleMapsUrl, string? Formation
 );
 
 public sealed record CreateEnterpriseRequest(
     string OrgName, string OrgSlug,
     string CompanyName, string Location, string? Description,
-    string? CompanyPhone, string? CompanyEmail, string? Website,
+    string? CompanyPhone, string? CompanyEmail, string? Website, string? GoogleMapsUrl,
     string AdminEmail, string AdminFullName, string? AdminPhone
 );
 
@@ -63,14 +66,15 @@ public sealed record CreateVeterinaireRequest(
     string OrgName, string OrgSlug,
     string ClinicName, string Location, string? Description,
     string? ClinicPhone, bool IsAvailable,
+    string? GoogleMapsUrl, string? Formation,
     string AdminEmail, string AdminFullName, string? AdminPhone
 );
 
 public sealed record CreateAccountResultDto(Guid UserId, string TempPassword);
 
 public sealed record UpdateUserRequest(string Email, string FullName, string? Phone, bool IsActive, string? About, string? ProfilePictureUrl);
-public sealed record UpdateCompanyProfileRequest(string CompanyName, string Location, string? Description, string? Phone, string? Email, string? Website);
-public sealed record UpdateVeterinaireProfileRequest(string ClinicName, string Location, string? Description, string? Phone, bool IsAvailable);
+public sealed record UpdateCompanyProfileRequest(string CompanyName, string Location, string? Description, string? Phone, string? Email, string? Website, string? GoogleMapsUrl);
+public sealed record UpdateVeterinaireProfileRequest(string ClinicName, string Location, string? Description, string? Phone, bool IsAvailable, string? GoogleMapsUrl, string? Formation);
 
 public sealed record OrganizationDetailDto(
     Guid Id, string Name, string Slug, bool IsActive,

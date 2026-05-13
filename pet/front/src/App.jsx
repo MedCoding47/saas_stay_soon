@@ -10,6 +10,10 @@ import AdminDashboard from './pages/admin/Dashboard';
 import PetManagement from './pages/admin/PetManagement';
 import AdminAdoptions from './pages/admin/Adoptions';
 import AdminConversations from './pages/admin/Conversations';
+import RoleSelector from './pages/auth/RoleSelector';
+import OrgLogin from './pages/auth/OrganizationLogin';
+import VetLogin from './pages/auth/VeterinaireLogin';
+import ClientLoginNew from './pages/auth/ClientLogin';
 import ClientLogin from './pages/client/Login';
 import ClientRegister from './pages/client/Register';
 import ClientDashboard from './pages/client/Dashboard';
@@ -40,6 +44,10 @@ function AnimatedRoutes() {
         <Route path="/pets/:id" element={<PetDetails />} />
         <Route path="/pets/adopted" element={<AdoptedPets />} />
         <Route path="/swipe" element={<SwipeMode />} />
+        <Route path="/login" element={<RoleSelector />} />
+        <Route path="/login/organization" element={<OrgLogin />} />
+        <Route path="/login/veterinaire" element={<VetLogin />} />
+        <Route path="/login/client" element={<ClientLoginNew />} />
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<ProtectedRoute roles={['SuperAdmin']}><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/pets" element={<ProtectedRoute roles={['SuperAdmin']}><PetManagement /></ProtectedRoute>} />

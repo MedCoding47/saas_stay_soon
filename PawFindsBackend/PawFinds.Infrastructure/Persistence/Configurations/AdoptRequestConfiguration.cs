@@ -43,6 +43,9 @@ public sealed class AdoptRequestConfiguration : IEntityTypeConfiguration<AdoptRe
             .HasMaxLength(40)
             .IsRequired();
 
+        builder.Property(ar => ar.ImageUrls)
+            .HasMaxLength(4000);
+
         builder.Property(ar => ar.AdminResponse)
             .HasMaxLength(2000);
 

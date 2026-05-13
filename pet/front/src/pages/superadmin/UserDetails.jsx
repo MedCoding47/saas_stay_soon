@@ -203,26 +203,61 @@ export default function SuperAdminUserDetails() {
               {tab === 'company' && user.companyProfile && (
                 editing === 'company'
                   ? <CompanyEditForm profile={user.companyProfile} onSave={handleSaveCompany} onCancel={() => setEditing(null)} saving={saving} />
-                  : <ProfileView data={user.companyProfile} fields={[
-                    { label: 'Company', key: 'companyName' },
-                    { label: 'Location', key: 'location' },
-                    { label: 'Phone', key: 'phone' },
-                    { label: 'Email', key: 'email' },
-                    { label: 'Website', key: 'website' },
-                    { label: 'Description', key: 'description' },
-                  ]} onEdit={() => handleEdit('company')} />
+                  : <>
+                    <ProfileView data={user.companyProfile} fields={[
+                      { label: 'Company', key: 'companyName' },
+                      { label: 'Location', key: 'location' },
+                      { label: 'Phone', key: 'phone' },
+                      { label: 'Email', key: 'email' },
+                      { label: 'Website', key: 'website' },
+                      { label: 'Description', key: 'description' },
+                    ]} onEdit={() => handleEdit('company')} />
+                    {(user.companyProfile.latitude != null && user.companyProfile.longitude != null) && (
+                      <div className="mt-4 rounded-xl overflow-hidden border border-gray-200">
+                        <iframe
+                          src={`https://maps.google.com/maps?q=${user.companyProfile.latitude},${user.companyProfile.longitude}&z=15&output=embed`}
+                          width="100%" height="200" style={{ border: 0 }} allowFullScreen loading="lazy"
+                          title="Google Maps"
+                        />
+                      </div>
+                    )}
+                    {user.companyProfile.googleMapsUrl && (
+                      <a href={user.companyProfile.googleMapsUrl} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-teal hover:text-teal-dark mt-3 transition-colors">
+                        View on Google Maps &rarr;
+                      </a>
+                    )}
+                  </>
               )}
 
               {tab === 'vet' && user.veterinaireProfile && (
                 editing === 'vet'
                   ? <VetEditForm profile={user.veterinaireProfile} onSave={handleSaveVet} onCancel={() => setEditing(null)} saving={saving} />
-                  : <ProfileView data={user.veterinaireProfile} fields={[
-                    { label: 'Clinic', key: 'clinicName' },
-                    { label: 'Location', key: 'location' },
-                    { label: 'Phone', key: 'phone' },
-                    { label: 'Available', key: 'isAvailable', render: (v) => v ? 'Yes' : 'No', className: (v) => v ? 'text-green-600' : 'text-red-500' },
-                    { label: 'Description', key: 'description' },
-                  ]} onEdit={() => handleEdit('vet')} />
+                  : <>
+                    <ProfileView data={user.veterinaireProfile} fields={[
+                      { label: 'Clinic', key: 'clinicName' },
+                      { label: 'Location', key: 'location' },
+                      { label: 'Phone', key: 'phone' },
+                      { label: 'Available', key: 'isAvailable', render: (v) => v ? 'Yes' : 'No', className: (v) => v ? 'text-green-600' : 'text-red-500' },
+                      { label: 'Formation', key: 'formation' },
+                      { label: 'Description', key: 'description' },
+                    ]} onEdit={() => handleEdit('vet')} />
+                    {(user.veterinaireProfile.latitude != null && user.veterinaireProfile.longitude != null) && (
+                      <div className="mt-4 rounded-xl overflow-hidden border border-gray-200">
+                        <iframe
+                          src={`https://maps.google.com/maps?q=${user.veterinaireProfile.latitude},${user.veterinaireProfile.longitude}&z=15&output=embed`}
+                          width="100%" height="200" style={{ border: 0 }} allowFullScreen loading="lazy"
+                          title="Google Maps"
+                        />
+                      </div>
+                    )}
+                    {user.veterinaireProfile.googleMapsUrl && (
+                      <a href={user.veterinaireProfile.googleMapsUrl} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-teal hover:text-teal-dark mt-3 transition-colors">
+                        View on Google Maps &rarr;
+                      </a>
+                    )}
+                  </>
               )}
 
               {tab === 'pets' && (
@@ -339,7 +374,8 @@ function UserEditForm({ user, onSave, onCancel, saving }) {
 function CompanyEditForm({ profile, onSave, onCancel, saving }) {
   const [form, setForm] = useState({
     companyName: profile.companyName, location: profile.location, description: profile.description || '',
-    phone: profile.phone || '', email: profile.email || '', website: profile.website || ''
+    phone: profile.phone || '', email: profile.email || '', website: profile.website || '',
+    googleMapsUrl: profile.googleMapsUrl || ''
   });
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   return (
@@ -348,6 +384,7 @@ function CompanyEditForm({ profile, onSave, onCancel, saving }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Input label="Company Name" name="companyName" value={form.companyName} onChange={handleChange} required />
         <Input label="Location" name="location" value={form.location} onChange={handleChange} required />
+        <Input label="Google Maps URL" name="googleMapsUrl" value={form.googleMapsUrl} onChange={handleChange} placeholder="https://maps.google.com/maps?q=..." />
         <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
         <Input label="Email" name="email" value={form.email} onChange={handleChange} type="email" />
         <Input label="Website" name="website" value={form.website} onChange={handleChange} />
@@ -368,7 +405,9 @@ function CompanyEditForm({ profile, onSave, onCancel, saving }) {
 function VetEditForm({ profile, onSave, onCancel, saving }) {
   const [form, setForm] = useState({
     clinicName: profile.clinicName, location: profile.location, description: profile.description || '',
-    phone: profile.phone || '', isAvailable: profile.isAvailable
+    phone: profile.phone || '', isAvailable: profile.isAvailable,
+    googleMapsUrl: profile.googleMapsUrl || '',
+    formation: profile.formation || ''
   });
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -380,10 +419,17 @@ function VetEditForm({ profile, onSave, onCancel, saving }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Input label="Clinic Name" name="clinicName" value={form.clinicName} onChange={handleChange} required />
         <Input label="Location" name="location" value={form.location} onChange={handleChange} required />
+        <Input label="Google Maps URL" name="googleMapsUrl" value={form.googleMapsUrl} onChange={handleChange} placeholder="https://maps.google.com/maps?q=..." />
         <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
         <div className="flex items-center gap-3 pt-6">
           <input type="checkbox" id="isAvailable" name="isAvailable" checked={form.isAvailable} onChange={handleChange} className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral" />
           <label htmlFor="isAvailable" className="text-sm font-medium text-gray-700">Available</label>
+        </div>
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Formation / Credentials</label>
+          <textarea name="formation" value={form.formation} onChange={handleChange} rows={2}
+            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none"
+            placeholder="Degrees, certifications, specialties..." />
         </div>
         <div className="md:col-span-2">
           <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>

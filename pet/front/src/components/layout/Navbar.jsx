@@ -79,9 +79,8 @@ export default function Navbar() {
           )}
           {!user && (
             <>
-              <Link to="/client/login" className={`${textClass} ${textClassHover} transition-colors`}>Sign In</Link>
-              <Link to="/client/register" className="btn-primary text-sm px-4 py-2">Get Started</Link>
-              <Link to="/admin" className={`text-xs ${textClass} ${textClassHover} transition-colors opacity-50 hover:opacity-100`}>Admin</Link>
+              <Link to="/login" className={`${textClass} ${textClassHover} transition-colors`}>Sign In</Link>
+              <Link to="/login/client" className="btn-primary text-sm px-4 py-2">Get Started</Link>
             </>
           )}
         </div>
@@ -115,9 +114,8 @@ export default function Navbar() {
             )}
             {!user && (
               <>
-                <Link to="/client/login" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Sign In</Link>
-                <Link to="/client/register" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Get Started</Link>
-                <Link to="/admin" onClick={() => setMenuOpen(false)} className="block text-xs text-dark/40 hover:text-coral">Admin</Link>
+                <Link to="/login" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Sign In</Link>
+                <Link to="/login/client" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Get Started</Link>
               </>
             )}
           </motion.div>

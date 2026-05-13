@@ -5,7 +5,7 @@ namespace PawFinds.Domain.Entities;
 
 public sealed class User : BaseEntity
 {
-    public Guid OrganizationId { get; set; }
+    public Guid? OrganizationId { get; set; }
 
     public string FullName { get; set; } = string.Empty;
 

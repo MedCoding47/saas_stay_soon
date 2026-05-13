@@ -20,6 +20,8 @@ public sealed class CompanyProfile : BaseEntity
 
     public string? Website { get; set; }
 
+    public string? GoogleMapsUrl { get; set; }
+
     public double? Latitude { get; set; }
 
     public double? Longitude { get; set; }

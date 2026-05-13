@@ -18,13 +18,13 @@ export default function SuperAdminCreateAccount() {
   const [enterprise, setEnterprise] = useState({
     orgName: '', orgSlug: '',
     companyName: '', location: '', description: '',
-    companyPhone: '', companyEmail: '', website: '',
+    companyPhone: '', companyEmail: '', website: '', googleMapsUrl: '',
     adminEmail: '', adminFullName: '', adminPhone: '',
   });
   const [veterinaire, setVeterinaire] = useState({
     orgName: '', orgSlug: '',
     clinicName: '', location: '', description: '',
-    clinicPhone: '', isAvailable: true,
+    clinicPhone: '', isAvailable: true, googleMapsUrl: '', formation: '',
     adminEmail: '', adminFullName: '', adminPhone: '',
   });
 
@@ -115,6 +115,7 @@ export default function SuperAdminCreateAccount() {
                         <Input label="Phone" name="companyPhone" value={enterprise.companyPhone} onChange={handleEnterpriseChange} placeholder="+212 5XX XX XX XX" />
                         <Input label="Email" name="companyEmail" value={enterprise.companyEmail} onChange={handleEnterpriseChange} placeholder="contact@happypaws.ma" type="email" />
                         <Input label="Website" name="website" value={enterprise.website} onChange={handleEnterpriseChange} placeholder="https://happypaws.ma" />
+                        <Input label="Google Maps URL" name="googleMapsUrl" value={enterprise.googleMapsUrl} onChange={handleEnterpriseChange} placeholder="https://maps.google.com/maps?q=..." />
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                           <textarea name="description" value={enterprise.description} onChange={handleEnterpriseChange} rows={2}
@@ -130,10 +131,17 @@ export default function SuperAdminCreateAccount() {
                         <Input label="Clinic Name" name="clinicName" value={veterinaire.clinicName} onChange={handleVetChange} required placeholder="Happy Paws Vet Clinic" />
                         <Input label="Location" name="location" value={veterinaire.location} onChange={handleVetChange} required placeholder="Rabat, Morocco" />
                         <Input label="Phone" name="clinicPhone" value={veterinaire.clinicPhone} onChange={handleVetChange} placeholder="+212 5XX XX XX XX" />
+                        <Input label="Google Maps URL" name="googleMapsUrl" value={veterinaire.googleMapsUrl} onChange={handleVetChange} placeholder="https://maps.google.com/maps?q=..." />
                         <div className="flex items-center gap-3 pt-6">
                           <input type="checkbox" id="isAvailable" name="isAvailable" checked={veterinaire.isAvailable} onChange={handleVetChange}
                             className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral" />
                           <label htmlFor="isAvailable" className="text-sm font-medium text-gray-700">Available for consultations</label>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Formation / Credentials</label>
+                          <textarea name="formation" value={veterinaire.formation} onChange={handleVetChange} rows={2}
+                            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none"
+                            placeholder="Degrees, certifications, specialties..." />
                         </div>
                         <div className="md:col-span-2">
                           <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>

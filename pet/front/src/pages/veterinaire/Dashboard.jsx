@@ -13,6 +13,10 @@ export default function VeterinaireDashboard() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('profile');
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [editForm, setEditForm] = useState({});
 
   useEffect(() => {
     let cancelled = false;
@@ -33,6 +37,37 @@ export default function VeterinaireDashboard() {
     load();
     return () => { cancelled = true; };
   }, []);
+
+  const handleEditProfile = () => {
+    setEditForm({
+      clinicName: profile.clinicName,
+      location: profile.location,
+      phone: profile.phone || '',
+      description: profile.description || '',
+      isAvailable: profile.isAvailable,
+      formation: profile.formation || '',
+    });
+    setEditing(true);
+  };
+
+  const handleSaveProfile = async () => {
+    setSaving(true);
+    setError('');
+    try {
+      await api.put('/veterinaire/profile', { ...editForm, latitude: profile.latitude, longitude: profile.longitude });
+      setEditing(false);
+      const { data } = await api.get('/veterinaire/profile');
+      setProfile(data);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to save');
+    }
+    setSaving(false);
+  };
+
+  const handleEditChange = (e) => {
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setEditForm({ ...editForm, [e.target.name]: value });
+  };
 
   if (loading) return <PageTransition><Navbar /><div className="min-h-screen pt-24 flex items-center justify-center"><LoadingSpinner /></div><Footer /></PageTransition>;
 
@@ -58,15 +93,62 @@ export default function VeterinaireDashboard() {
 
           {tab === 'profile' && profile && (
             <div className="bg-white rounded-2xl shadow-card p-6 max-w-lg">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Clinic Information</h2>
-              <div className="space-y-3 text-sm">
-                <div><span className="text-muted">Clinic:</span> <span className="font-medium">{profile.clinicName}</span></div>
-                <div><span className="text-muted">Location:</span> <span>{profile.location}</span></div>
-                <div><span className="text-muted">Phone:</span> <span>{profile.phone || '—'}</span></div>
-                <div><span className="text-muted">Available:</span> <span>{profile.isAvailable ? '✅ Yes' : '❌ No'}</span></div>
-                {profile.description && <div><span className="text-muted">About:</span> <p className="text-gray-700 mt-1">{profile.description}</p></div>}
-              </div>
-              <Button variant="primary" className="!rounded-pill mt-6">Edit Profile</Button>
+              {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-lg">{error}</p>}
+              {editing ? (
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">Edit Clinic Profile</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Clinic Name</label>
+                      <input name="clinicName" value={editForm.clinicName} onChange={handleEditChange}
+                        className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                      <input name="location" value={editForm.location} onChange={handleEditChange}
+                        className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                      <input name="phone" value={editForm.phone} onChange={handleEditChange}
+                        className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all" />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <input type="checkbox" id="isAvailable" name="isAvailable" checked={editForm.isAvailable} onChange={handleEditChange}
+                        className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral" />
+                      <label htmlFor="isAvailable" className="text-sm font-medium text-gray-700">Available for consultations</label>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Formation / Credentials</label>
+                      <textarea name="formation" value={editForm.formation} onChange={handleEditChange} rows={3}
+                        className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none"
+                        placeholder="Degrees, certifications, specialties..." />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                      <textarea name="description" value={editForm.description} onChange={handleEditChange} rows={3}
+                        className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none" />
+                    </div>
+                  </div>
+                  <div className="flex gap-3 mt-6">
+                    <Button onClick={handleSaveProfile} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
+                    <Button variant="outline" onClick={() => setEditing(false)}>Cancel</Button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">Clinic Information</h2>
+                  <div className="space-y-3 text-sm">
+                    <div><span className="text-muted">Clinic:</span> <span className="font-medium">{profile.clinicName}</span></div>
+                    <div><span className="text-muted">Location:</span> <span>{profile.location}</span></div>
+                    <div><span className="text-muted">Phone:</span> <span>{profile.phone || '—'}</span></div>
+                    <div><span className="text-muted">Available:</span> <span>{profile.isAvailable ? '✅ Yes' : '❌ No'}</span></div>
+                    {profile.formation && <div><span className="text-muted">Formation:</span> <p className="text-gray-700 mt-1 whitespace-pre-wrap">{profile.formation}</p></div>}
+                    {profile.description && <div><span className="text-muted">About:</span> <p className="text-gray-700 mt-1">{profile.description}</p></div>}
+                  </div>
+                  <Button variant="primary" className="!rounded-pill mt-6" onClick={handleEditProfile}>Edit Profile</Button>
+                </div>
+              )}
             </div>
           )}
 

@@ -65,12 +65,12 @@ export default function PetDetails() {
   }, [id, navigate]);
 
   const handleAdoptClick = () => {
-    if (!token) { navigate('/client/register'); return; }
+    if (!token) { navigate('/login/client'); return; }
     navigate(`/client/dashboard?adopt=${pet.id}`);
   };
 
   const handleInfoClick = () => {
-    if (!token) { navigate('/client/register'); return; }
+    if (!token) { navigate('/login/client'); return; }
     navigate(`/client/messages?pet=${pet.id}`);
   };
 

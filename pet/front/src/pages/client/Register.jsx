@@ -19,9 +19,8 @@ export default function ClientRegister() {
         fullName: form.fullName,
         email: form.email,
         password: form.password,
-        organizationId: '372fbbfe-ec4d-4024-23f7-08deae08aef0',
       });
-      navigate('/client/login');
+      navigate('/login/client');
     } catch {}
   };
 
@@ -55,7 +54,7 @@ export default function ClientRegister() {
           </form>
           <p className="text-center text-sm text-gray-500 mt-6">
             Already have an account?{' '}
-            <a href="/client/login" className="text-coral font-medium hover:underline">Sign in</a>
+            <a href="/login/client" className="text-coral font-medium hover:underline">Sign in</a>
           </p>
         </motion.div>
       </div>

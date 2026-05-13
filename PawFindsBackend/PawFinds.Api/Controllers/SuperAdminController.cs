@@ -197,6 +197,34 @@ public sealed class SuperAdminController : ControllerBase
         return Ok(org);
     }
 
+    [HttpDelete("organizations/{id:guid}")]
+    public async Task<IActionResult> DeleteOrganization(Guid id, CancellationToken ct)
+    {
+        try
+        {
+            await _service.DeleteOrganizationAsync(id, ct);
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("veterinaires/{userId:guid}")]
+    public async Task<IActionResult> DeleteVeterinaire(Guid userId, CancellationToken ct)
+    {
+        try
+        {
+            await _service.DeleteVeterinaireAsync(userId, ct);
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     private Guid GetUserId()
     {
         var claim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("user_id");

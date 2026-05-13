@@ -204,7 +204,7 @@ public sealed class SuperAdminService : ISuperAdminService
             .CountAsync(a => a.AdopterId == userId, ct);
 
         CompanyDetailDto? companyProfile = null;
-        if (user.Role == RoleType.Enterprise && user.OrganizationId != Guid.Empty)
+        if (user.Role == RoleType.Enterprise && user.OrganizationId.HasValue)
         {
             var cp = await _db.CompanyProfiles
                 .IgnoreQueryFilters()
@@ -213,7 +213,7 @@ public sealed class SuperAdminService : ISuperAdminService
             {
                 companyProfile = new CompanyDetailDto(
                     cp.Id, cp.CompanyName, cp.Description, cp.LogoUrl,
-                    cp.Location, cp.Phone, cp.Email, cp.Website);
+                    cp.Location, cp.Phone, cp.Email, cp.Website, cp.GoogleMapsUrl);
             }
         }
 
@@ -227,7 +227,8 @@ public sealed class SuperAdminService : ISuperAdminService
                 ? new VeterinaireDetailDto(
                     user.VeterinaireProfile.Id, user.VeterinaireProfile.ClinicName,
                     user.VeterinaireProfile.Location, user.VeterinaireProfile.Phone,
-                    user.VeterinaireProfile.Description, user.VeterinaireProfile.IsAvailable)
+                    user.VeterinaireProfile.Description, user.VeterinaireProfile.IsAvailable,
+                    user.VeterinaireProfile.GoogleMapsUrl, user.VeterinaireProfile.Formation)
                 : null,
             user.OwnedPets.Count, adoptionsCount,
             user.Favorites.Count, user.Bookings.Count
@@ -285,6 +286,7 @@ public sealed class SuperAdminService : ISuperAdminService
             Phone = request.CompanyPhone,
             Email = request.CompanyEmail,
             Website = request.Website,
+            GoogleMapsUrl = request.GoogleMapsUrl,
             CreatedAt = DateTimeOffset.UtcNow,
             UpdatedAt = DateTimeOffset.UtcNow
         };
@@ -345,6 +347,8 @@ public sealed class SuperAdminService : ISuperAdminService
             Phone = request.ClinicPhone,
             Description = request.Description,
             IsAvailable = request.IsAvailable,
+            GoogleMapsUrl = request.GoogleMapsUrl,
+            Formation = request.Formation,
             CreatedAt = DateTimeOffset.UtcNow,
             UpdatedAt = DateTimeOffset.UtcNow
         };
@@ -403,6 +407,7 @@ public sealed class SuperAdminService : ISuperAdminService
         profile.Phone = request.Phone;
         profile.Email = request.Email;
         profile.Website = request.Website;
+        profile.GoogleMapsUrl = request.GoogleMapsUrl;
         profile.UpdatedAt = DateTimeOffset.UtcNow;
 
         await _db.SaveChangesAsync(ct);
@@ -420,6 +425,8 @@ public sealed class SuperAdminService : ISuperAdminService
         profile.Description = request.Description;
         profile.Phone = request.Phone;
         profile.IsAvailable = request.IsAvailable;
+        profile.GoogleMapsUrl = request.GoogleMapsUrl;
+        profile.Formation = request.Formation;
         profile.UpdatedAt = DateTimeOffset.UtcNow;
 
         await _db.SaveChangesAsync(ct);
@@ -464,13 +471,14 @@ public sealed class SuperAdminService : ISuperAdminService
                     companyProfile.Id, companyProfile.CompanyName,
                     companyProfile.Description, companyProfile.LogoUrl,
                     companyProfile.Location, companyProfile.Phone,
-                    companyProfile.Email, companyProfile.Website)
+                    companyProfile.Email, companyProfile.Website, companyProfile.GoogleMapsUrl)
                 : null,
             vetProfile is not null
                 ? new VeterinaireDetailDto(
                     vetProfile.Id, vetProfile.ClinicName,
                     vetProfile.Location, vetProfile.Phone,
-                    vetProfile.Description, vetProfile.IsAvailable)
+                    vetProfile.Description, vetProfile.IsAvailable,
+                    vetProfile.GoogleMapsUrl, vetProfile.Formation)
                 : null,
             org.Users.Select(u => new OrgUserDto(u.Id, u.FullName, u.Email, u.Role.ToString(), u.IsActive)).ToList(),
             org.Pets.Select(p => new OrgPetDto(p.Id, p.Name, p.Type, p.Breed, p.Status.ToString())).ToList(),
@@ -478,6 +486,47 @@ public sealed class SuperAdminService : ISuperAdminService
             adoptions,
             org.Users.Count, org.Pets.Count, products.Count, adoptions.Count
         );
+    }
+
+    public async Task DeleteOrganizationAsync(Guid orgId, CancellationToken ct)
+    {
+        var org = await _db.Organizations
+            .IgnoreQueryFilters()
+            .Include(o => o.Users)
+            .FirstOrDefaultAsync(o => o.Id == orgId, ct)
+            ?? throw new InvalidOperationException("Organization not found.");
+
+        org.IsActive = false;
+        org.UpdatedAt = DateTimeOffset.UtcNow;
+
+        foreach (var user in org.Users)
+        {
+            user.IsActive = false;
+            user.UpdatedAt = DateTimeOffset.UtcNow;
+        }
+
+        await _db.SaveChangesAsync(ct);
+    }
+
+    public async Task DeleteVeterinaireAsync(Guid userId, CancellationToken ct)
+    {
+        var user = await _db.Users
+            .IgnoreQueryFilters()
+            .Include(u => u.VeterinaireProfile)
+            .FirstOrDefaultAsync(u => u.Id == userId && u.Role == RoleType.Veterinaire, ct)
+            ?? throw new InvalidOperationException("Veterinaire user not found.");
+
+        user.IsActive = false;
+        user.UpdatedAt = DateTimeOffset.UtcNow;
+
+        if (user.VeterinaireProfile is not null)
+        {
+            var vetProfile = user.VeterinaireProfile;
+            vetProfile.IsAvailable = false;
+            vetProfile.UpdatedAt = DateTimeOffset.UtcNow;
+        }
+
+        await _db.SaveChangesAsync(ct);
     }
 
     private static string GenerateTempPassword()
