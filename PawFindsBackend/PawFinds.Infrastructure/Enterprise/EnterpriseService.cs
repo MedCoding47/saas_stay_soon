@@ -91,7 +91,15 @@ public sealed class EnterpriseService : IEnterpriseService
             Description = string.IsNullOrWhiteSpace(request.Description) ? null : request.Description.Trim(),
             ImageUrl = string.IsNullOrWhiteSpace(request.ImageUrl) ? null : request.ImageUrl.Trim(),
             ImageFileName = string.IsNullOrWhiteSpace(request.ImageFileName) ? null : request.ImageFileName.Trim(),
-            Status = AdoptionStatus.Available
+            Status = AdoptionStatus.Available,
+            IsVaccinated = request.IsVaccinated,
+            IsSterilized = request.IsSterilized,
+            IsDewormed = request.IsDewormed,
+            HealthNotes = string.IsNullOrWhiteSpace(request.HealthNotes) ? null : request.HealthNotes.Trim(),
+            GoodWithKids = request.GoodWithKids,
+            GoodWithDogs = request.GoodWithDogs,
+            GoodWithCats = request.GoodWithCats,
+            BehaviorNotes = string.IsNullOrWhiteSpace(request.BehaviorNotes) ? null : request.BehaviorNotes.Trim()
         };
 
         _db.Pets.Add(pet);
@@ -222,7 +230,9 @@ public sealed class EnterpriseService : IEnterpriseService
     private static PetDto ToPetDto(Pet p) => new(
         p.Id, p.OrganizationId, p.OwnerId, null, p.Name, p.Breed, p.Age,
         p.Type, p.Location, p.Description, p.ImageUrl, p.ImageFileName,
-        p.Status, p.CreatedAt, p.UpdatedAt);
+        p.Status, p.IsVaccinated, p.IsSterilized, p.IsDewormed, p.HealthNotes,
+        p.GoodWithKids, p.GoodWithDogs, p.GoodWithCats, p.BehaviorNotes,
+        p.CreatedAt, p.UpdatedAt);
 
     private static ProductDto ToProductDto(Product p) => new(
         p.Id, p.PetId, p.Name, p.Description, p.Price, p.ImageUrl, p.CreatedAt);

@@ -90,7 +90,15 @@ public sealed class PetService : IPetService
             Description = NormalizeOptional(request.Description),
             ImageUrl = NormalizeOptional(request.ImageUrl),
             ImageFileName = NormalizeOptional(request.ImageFileName),
-            Status = request.Status
+            Status = request.Status,
+            IsVaccinated = request.IsVaccinated,
+            IsSterilized = request.IsSterilized,
+            IsDewormed = request.IsDewormed,
+            HealthNotes = NormalizeOptional(request.HealthNotes),
+            GoodWithKids = request.GoodWithKids,
+            GoodWithDogs = request.GoodWithDogs,
+            GoodWithCats = request.GoodWithCats,
+            BehaviorNotes = NormalizeOptional(request.BehaviorNotes)
         };
 
         _dbContext.Pets.Add(pet);
@@ -123,6 +131,14 @@ public sealed class PetService : IPetService
         pet.ImageUrl = NormalizeOptional(request.ImageUrl);
         pet.ImageFileName = NormalizeOptional(request.ImageFileName);
         pet.Status = request.Status;
+        pet.IsVaccinated = request.IsVaccinated;
+        pet.IsSterilized = request.IsSterilized;
+        pet.IsDewormed = request.IsDewormed;
+        pet.HealthNotes = NormalizeOptional(request.HealthNotes);
+        pet.GoodWithKids = request.GoodWithKids;
+        pet.GoodWithDogs = request.GoodWithDogs;
+        pet.GoodWithCats = request.GoodWithCats;
+        pet.BehaviorNotes = NormalizeOptional(request.BehaviorNotes);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -189,6 +205,14 @@ public sealed class PetService : IPetService
             pet.ImageUrl,
             pet.ImageFileName,
             pet.Status,
+            pet.IsVaccinated,
+            pet.IsSterilized,
+            pet.IsDewormed,
+            pet.HealthNotes,
+            pet.GoodWithKids,
+            pet.GoodWithDogs,
+            pet.GoodWithCats,
+            pet.BehaviorNotes,
             pet.CreatedAt,
             pet.UpdatedAt);
     }

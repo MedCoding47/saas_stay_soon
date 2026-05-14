@@ -18,7 +18,7 @@ export default function EnterpriseDashboard() {
 
   /* ---- Add pet state ---- */
   const [showAddPet, setShowAddPet] = useState(false);
-  const [petForm, setPetForm] = useState({ name: '', type: '', breed: '', age: 1, location: '', description: '' });
+  const [petForm, setPetForm] = useState({ name: '', type: '', breed: '', age: 1, location: '', description: '', isVaccinated: false, isSterilized: false, isDewormed: false, healthNotes: '', goodWithKids: false, goodWithDogs: false, goodWithCats: false, behaviorNotes: '' });
   const [petImageFile, setPetImageFile] = useState(null);
   const [savingPet, setSavingPet] = useState(false);
   const [petError, setPetError] = useState('');
@@ -80,9 +80,17 @@ export default function EnterpriseDashboard() {
         location: petForm.location,
         description: petForm.description || null,
         imageUrl,
+        isVaccinated: petForm.isVaccinated || null,
+        isSterilized: petForm.isSterilized || null,
+        isDewormed: petForm.isDewormed || null,
+        healthNotes: petForm.healthNotes || null,
+        goodWithKids: petForm.goodWithKids || null,
+        goodWithDogs: petForm.goodWithDogs || null,
+        goodWithCats: petForm.goodWithCats || null,
+        behaviorNotes: petForm.behaviorNotes || null,
       });
       setShowAddPet(false);
-      setPetForm({ name: '', type: '', breed: '', age: 1, location: '', description: '' });
+      setPetForm({ name: '', type: '', breed: '', age: 1, location: '', description: '', isVaccinated: false, isSterilized: false, isDewormed: false, healthNotes: '', goodWithKids: false, goodWithDogs: false, goodWithCats: false, behaviorNotes: '' });
       setPetImageFile(null);
       setLoading(true);
       await loadData();
@@ -220,6 +228,51 @@ export default function EnterpriseDashboard() {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                         <textarea className="input" rows="2" value={petForm.description} onChange={(e) => setPetForm({ ...petForm, description: e.target.value })} />
                       </div>
+
+                      <div>
+                        <h4 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Health</h4>
+                        <div className="grid grid-cols-3 gap-2 mb-2">
+                          <label className="flex items-center gap-2 text-sm">
+                            <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral"
+                              checked={petForm.isVaccinated} onChange={(e) => setPetForm({ ...petForm, isVaccinated: e.target.checked })} />
+                            Vaccinated
+                          </label>
+                          <label className="flex items-center gap-2 text-sm">
+                            <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral"
+                              checked={petForm.isSterilized} onChange={(e) => setPetForm({ ...petForm, isSterilized: e.target.checked })} />
+                            Sterilized
+                          </label>
+                          <label className="flex items-center gap-2 text-sm">
+                            <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral"
+                              checked={petForm.isDewormed} onChange={(e) => setPetForm({ ...petForm, isDewormed: e.target.checked })} />
+                            Dewormed
+                          </label>
+                        </div>
+                        <textarea className="input" rows="2" placeholder="Health notes (optional)" value={petForm.healthNotes} onChange={(e) => setPetForm({ ...petForm, healthNotes: e.target.value })} />
+                      </div>
+
+                      <div>
+                        <h4 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Behavior</h4>
+                        <div className="grid grid-cols-3 gap-2 mb-2">
+                          <label className="flex items-center gap-2 text-sm">
+                            <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral"
+                              checked={petForm.goodWithKids} onChange={(e) => setPetForm({ ...petForm, goodWithKids: e.target.checked })} />
+                            Good with kids
+                          </label>
+                          <label className="flex items-center gap-2 text-sm">
+                            <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral"
+                              checked={petForm.goodWithDogs} onChange={(e) => setPetForm({ ...petForm, goodWithDogs: e.target.checked })} />
+                            Good with dogs
+                          </label>
+                          <label className="flex items-center gap-2 text-sm">
+                            <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral"
+                              checked={petForm.goodWithCats} onChange={(e) => setPetForm({ ...petForm, goodWithCats: e.target.checked })} />
+                            Good with cats
+                          </label>
+                        </div>
+                        <textarea className="input" rows="2" placeholder="Behavior notes (optional)" value={petForm.behaviorNotes} onChange={(e) => setPetForm({ ...petForm, behaviorNotes: e.target.value })} />
+                      </div>
+
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Photo</label>
                         <input type="file" accept="image/*" onChange={handlePetImageChange}

@@ -38,7 +38,7 @@ public sealed class UploadController : ControllerBase
             await file.CopyToAsync(stream);
         }
 
-        var url = $"/uploads/{fileName}";
+        var url = $"{Request.Scheme}://{Request.Host}/uploads/{fileName}";
 
         return Ok(new UploadResponse(url, fileName));
     }

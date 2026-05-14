@@ -27,6 +27,22 @@ public sealed class Pet : BaseEntity
 
     public AdoptionStatus Status { get; set; } = AdoptionStatus.Available;
 
+    public bool? IsVaccinated { get; set; }
+
+    public bool? IsSterilized { get; set; }
+
+    public bool? IsDewormed { get; set; }
+
+    public string? HealthNotes { get; set; }
+
+    public bool? GoodWithKids { get; set; }
+
+    public bool? GoodWithDogs { get; set; }
+
+    public bool? GoodWithCats { get; set; }
+
+    public string? BehaviorNotes { get; set; }
+
     public Organization? Organization { get; set; }
 
     public User? Owner { get; set; }

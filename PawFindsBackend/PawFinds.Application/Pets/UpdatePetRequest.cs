@@ -34,4 +34,18 @@ public sealed class UpdatePetRequest
 
     [EnumDataType(typeof(AdoptionStatus))]
     public AdoptionStatus Status { get; set; } = AdoptionStatus.Available;
+
+    public bool? IsVaccinated { get; set; }
+    public bool? IsSterilized { get; set; }
+    public bool? IsDewormed { get; set; }
+
+    [MaxLength(2000)]
+    public string? HealthNotes { get; set; }
+
+    public bool? GoodWithKids { get; set; }
+    public bool? GoodWithDogs { get; set; }
+    public bool? GoodWithCats { get; set; }
+
+    [MaxLength(2000)]
+    public string? BehaviorNotes { get; set; }
 }

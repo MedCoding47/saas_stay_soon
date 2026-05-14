@@ -38,6 +38,12 @@ public sealed class PetConfiguration : IEntityTypeConfiguration<Pet>
             .HasMaxLength(80)
             .IsRequired();
 
+        builder.Property(pet => pet.HealthNotes)
+            .HasMaxLength(2000);
+
+        builder.Property(pet => pet.BehaviorNotes)
+            .HasMaxLength(2000);
+
         builder.HasOne(pet => pet.Organization)
             .WithMany(organization => organization.Pets)
             .HasForeignKey(pet => pet.OrganizationId)

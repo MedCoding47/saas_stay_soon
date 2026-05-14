@@ -23,12 +23,11 @@ const petStatusLabel = (s) => {
   return map[s] || s || 'Available';
 };
 
-function formatAge(months) {
-  if (months == null) return '—';
-  if (months < 12) return `${months} months`;
-  const y = Math.floor(months / 12);
-  const m = months % 12;
-  return m ? `${y} yr ${m} mo` : `${y} years`;
+function formatAge(years) {
+  if (years == null) return '—';
+  if (years === 0) return 'Less than 1 year';
+  if (years === 1) return '1 year';
+  return `${years} years`;
 }
 
 function BoolIcon({ value }) {
@@ -75,10 +74,10 @@ export default function PetDetails() {
   };
 
   const similarPets = samplePets
-    .filter((p) => String(p.id) !== String(id) && p.shelterName === pet?.shelterName)
+    .filter((p) => String(p.id) !== String(id))
     .slice(0, 3);
 
-  const imgSrc = pet?.imageUrl || pet?.mainImageUrl;
+  const imgSrc = pet?.imageUrl;
   const status = petStatusLabel(pet?.status);
   const isAvailable = status === 'Available';
 
@@ -134,7 +133,7 @@ export default function PetDetails() {
                   </span>
                 )}
                 <span className="px-4 py-1.5 bg-gray-100 text-gray-700 rounded-pill text-sm font-medium">
-                  {formatAge(pet.ageMonths)}
+                  {formatAge(pet.age)}
                 </span>
               </div>
 
@@ -142,13 +141,11 @@ export default function PetDetails() {
               <div className="space-y-2 text-sm text-gray-700">
                 <div className="flex items-center gap-2">
                   <span>📅</span>
-                  <span>Age: <strong>{formatAge(pet.ageMonths)}</strong></span>
+                  <span>Age: <strong>{formatAge(pet.age)}</strong></span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span>📍</span>
-                  <span>
-                    {pet.shelterName || pet.city || 'Unknown shelter'}
-                  </span>
+                  <span>{pet.location || 'Unknown location'}</span>
                 </div>
               </div>
 
@@ -205,28 +202,6 @@ export default function PetDetails() {
                   )}
                 </div>
               </div>
-
-              {/* Vétérinaire */}
-              {pet.vetPartnerName && (
-                <div>
-                  <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Partner Veterinarian</h3>
-                  <div className="bg-warm rounded-xl p-4 text-sm">
-                    <p className="font-medium text-gray-800">{pet.vetPartnerName}</p>
-                    <p className="text-muted text-xs">{pet.vetPartnerClinic}</p>
-                    {pet.lastVetCheckup && (
-                      <p className="text-muted-light text-xs mt-1">Last checkup: {pet.lastVetCheckup}</p>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* QR Code */}
-              {pet.qrCodeId && (
-                <div className="flex items-center gap-2 text-xs text-muted bg-warm rounded-xl px-4 py-3">
-                  <span className="text-lg">📱</span>
-                  <span>QR collar: <strong className="text-gray-700">{pet.qrCodeId}</strong></span>
-                </div>
-              )}
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
@@ -306,16 +281,15 @@ export default function PetDetails() {
                 🗺️
               </div>
               <p className="text-sm text-muted mt-4">
-                {pet.shelterName && <span className="font-medium text-gray-900">{pet.shelterName}</span>}
-                {pet.city && <span> — {pet.city}</span>}
+                <span className="font-medium text-gray-900">{pet.location || 'Super-hayawan Shelter'}</span>
               </p>
               <Button variant="primary" className="!rounded-pill mt-3">Get directions</Button>
             </div>
             <ShelterInfoCard
               shelter={{
-                name: pet.shelterName || 'Super-hayawan Shelter',
-                city: pet.city,
-                phone: pet.shelterPhone || '+212 5XX XX XX XX',
+                name: pet.ownerName || pet.location || 'Super-hayawan Shelter',
+                city: pet.location,
+                phone: '+212 5XX XX XX XX',
                 hours: {
                   'Mon-Fri': '9:00 – 17:00',
                   'Saturday': '10:00 – 16:00',

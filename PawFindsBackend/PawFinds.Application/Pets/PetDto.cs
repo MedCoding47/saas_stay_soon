@@ -16,5 +16,13 @@ public sealed record PetDto(
     string? ImageUrl,
     string? ImageFileName,
     AdoptionStatus Status,
+    bool? IsVaccinated,
+    bool? IsSterilized,
+    bool? IsDewormed,
+    string? HealthNotes,
+    bool? GoodWithKids,
+    bool? GoodWithDogs,
+    bool? GoodWithCats,
+    string? BehaviorNotes,
     DateTimeOffset CreatedAt,
     DateTimeOffset? UpdatedAt);
