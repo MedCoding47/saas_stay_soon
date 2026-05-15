@@ -102,6 +102,44 @@ public sealed class EnterpriseController : ControllerBase
         return deleted ? NoContent() : NotFound();
     }
 
+    [HttpGet("catalog")]
+    public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetCatalog(CancellationToken ct)
+    {
+        var orgId = GetOrgId();
+        return Ok(await _service.GetCatalogAsync(orgId, ct));
+    }
+
+    [HttpPost("catalog")]
+    public async Task<ActionResult<ProductDto>> CreateCatalogProduct(CreateProductRequest request, CancellationToken ct)
+    {
+        var orgId = GetOrgId();
+        try
+        {
+            var product = await _service.CreateCatalogProductAsync(orgId, request, ct);
+            return CreatedAtAction(null, product);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("catalog/{id:guid}")]
+    public async Task<IActionResult> DeleteCatalogProduct(Guid id, CancellationToken ct)
+    {
+        var orgId = GetOrgId();
+        var deleted = await _service.DeleteCatalogProductAsync(id, orgId, ct);
+        return deleted ? NoContent() : NotFound();
+    }
+
+    [HttpPut("pets/{petId:guid}/products")]
+    public async Task<IActionResult> SetPetProducts(Guid petId, SetPetProductsBody body, CancellationToken ct)
+    {
+        var orgId = GetOrgId();
+        await _service.SetPetProductsAsync(petId, orgId, body.ProductIds, ct);
+        return NoContent();
+    }
+
     [HttpGet("pets/{petId:guid}/adoptions")]
     public async Task<ActionResult<IReadOnlyList<AdoptionDto>>> GetAdoptions(Guid petId, CancellationToken ct)
     {
@@ -131,3 +169,5 @@ public sealed class EnterpriseController : ControllerBase
 }
 
 public sealed record UpdateAdoptionStatusBody(AdoptionStatus Status, string? Notes);
+
+public sealed record SetPetProductsBody(List<Guid> ProductIds);

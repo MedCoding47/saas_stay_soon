@@ -54,7 +54,8 @@ export function useAuth() {
     setLoading(true);
     setError('');
     try {
-      await api.put('/auth/profile', profileData);
+      const { data } = await api.put('/auth/profile', profileData);
+      localStorage.setItem('sh-user', JSON.stringify(data));
     } catch (err) {
       if (!err.response) {
         setError('Cannot connect to server.');

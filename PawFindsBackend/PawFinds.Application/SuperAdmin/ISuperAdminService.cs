@@ -24,6 +24,7 @@ public interface ISuperAdminService
     Task<OrganizationDetailDto?> GetOrganizationDetailsAsync(Guid orgId, CancellationToken ct);
     Task DeleteOrganizationAsync(Guid orgId, CancellationToken ct);
     Task DeleteVeterinaireAsync(Guid userId, CancellationToken ct);
+    Task<string> ResetUserPasswordAsync(Guid userId, CancellationToken ct);
 }
 
 public sealed record SuperAdminUserDto(Guid Id, string Email, string FullName, string Role, string? Phone, bool IsActive, string? OrgName);

@@ -56,7 +56,8 @@ public class AuthController : ControllerBase
             UserId = user.Id,
             OrganizationId = user.OrganizationId,
             Role = user.Role.ToString(),
-            FullName = user.FullName
+            FullName = user.FullName,
+            ProfilePictureUrl = user.ProfilePictureUrl
         });
     }
 
@@ -99,7 +100,8 @@ public class AuthController : ControllerBase
             UserId = user.Id,
             OrganizationId = user.OrganizationId,
             Role = user.Role.ToString(),
-            FullName = user.FullName
+            FullName = user.FullName,
+            ProfilePictureUrl = user.ProfilePictureUrl
         });
     }
 
@@ -168,7 +170,9 @@ public class AuthController : ControllerBase
 
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok(new MeResponse(
+            user.Id, user.Email, user.FullName, user.Role.ToString(),
+            user.OrganizationId, user.PhoneNumber, user.About, user.ProfilePictureUrl));
     }
 
     private bool TryGetCurrentUserId(out Guid userId)

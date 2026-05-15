@@ -21,6 +21,8 @@ export default function SuperAdminUserDetails() {
   const [pets, setPets] = useState([]);
   const [adoptions, setAdoptions] = useState([]);
   const [deleting, setDeleting] = useState(false);
+  const [resetting, setResetting] = useState(false);
+  const [resetPassword, setResetPassword] = useState('');
 
   const load = useCallback(async () => {
     try {
@@ -93,6 +95,19 @@ export default function SuperAdminUserDetails() {
     setSaving(false);
   };
 
+  const handleResetPassword = async () => {
+    if (!window.confirm('Reset password for this user? The new password will be shown once.')) return;
+    setResetting(true);
+    setResetPassword('');
+    try {
+      const { data } = await api.post(`/superadmin/users/${id}/reset-password`);
+      setResetPassword(data.newPassword);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to reset password');
+    }
+    setResetting(false);
+  };
+
   const handleDelete = async () => {
     if (!window.confirm('Deactivate this user? They will be unable to log in.')) return;
     setDeleting(true);
@@ -144,6 +159,7 @@ export default function SuperAdminUserDetails() {
               </div>
               <div className="flex gap-2">
                 <button onClick={() => handleEdit('user')} className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-medium transition-colors">Edit</button>
+                <button onClick={handleResetPassword} disabled={resetting} className="px-3 py-1.5 bg-amber-400/30 hover:bg-amber-400/50 rounded-lg text-xs font-medium transition-colors">{resetting ? '...' : 'Reset PW'}</button>
                 <button onClick={handleDelete} disabled={deleting} className="px-3 py-1.5 bg-red-500/30 hover:bg-red-500/50 rounded-lg text-xs font-medium transition-colors">{deleting ? '...' : 'Deactivate'}</button>
               </div>
             </div>
@@ -295,6 +311,18 @@ export default function SuperAdminUserDetails() {
             </div>
           </div>
         </div>
+
+        {resetPassword && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setResetPassword('')}>
+            <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4 text-center" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Password Reset</h3>
+              <p className="text-sm text-muted mb-4">New password for {user?.fullName}:</p>
+              <div className="bg-warm rounded-xl p-4 mb-4 font-mono text-lg font-bold text-coral break-all select-all">{resetPassword}</div>
+              <p className="text-xs text-muted-light mb-4">Share this password securely with the user. It will not be shown again.</p>
+              <button onClick={() => setResetPassword('')} className="px-6 py-2 bg-coral text-white rounded-pill text-sm font-medium hover:bg-coral-dark transition-colors">Done</button>
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </PageTransition>

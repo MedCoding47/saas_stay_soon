@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import api from '../../api/client';
 import { useAuth } from '../../hooks/useAuth';
@@ -9,6 +9,7 @@ import Badge from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import PageTransition from '../../components/animations/PageTransition';
+import ProfileCard from '../../components/ui/profile-card';
 
 const speciesEmoji = {
   Dog: '\u{1F415}', Cat: '\u{1F408}', Rabbit: '\u{1F430}', Bird: '\u{1F426}', Parrot: '\u{1F99C}',
@@ -24,6 +25,50 @@ export default function ClientDashboard() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
 
+  /* ---- Adoption request state ---- */
+  const [searchParams] = useSearchParams();
+  const [showAdoptModal, setShowAdoptModal] = useState(false);
+  const [adoptPetId, setAdoptPetId] = useState(null);
+  const [adoptMessage, setAdoptMessage] = useState('');
+  const [submittingAdopt, setSubmittingAdopt] = useState(false);
+  const [adoptError, setAdoptError] = useState('');
+
+  const handleSubmitAdoption = async (e) => {
+    e.preventDefault();
+    setSubmittingAdopt(true);
+    setAdoptError('');
+    try {
+      await api.post('/adoptions/apply', { petId: adoptPetId, applicationMessage: adoptMessage || null });
+      setShowAdoptModal(false);
+      setAdoptPetId(null);
+      setAdoptMessage('');
+      setLoading(true);
+      const load = async () => {
+        try {
+          const [reqRes, countRes] = await Promise.all([
+            api.get('/adoptions/mine'),
+            api.get('/client/adoption-count'),
+          ]);
+          setRequests(reqRes.data?.items || reqRes.data?.$values || []);
+          setAdoptionCount(countRes.data || 0);
+        } catch {}
+        setLoading(false);
+      };
+      load();
+    } catch (err) {
+      setAdoptError(err.response?.data?.message || 'Failed to submit adoption request');
+    }
+    setSubmittingAdopt(false);
+  };
+
+  useEffect(() => {
+    const adopt = searchParams.get('adopt');
+    if (adopt) {
+      setAdoptPetId(adopt);
+      setShowAdoptModal(true);
+    }
+  }, [searchParams]);
+
   /* ---- Give up a pet state ---- */
   const [formData, setFormData] = useState({ petName: '', species: 'Dog', breed: '', age: 1, reason: '', description: '', contactPhone: '', contactEmail: '' });
   const [formSubmitting, setFormSubmitting] = useState(false);
@@ -33,12 +78,14 @@ export default function ClientDashboard() {
   const [imageError, setImageError] = useState('');
 
   /* ---- Profile state ---- */
+  const [editingProfile, setEditingProfile] = useState(false);
   const [profileForm, setProfileForm] = useState({ fullName: '', phoneNumber: '', about: '' });
   const [profilePictureFile, setProfilePictureFile] = useState(null);
   const [savingProfile, setSavingProfile] = useState(false);
   const [profileMessage, setProfileMessage] = useState('');
-
-  const user = JSON.parse(localStorage.getItem('sh-user') || '{}');
+  const [user, setUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('sh-user') || '{}'); } catch { return {}; }
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -55,6 +102,8 @@ export default function ClientDashboard() {
         setFavorites(favRes.data || []);
         setAdoptionCount(countRes.data || 0);
         const me = meRes.data;
+        localStorage.setItem('sh-user', JSON.stringify(me));
+        setUser(me);
         setProfileForm({ fullName: me.fullName || '', phoneNumber: me.phoneNumber || '', about: me.about || '' });
       } catch {}
       if (!cancelled) setLoading(false);
@@ -132,6 +181,7 @@ export default function ClientDashboard() {
         about: profileForm.about,
         profilePictureUrl,
       });
+      setUser(JSON.parse(localStorage.getItem('sh-user') || '{}'));
       setProfileMessage('Profile updated successfully.');
       setProfilePictureFile(null);
     } catch {
@@ -183,48 +233,64 @@ export default function ClientDashboard() {
           )}
 
           {tab === 'profile' && (
-            <div className="max-w-lg">
-              <form onSubmit={handleSaveProfile} className="bg-white rounded-2xl shadow-card p-6 space-y-4">
-                <div className="flex flex-col items-center mb-4">
-                  <div className="w-24 h-24 rounded-full bg-warm-dark flex items-center justify-center overflow-hidden mb-3">
-                    {user.profilePictureUrl ? (
-                      <img src={user.profilePictureUrl} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-3xl text-muted">{profileForm.fullName?.charAt(0) || '?'}</span>
+            <div className="max-w-lg mx-auto">
+              <div className="mb-6">
+                <ProfileCard
+                  imageUrl={user.profilePictureUrl}
+                  name={user.fullName || 'User'}
+                  subtitle={user.email || (user.fullName ? `@${user.fullName.toLowerCase().replace(/\s+/g, '')}` : '@user')}
+                  meta={user.createdAt ? `Joined ${new Date(user.createdAt).toLocaleDateString()}` : ''}
+                  buttonLabel={editingProfile ? 'Cancel' : 'Edit Profile'}
+                  buttonAction={() => setEditingProfile(!editingProfile)}
+                />
+              </div>
+
+              {editingProfile && (
+                <form onSubmit={handleSaveProfile} className="bg-white rounded-2xl shadow-card p-6 space-y-4">
+                  <div className="flex flex-col items-center mb-4">
+                    <div className="w-24 h-24 rounded-full bg-warm-dark flex items-center justify-center overflow-hidden mb-3"
+                      style={{ transition: 'transform 500ms ease-out' }}
+                      onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.1)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}>
+                      {user.profilePictureUrl ? (
+                        <img src={user.profilePictureUrl} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-3xl text-muted">{profileForm.fullName?.charAt(0) || '?'}</span>
+                      )}
+                    </div>
+                    <label className="text-sm text-coral cursor-pointer hover:underline">
+                      Change photo
+                      <input type="file" accept="image/*" className="hidden" onChange={handleProfilePictureChange} />
+                    </label>
+                    {profilePictureFile && (
+                      <p className="text-xs text-muted mt-1">{profilePictureFile.name}</p>
                     )}
                   </div>
-                  <label className="text-sm text-coral cursor-pointer hover:underline">
-                    Change photo
-                    <input type="file" accept="image/*" className="hidden" onChange={handleProfilePictureChange} />
-                  </label>
-                  {profilePictureFile && (
-                    <p className="text-xs text-muted mt-1">{profilePictureFile.name}</p>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <input className="input" value={profileForm.fullName}
+                      onChange={(e) => setProfileForm({ ...profileForm, fullName: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <input className="input" value={profileForm.phoneNumber}
+                      onChange={(e) => setProfileForm({ ...profileForm, phoneNumber: e.target.value })} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">About</label>
+                    <textarea className="input" rows="3" value={profileForm.about}
+                      onChange={(e) => setProfileForm({ ...profileForm, about: e.target.value })} />
+                  </div>
+                  {profileMessage && (
+                    <p className={`text-sm ${profileMessage.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
+                      {profileMessage}
+                    </p>
                   )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                  <input className="input" value={profileForm.fullName}
-                    onChange={(e) => setProfileForm({ ...profileForm, fullName: e.target.value })} required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                  <input className="input" value={profileForm.phoneNumber}
-                    onChange={(e) => setProfileForm({ ...profileForm, phoneNumber: e.target.value })} />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">About</label>
-                  <textarea className="input" rows="3" value={profileForm.about}
-                    onChange={(e) => setProfileForm({ ...profileForm, about: e.target.value })} />
-                </div>
-                {profileMessage && (
-                  <p className={`text-sm ${profileMessage.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
-                    {profileMessage}
-                  </p>
-                )}
-                <Button type="submit" variant="primary" className="!rounded-pill" disabled={savingProfile}>
-                  {savingProfile ? 'Saving...' : 'Save Profile'}
-                </Button>
-              </form>
+                  <Button type="submit" variant="primary" className="!rounded-pill" disabled={savingProfile}>
+                    {savingProfile ? 'Saving...' : 'Save Profile'}
+                  </Button>
+                </form>
+              )}
             </div>
           )}
 
@@ -352,6 +418,31 @@ export default function ClientDashboard() {
             </div>
           )}
         </div>
+
+        {/* Adoption Request Modal */}
+        {showAdoptModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowAdoptModal(false)}>
+            <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg mx-4" onClick={(e) => e.stopPropagation()}>
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Adoption Request</h2>
+              <p className="text-sm text-muted mb-4">You are applying to adopt pet ID: <strong>{adoptPetId}</strong></p>
+              {adoptError && <p className="text-red-500 text-sm mb-3 bg-red-50 p-3 rounded-lg">{adoptError}</p>}
+              <form onSubmit={handleSubmitAdoption} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Message (optional)</label>
+                  <textarea className="input" rows="4" value={adoptMessage}
+                    onChange={(e) => setAdoptMessage(e.target.value)}
+                    placeholder="Tell the shelter why you'd be a great home for this pet..." />
+                </div>
+                <div className="flex gap-2 pt-2">
+                  <Button type="submit" variant="primary" className="!rounded-pill" disabled={submittingAdopt}>
+                    {submittingAdopt ? 'Submitting...' : 'Submit Request'}
+                  </Button>
+                  <Button variant="outline" className="!rounded-pill" onClick={() => setShowAdoptModal(false)}>Cancel</Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </PageTransition>

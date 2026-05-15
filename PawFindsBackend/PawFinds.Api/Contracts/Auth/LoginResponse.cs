@@ -8,5 +8,6 @@ public class LoginResponse
     public Guid? OrganizationId { get; set; }
     public string Role { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty;
+    public string? ProfilePictureUrl { get; set; }
 }
 

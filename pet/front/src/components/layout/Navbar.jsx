@@ -48,6 +48,9 @@ export default function Navbar() {
         </button>
 
         <div className="hidden lg:flex items-center gap-6 text-sm font-medium">
+          {user?.profilePictureUrl && (
+            <img src={user.profilePictureUrl} alt="" className="w-8 h-8 rounded-full object-cover border-2 border-coral/50" />
+          )}
           <Link to="/" className={`${textClass} ${textClassHover} transition-colors`}>Home</Link>
           <Link to="/pets" className={`${textClass} ${textClassHover} transition-colors`}>Browse</Link>
           <Link to="/pets/adopted" className={`${textClass} ${textClassHover} transition-colors`}>Adopted</Link>

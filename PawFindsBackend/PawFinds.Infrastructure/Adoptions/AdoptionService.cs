@@ -43,7 +43,18 @@ public sealed class AdoptionService : IAdoptionService
         return await _dbContext.Adoptions
             .AsNoTracking()
             .OrderByDescending(adoption => adoption.CreatedAt)
-            .Select(adoption => ToDto(adoption))
+            .Select(adoption => new AdoptionDto(
+                adoption.Id,
+                adoption.OrganizationId,
+                adoption.PetId,
+                adoption.AdopterId,
+                adoption.Status,
+                adoption.ApplicationMessage,
+                adoption.AdminNotes,
+                adoption.CompletedAt,
+                adoption.CreatedAt,
+                adoption.UpdatedAt,
+                adoption.Adopter != null ? adoption.Adopter.ProfilePictureUrl : null))
             .ToListAsync(cancellationToken);
     }
 
@@ -77,7 +88,18 @@ public sealed class AdoptionService : IAdoptionService
             .OrderByDescending(adoption => adoption.CreatedAt)
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(adoption => ToDto(adoption))
+            .Select(adoption => new AdoptionDto(
+                adoption.Id,
+                adoption.OrganizationId,
+                adoption.PetId,
+                adoption.AdopterId,
+                adoption.Status,
+                adoption.ApplicationMessage,
+                adoption.AdminNotes,
+                adoption.CompletedAt,
+                adoption.CreatedAt,
+                adoption.UpdatedAt,
+                adoption.Adopter != null ? adoption.Adopter.ProfilePictureUrl : null))
             .ToListAsync(cancellationToken);
 
         return new PagedResult<AdoptionDto>(
@@ -107,10 +129,11 @@ public sealed class AdoptionService : IAdoptionService
             throw new AdoptionWorkflowException("This pet is not available for adoption.");
         }
 
-        var adopterExists = await _dbContext.Users
-            .AnyAsync(user => user.Id == request.AdopterId, cancellationToken);
+        var adopter = await _dbContext.Users
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(user => user.Id == request.AdopterId, cancellationToken);
 
-        if (!adopterExists)
+        if (adopter is null)
         {
             throw new AdoptionWorkflowException("Adopter was not found for the current organization.");
         }
@@ -130,7 +153,11 @@ public sealed class AdoptionService : IAdoptionService
         _dbContext.Adoptions.Add(adoption);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return ToDto(adoption);
+        return new AdoptionDto(
+            adoption.Id, adoption.OrganizationId, adoption.PetId, adoption.AdopterId,
+            adoption.Status, adoption.ApplicationMessage, adoption.AdminNotes,
+            adoption.CompletedAt, adoption.CreatedAt, adoption.UpdatedAt,
+            adopter.ProfilePictureUrl);
     }
 
     public async Task<AdoptionDto?> TransitionAsync(
@@ -142,6 +169,7 @@ public sealed class AdoptionService : IAdoptionService
 
         var adoption = await _dbContext.Adoptions
             .Include(adoption => adoption.Pet)
+            .Include(adoption => adoption.Adopter)
             .FirstOrDefaultAsync(adoption => adoption.Id == adoptionId, cancellationToken);
 
         if (adoption is null)
@@ -180,7 +208,11 @@ public sealed class AdoptionService : IAdoptionService
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return ToDto(adoption);
+        return new AdoptionDto(
+            adoption.Id, adoption.OrganizationId, adoption.PetId, adoption.AdopterId,
+            adoption.Status, adoption.ApplicationMessage, adoption.AdminNotes,
+            adoption.CompletedAt, adoption.CreatedAt, adoption.UpdatedAt,
+            adoption.Adopter?.ProfilePictureUrl);
     }
 
     public bool CanTransition(
@@ -239,18 +271,4 @@ public sealed class AdoptionService : IAdoptionService
         return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
 
-    private static AdoptionDto ToDto(Adoption adoption)
-    {
-        return new AdoptionDto(
-            adoption.Id,
-            adoption.OrganizationId,
-            adoption.PetId,
-            adoption.AdopterId,
-            adoption.Status,
-            adoption.ApplicationMessage,
-            adoption.AdminNotes,
-            adoption.CompletedAt,
-            adoption.CreatedAt,
-            adoption.UpdatedAt);
-    }
 }

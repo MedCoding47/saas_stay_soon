@@ -12,4 +12,5 @@ public sealed record AdoptionDto(
     string? AdminNotes,
     DateTimeOffset? CompletedAt,
     DateTimeOffset CreatedAt,
-    DateTimeOffset? UpdatedAt);
+    DateTimeOffset? UpdatedAt,
+    string? AdopterProfilePictureUrl);

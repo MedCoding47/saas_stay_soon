@@ -19,6 +19,8 @@ export default function SuperAdminOrganizationDetail() {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState('');
+  const [resettingUserId, setResettingUserId] = useState(null);
+  const [resetPassword, setResetPassword] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -59,6 +61,19 @@ export default function SuperAdminOrganizationDetail() {
       setError(err.response?.data?.message || 'Failed to update');
     }
     setSaving(false);
+  };
+
+  const handleResetPassword = async (userId) => {
+    if (!window.confirm('Reset password for this user? The new password will be shown once.')) return;
+    setResettingUserId(userId);
+    setResetPassword('');
+    try {
+      const { data } = await api.post(`/superadmin/users/${userId}/reset-password`);
+      setResetPassword(data.newPassword);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to reset password');
+    }
+    setResettingUserId(null);
   };
 
   const handleDeleteOrg = async () => {
@@ -185,19 +200,23 @@ export default function SuperAdminOrganizationDetail() {
               {tab === 'users' && (
                 <div className="space-y-2">
                   {org.users.map((u) => (
-                    <Link key={u.id} to={`/superadmin/users/${u.id}`}
+                    <div key={u.id}
                       className="block bg-warm rounded-xl p-4 hover:bg-warm-dark/30 transition-colors">
                       <div className="flex items-center justify-between">
-                        <div>
+                        <Link to={`/superadmin/users/${u.id}`} className="flex-1 min-w-0">
                           <span className="font-bold text-gray-900">{u.fullName}</span>
                           <span className="text-muted text-sm ml-2">{u.email}</span>
-                        </div>
-                        <div className="flex items-center gap-3">
+                        </Link>
+                        <div className="flex items-center gap-2 shrink-0">
                           <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-coral-light text-coral">{u.role}</span>
                           <span className={`text-xs font-semibold ${u.isActive ? 'text-green-600' : 'text-red-500'}`}>{u.isActive ? 'Active' : 'Inactive'}</span>
+                          <button onClick={() => handleResetPassword(u.id)} disabled={resettingUserId === u.id}
+                            className="text-xs px-2 py-1 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors font-medium">
+                            {resettingUserId === u.id ? '...' : 'Reset PW'}
+                          </button>
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   ))}
                   {org.users.length === 0 && <p className="text-center text-muted py-8">No users in this organization.</p>}
                 </div>
@@ -254,6 +273,18 @@ export default function SuperAdminOrganizationDetail() {
             </div>
           </div>
         </div>
+
+        {resetPassword && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setResetPassword('')}>
+            <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4 text-center" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Password Reset</h3>
+              <p className="text-sm text-muted mb-4">New password for this user:</p>
+              <div className="bg-warm rounded-xl p-4 mb-4 font-mono text-lg font-bold text-coral break-all select-all">{resetPassword}</div>
+              <p className="text-xs text-muted-light mb-4">Share this password securely with the user. It will not be shown again.</p>
+              <button onClick={() => setResetPassword('')} className="px-6 py-2 bg-coral text-white rounded-pill text-sm font-medium hover:bg-coral-dark transition-colors">Done</button>
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </PageTransition>

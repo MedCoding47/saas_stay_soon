@@ -529,6 +529,21 @@ public sealed class SuperAdminService : ISuperAdminService
         await _db.SaveChangesAsync(ct);
     }
 
+    public async Task<string> ResetUserPasswordAsync(Guid userId, CancellationToken ct)
+    {
+        var user = await _db.Users
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(u => u.Id == userId, ct)
+            ?? throw new InvalidOperationException("User not found.");
+
+        var newPassword = GenerateTempPassword();
+        user.PasswordHash = _passwordHasher.HashPassword(user, newPassword);
+        user.UpdatedAt = DateTimeOffset.UtcNow;
+        await _db.SaveChangesAsync(ct);
+
+        return newPassword;
+    }
+
     private static string GenerateTempPassword()
     {
         var guid = Guid.NewGuid().ToString("N");

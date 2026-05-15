@@ -225,6 +225,20 @@ public sealed class SuperAdminController : ControllerBase
         }
     }
 
+    [HttpPost("users/{id:guid}/reset-password")]
+    public async Task<ActionResult<ResetPasswordResponse>> ResetPassword(Guid id, CancellationToken ct)
+    {
+        try
+        {
+            var newPassword = await _service.ResetUserPasswordAsync(id, ct);
+            return Ok(new ResetPasswordResponse(newPassword));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     private Guid GetUserId()
     {
         var claim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("user_id");
@@ -236,5 +250,7 @@ public sealed record CreateUserRequest(
     string Email, string FullName, RoleType Role, Guid OrganizationId, string? Phone);
 
 public sealed record CreateUserResponse(Guid UserId, string TempPassword);
+
+public sealed record ResetPasswordResponse(string NewPassword);
 
 public sealed record RespondToAdoptRequestBody(bool Approved, string? Response);

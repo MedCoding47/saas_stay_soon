@@ -6,7 +6,7 @@ public sealed class Product : BaseEntity
 {
     public Guid OrganizationId { get; set; }
 
-    public Guid PetId { get; set; }
+    public Guid? PetId { get; set; }
 
     public string Name { get; set; } = string.Empty;
 

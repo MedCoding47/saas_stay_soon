@@ -104,12 +104,17 @@ public sealed class EnterpriseService : IEnterpriseService
 
         _db.Pets.Add(pet);
         await _db.SaveChangesAsync(ct);
+
+        if (request.ProductIds is { Count: > 0 })
+            await SetPetProductsInternalAsync(pet.Id, organizationId, request.ProductIds, ct);
+
         return ToPetDto(pet);
     }
 
     public async Task<bool> UpdatePetAsync(Guid petId, Guid organizationId, UpdatePetRequest request, CancellationToken ct)
     {
         var pet = await _db.Pets
+            .Include(p => p.Products)
             .FirstOrDefaultAsync(p => p.Id == petId && p.OrganizationId == organizationId, ct);
         if (pet is null) return false;
 
@@ -122,9 +127,21 @@ public sealed class EnterpriseService : IEnterpriseService
         pet.ImageUrl = string.IsNullOrWhiteSpace(request.ImageUrl) ? null : request.ImageUrl.Trim();
         pet.ImageFileName = string.IsNullOrWhiteSpace(request.ImageFileName) ? null : request.ImageFileName.Trim();
         pet.Status = request.Status;
+        pet.IsVaccinated = request.IsVaccinated;
+        pet.IsSterilized = request.IsSterilized;
+        pet.IsDewormed = request.IsDewormed;
+        pet.HealthNotes = string.IsNullOrWhiteSpace(request.HealthNotes) ? null : request.HealthNotes.Trim();
+        pet.GoodWithKids = request.GoodWithKids;
+        pet.GoodWithDogs = request.GoodWithDogs;
+        pet.GoodWithCats = request.GoodWithCats;
+        pet.BehaviorNotes = string.IsNullOrWhiteSpace(request.BehaviorNotes) ? null : request.BehaviorNotes.Trim();
         pet.UpdatedAt = DateTimeOffset.UtcNow;
 
         await _db.SaveChangesAsync(ct);
+
+        if (request.ProductIds is { Count: > 0 })
+            await SetPetProductsInternalAsync(petId, organizationId, request.ProductIds, ct);
+
         return true;
     }
 
@@ -133,6 +150,14 @@ public sealed class EnterpriseService : IEnterpriseService
         var pet = await _db.Pets
             .FirstOrDefaultAsync(p => p.Id == petId && p.OrganizationId == organizationId, ct);
         if (pet is null) return false;
+
+        var hasActiveAdoptions = await _db.Adoptions
+            .AnyAsync(a => a.PetId == petId
+                && a.OrganizationId == organizationId
+                && a.Status != AdoptionStatus.Completed, ct);
+
+        if (hasActiveAdoptions)
+            throw new InvalidOperationException("Cannot delete this pet. There are active adoption requests. Please reject them first.");
 
         _db.Pets.Remove(pet);
         await _db.SaveChangesAsync(ct);
@@ -151,13 +176,16 @@ public sealed class EnterpriseService : IEnterpriseService
 
     public async Task<ProductDto> CreateProductAsync(Guid organizationId, CreateProductRequest request, CancellationToken ct)
     {
-        var petExists = await _db.Pets.AnyAsync(p => p.Id == request.PetId && p.OrganizationId == organizationId, ct);
-        if (!petExists)
-            throw new InvalidOperationException("Pet not found.");
+        if (request.PetId.HasValue)
+        {
+            var petExists = await _db.Pets.AnyAsync(p => p.Id == request.PetId && p.OrganizationId == organizationId, ct);
+            if (!petExists)
+                throw new InvalidOperationException("Pet not found.");
 
-        var productCount = await _db.Products.CountAsync(p => p.PetId == request.PetId, ct);
-        if (productCount >= 4)
-            throw new InvalidOperationException("Maximum 4 products per pet.");
+            var productCount = await _db.Products.CountAsync(p => p.PetId == request.PetId, ct);
+            if (productCount >= 4)
+                throw new InvalidOperationException("Maximum 4 products per pet.");
+        }
 
         var product = new Product
         {
@@ -184,6 +212,82 @@ public sealed class EnterpriseService : IEnterpriseService
         _db.Products.Remove(product);
         await _db.SaveChangesAsync(ct);
         return true;
+    }
+
+    public async Task<IReadOnlyList<ProductDto>> GetCatalogAsync(Guid organizationId, CancellationToken ct)
+    {
+        return await _db.Products
+            .AsNoTracking()
+            .Where(p => p.OrganizationId == organizationId && p.PetId == null)
+            .OrderByDescending(p => p.CreatedAt)
+            .Select(p => ToProductDto(p))
+            .ToListAsync(ct);
+    }
+
+    public async Task<ProductDto> CreateCatalogProductAsync(Guid organizationId, CreateProductRequest request, CancellationToken ct)
+    {
+        var product = new Product
+        {
+            Id = Guid.NewGuid(),
+            OrganizationId = organizationId,
+            PetId = null,
+            Name = request.Name.Trim(),
+            Description = request.Description?.Trim(),
+            Price = request.Price,
+            ImageUrl = request.ImageUrl?.Trim()
+        };
+
+        _db.Products.Add(product);
+        await _db.SaveChangesAsync(ct);
+        return ToProductDto(product);
+    }
+
+    public async Task<bool> DeleteCatalogProductAsync(Guid productId, Guid organizationId, CancellationToken ct)
+    {
+        var product = await _db.Products
+            .FirstOrDefaultAsync(p => p.Id == productId && p.OrganizationId == organizationId && p.PetId == null, ct);
+        if (product is null) return false;
+
+        _db.Products.Remove(product);
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
+    public async Task SetPetProductsAsync(Guid petId, Guid organizationId, List<Guid> productIds, CancellationToken ct)
+    {
+        await SetPetProductsInternalAsync(petId, organizationId, productIds, ct);
+    }
+
+    private async Task SetPetProductsInternalAsync(Guid petId, Guid organizationId, List<Guid> productIds, CancellationToken ct)
+    {
+        var pet = await _db.Pets
+            .Include(p => p.Products)
+            .FirstOrDefaultAsync(p => p.Id == petId && p.OrganizationId == organizationId, ct);
+        if (pet is null) return;
+
+        var maxPerPet = 4;
+        if (productIds.Count > maxPerPet)
+            throw new InvalidOperationException($"Maximum {maxPerPet} products per pet.");
+
+        var allProducts = await _db.Products
+            .Where(p => p.OrganizationId == organizationId && productIds.Contains(p.Id))
+            .ToListAsync(ct);
+
+        foreach (var product in allProducts)
+        {
+            product.PetId = petId;
+        }
+
+        // Unlink products that were previously linked but not in the new list
+        foreach (var product in pet.Products)
+        {
+            if (!productIds.Contains(product.Id))
+            {
+                product.PetId = null;
+            }
+        }
+
+        await _db.SaveChangesAsync(ct);
     }
 
     public async Task<IReadOnlyList<AdoptionDto>> GetPetAdoptionsAsync(Guid petId, Guid organizationId, CancellationToken ct)
@@ -239,7 +343,8 @@ public sealed class EnterpriseService : IEnterpriseService
 
     private static AdoptionDto ToAdoptionDto(Adoption a) => new(
         a.Id, a.PetId, a.AdopterId, a.Adopter?.FullName, a.Pet?.Name,
-        a.Status, a.ApplicationMessage, a.AdminNotes, a.CompletedAt, a.CreatedAt);
+        a.Status, a.ApplicationMessage, a.AdminNotes, a.CompletedAt, a.CreatedAt,
+        a.Adopter?.ProfilePictureUrl);
 }
 
 

@@ -48,4 +48,6 @@ public sealed class CreatePetRequest
 
     [MaxLength(2000)]
     public string? BehaviorNotes { get; set; }
+
+    public List<Guid>? ProductIds { get; set; }
 }

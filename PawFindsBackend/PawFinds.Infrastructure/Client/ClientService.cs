@@ -73,6 +73,10 @@ public sealed class ClientService : IClientService
 
     public async Task<AdoptRequestDto> SubmitAdoptRequestAsync(Guid userId, Guid organizationId, SubmitAdoptRequest request, CancellationToken ct)
     {
+        var user = await _db.Users
+            .IgnoreQueryFilters()
+            .FirstAsync(u => u.Id == userId, ct);
+
         var entity = new AdoptRequest
         {
             Id = Guid.NewGuid(),
@@ -95,24 +99,26 @@ public sealed class ClientService : IClientService
         _db.AdoptRequests.Add(entity);
         await _db.SaveChangesAsync(ct);
 
-        return ToDto(entity);
+        return ToDto(entity, user.ProfilePictureUrl);
     }
 
     public async Task<IReadOnlyList<AdoptRequestDto>> GetMyAdoptRequestsAsync(Guid userId, CancellationToken ct)
     {
         return await _db.AdoptRequests
             .AsNoTracking()
+            .Include(ar => ar.User)
             .Where(ar => ar.UserId == userId)
             .OrderByDescending(ar => ar.CreatedAt)
-            .Select(ar => ToDto(ar))
+            .Select(ar => ToDto(ar, ar.User!.ProfilePictureUrl))
             .ToListAsync(ct);
     }
 
-    private static AdoptRequestDto ToDto(AdoptRequest ar) => new(
+    private static AdoptRequestDto ToDto(AdoptRequest ar, string? profilePictureUrl) => new(
         ar.Id, ar.PetName, ar.Species, ar.Breed, ar.Age, ar.Reason,
         ar.Description, ar.ContactPhone, ar.ContactEmail,
         DeserializeImageUrls(ar.ImageUrls),
-        ar.Status.ToString(), ar.AdminResponse, ar.RespondedAt, ar.CreatedAt);
+        ar.Status.ToString(), ar.AdminResponse, ar.RespondedAt, ar.CreatedAt,
+        profilePictureUrl);
 
     private static List<string>? DeserializeImageUrls(string? json)
     {

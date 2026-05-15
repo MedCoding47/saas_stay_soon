@@ -34,7 +34,7 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasOne(p => p.Pet)
             .WithMany(pet => pet.Products)
             .HasForeignKey(p => p.PetId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasIndex(p => p.OrganizationId);
         builder.HasIndex(p => p.PetId);
