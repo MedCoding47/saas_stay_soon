@@ -68,6 +68,28 @@ public sealed class VeterinaireController : ControllerBase
         return updated ? NoContent() : NotFound();
     }
 
+    [HttpGet("recommendations")]
+    public async Task<ActionResult<IReadOnlyList<PetCareRecommendationDto>>> GetRecommendations(CancellationToken ct)
+    {
+        var userId = GetUserId();
+        return Ok(await _service.GetRecommendationsAsync(userId, ct));
+    }
+
+    [HttpPost("recommendations")]
+    public async Task<ActionResult<PetCareRecommendationDto>> CreateRecommendation(CreateRecommendationRequest request, CancellationToken ct)
+    {
+        var userId = GetUserId();
+        return Ok(await _service.CreateRecommendationAsync(userId, request, ct));
+    }
+
+    [HttpDelete("recommendations/{id:guid}")]
+    public async Task<IActionResult> DeleteRecommendation(Guid id, CancellationToken ct)
+    {
+        var userId = GetUserId();
+        var deleted = await _service.DeleteRecommendationAsync(id, userId, ct);
+        return deleted ? NoContent() : NotFound();
+    }
+
     private Guid GetUserId()
     {
         var claim = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue("user_id");

@@ -33,4 +33,6 @@ public sealed class VeterinaireProfile : BaseEntity
     public ICollection<Advice> AdviceList { get; set; } = [];
 
     public ICollection<Booking> Bookings { get; set; } = [];
+
+    public ICollection<PetCareRecommendation> Recommendations { get; set; } = [];
 }

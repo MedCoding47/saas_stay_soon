@@ -5,6 +5,7 @@ import PetBrowser from './pages/pets/PetBrowser';
 import PetDetails from './pages/pets/PetDetails';
 import AdoptedPets from './pages/pets/AdoptedPets';
 import SwipeMode from './pages/swipe/SwipeMode';
+import Doctors from './pages/doctors/Doctors';
 import AdminLogin from './pages/admin/Login';
 import AdminDashboard from './pages/admin/Dashboard';
 import PetManagement from './pages/admin/PetManagement';
@@ -44,6 +45,7 @@ function AnimatedRoutes() {
         <Route path="/pets/:id" element={<PetDetails />} />
         <Route path="/pets/adopted" element={<AdoptedPets />} />
         <Route path="/swipe" element={<SwipeMode />} />
+        <Route path="/doctors" element={<Doctors />} />
         <Route path="/login" element={<RoleSelector />} />
         <Route path="/login/organization" element={<OrgLogin />} />
         <Route path="/login/veterinaire" element={<VetLogin />} />

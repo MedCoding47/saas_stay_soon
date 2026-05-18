@@ -18,6 +18,7 @@ public sealed class VeterinaireService : IVeterinaireService
     {
         var profile = await _db.VeterinaireProfiles
             .AsNoTracking()
+            .Include(vp => vp.User)
             .FirstOrDefaultAsync(vp => vp.UserId == userId, ct);
 
         if (profile is null)
@@ -29,6 +30,7 @@ public sealed class VeterinaireService : IVeterinaireService
     public async Task<VeterinaireProfileDto> UpdateProfileAsync(Guid userId, UpdateVeterinaireProfileRequest request, CancellationToken ct)
     {
         var profile = await _db.VeterinaireProfiles
+            .Include(vp => vp.User)
             .FirstOrDefaultAsync(vp => vp.UserId == userId, ct);
 
         if (profile is null)
@@ -140,8 +142,65 @@ public sealed class VeterinaireService : IVeterinaireService
         return false;
     }
 
+    public async Task<IReadOnlyList<PetCareRecommendationDto>> GetRecommendationsAsync(Guid userId, CancellationToken ct)
+    {
+        var profile = await _db.VeterinaireProfiles
+            .AsNoTracking()
+            .FirstOrDefaultAsync(vp => vp.UserId == userId, ct);
+        if (profile is null) return [];
+
+        return await _db.PetCareRecommendations
+            .AsNoTracking()
+            .Where(r => r.VeterinaireProfileId == profile.Id)
+            .OrderByDescending(r => r.CreatedAt)
+            .Select(r => new PetCareRecommendationDto(
+                r.Id, r.Title, r.Description, r.TargetSpecies, r.TargetAgeRange, r.CreatedAt))
+            .ToListAsync(ct);
+    }
+
+    public async Task<PetCareRecommendationDto> CreateRecommendationAsync(Guid userId, CreateRecommendationRequest request, CancellationToken ct)
+    {
+        var profile = await _db.VeterinaireProfiles
+            .FirstOrDefaultAsync(vp => vp.UserId == userId, ct);
+        if (profile is null)
+            throw new InvalidOperationException("Veterinaire profile not found.");
+
+        var recommendation = new PetCareRecommendation
+        {
+            Id = Guid.NewGuid(),
+            VeterinaireProfileId = profile.Id,
+            Title = request.Title.Trim(),
+            Description = request.Description.Trim(),
+            TargetSpecies = request.TargetSpecies?.Trim(),
+            TargetAgeRange = request.TargetAgeRange?.Trim()
+        };
+
+        _db.PetCareRecommendations.Add(recommendation);
+        await _db.SaveChangesAsync(ct);
+
+        return new PetCareRecommendationDto(
+            recommendation.Id, recommendation.Title, recommendation.Description,
+            recommendation.TargetSpecies, recommendation.TargetAgeRange, recommendation.CreatedAt);
+    }
+
+    public async Task<bool> DeleteRecommendationAsync(Guid recommendationId, Guid userId, CancellationToken ct)
+    {
+        var profile = await _db.VeterinaireProfiles
+            .FirstOrDefaultAsync(vp => vp.UserId == userId, ct);
+        if (profile is null) return false;
+
+        var recommendation = await _db.PetCareRecommendations
+            .FirstOrDefaultAsync(r => r.Id == recommendationId && r.VeterinaireProfileId == profile.Id, ct);
+        if (recommendation is null) return false;
+
+        _db.PetCareRecommendations.Remove(recommendation);
+        await _db.SaveChangesAsync(ct);
+        return true;
+    }
+
     private static VeterinaireProfileDto ToProfileDto(VeterinaireProfile vp) => new(
         vp.Id, vp.ClinicName, vp.Location, vp.Phone, vp.Description,
         vp.Latitude, vp.Longitude, vp.IsAvailable,
-        vp.GoogleMapsUrl, vp.Formation);
+        vp.GoogleMapsUrl, vp.Formation,
+        vp.User?.FullName, vp.User?.Email, vp.User?.ProfilePictureUrl);
 }

@@ -53,7 +53,7 @@ export default function Navbar() {
           )}
           <Link to="/" className={`${textClass} ${textClassHover} transition-colors`}>Home</Link>
           <Link to="/pets" className={`${textClass} ${textClassHover} transition-colors`}>Browse</Link>
-          <Link to="/pets/adopted" className={`${textClass} ${textClassHover} transition-colors`}>Adopted</Link>
+          <Link to="/doctors" className={`${textClass} ${textClassHover} transition-colors`}>Doctors</Link>
 
           {role === 'SuperAdmin' && (
             <>
@@ -99,7 +99,7 @@ export default function Navbar() {
           >
             <Link to="/" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Home</Link>
             <Link to="/pets" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Browse</Link>
-            <Link to="/pets/adopted" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Adopted</Link>
+            <Link to="/doctors" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Doctors</Link>
             {role === 'SuperAdmin' && (
               <>
                 <Link to="/superadmin/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>

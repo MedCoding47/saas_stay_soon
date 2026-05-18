@@ -51,3 +51,13 @@ obj/
 tmp/
 temp/
 *.tmp
+
+# Runtime artifacts
+*.err
+run-err.txt
+run-out.txt
+dev-*.txt
+err-*.txt
+frontend.err
+backend.err
+wwwroot/

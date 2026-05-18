@@ -38,15 +38,35 @@ public sealed class PublicController : ControllerBase
     public async Task<ActionResult> GetVeterinaires(CancellationToken ct)
     {
         var vets = await _db.VeterinaireProfiles
+            .AsNoTracking()
             .Include(v => v.Organization)
-            .Where(v => v.Organization!.IsActive)
+            .Include(v => v.User)
+            .Include(v => v.AdviceList)
+            .Include(v => v.Recommendations)
+            .Where(v => v.Organization!.IsActive && v.IsAvailable)
             .OrderBy(v => v.ClinicName)
             .Select(v => new
             {
                 v.ClinicName,
                 v.Location,
+                v.Phone,
+                v.Description,
+                v.Latitude,
+                v.Longitude,
                 v.GoogleMapsUrl,
-                v.Phone
+                v.Formation,
+                UserName = v.User!.FullName,
+                UserEmail = v.User.Email,
+                ProfilePictureUrl = v.User.ProfilePictureUrl,
+                AdviceList = v.AdviceList
+                    .OrderByDescending(a => a.CreatedAt)
+                    .Take(2)
+                    .Select(a => new { a.Title, a.Content })
+                    .ToList(),
+                Recommendations = v.Recommendations
+                    .OrderByDescending(r => r.CreatedAt)
+                    .Select(r => new { r.Title, r.Description, r.TargetSpecies, r.TargetAgeRange })
+                    .ToList()
             })
             .ToListAsync(ct);
 

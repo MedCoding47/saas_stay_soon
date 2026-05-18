@@ -14,6 +14,22 @@
     --sh-muted: #8c7e74;
     --sh-dark: #1a1a2e;
     --sh-amber: #f0a030;
+
+    --background: 30 40% 96%;
+    --foreground: 20 14% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 4%;
+    --primary: 16 68% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 40% 92%;
+    --secondary-foreground: 20 14% 20%;
+    --muted: 30 15% 88%;
+    --muted-foreground: 30 8% 50%;
+    --destructive: 0 78% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 30 15% 88%;
+    --ring: 16 68% 52%;
+    --radius: 0.75rem;
   }
 
   html { scroll-behavior: smooth; }

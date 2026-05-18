@@ -9,12 +9,16 @@ public interface IVeterinaireService
     Task<bool> DeleteAdviceAsync(Guid adviceId, Guid userId, CancellationToken ct);
     Task<IReadOnlyList<BookingDto>> GetBookingsAsync(Guid userId, CancellationToken ct);
     Task<bool> UpdateBookingStatusAsync(Guid bookingId, Guid userId, string status, CancellationToken ct);
+    Task<IReadOnlyList<PetCareRecommendationDto>> GetRecommendationsAsync(Guid userId, CancellationToken ct);
+    Task<PetCareRecommendationDto> CreateRecommendationAsync(Guid userId, CreateRecommendationRequest request, CancellationToken ct);
+    Task<bool> DeleteRecommendationAsync(Guid recommendationId, Guid userId, CancellationToken ct);
 }
 
 public sealed record VeterinaireProfileDto(
     Guid Id, string ClinicName, string Location, string? Phone,
     string? Description, double? Latitude, double? Longitude, bool IsAvailable,
-    string? GoogleMapsUrl, string? Formation);
+    string? GoogleMapsUrl, string? Formation,
+    string? UserName, string? UserEmail, string? ProfilePictureUrl);
 
 public sealed record UpdateVeterinaireProfileRequest(
     string ClinicName, string Location, string? Phone,
@@ -28,3 +32,9 @@ public sealed record AdviceDto(Guid Id, string Title, string Content, DateTimeOf
 public sealed record BookingDto(
     Guid Id, Guid UserId, string? UserName, Guid? PetId, string? PetName,
     DateTimeOffset BookingDate, string Status, string? Notes);
+
+public sealed record CreateRecommendationRequest(
+    string Title, string Description, string? TargetSpecies, string? TargetAgeRange);
+
+public sealed record PetCareRecommendationDto(
+    Guid Id, string Title, string Description, string? TargetSpecies, string? TargetAgeRange, DateTimeOffset CreatedAt);

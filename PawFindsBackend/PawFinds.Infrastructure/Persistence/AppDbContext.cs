@@ -47,6 +47,8 @@ public sealed class AppDbContext : DbContext
 
     public DbSet<Booking> Bookings => Set<Booking>();
 
+    public DbSet<PetCareRecommendation> PetCareRecommendations => Set<PetCareRecommendation>();
+
     public DbSet<AdoptRequest> AdoptRequests => Set<AdoptRequest>();
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
