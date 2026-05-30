@@ -567,7 +567,7 @@ Keep the .NET backend unchanged — Next.js just replaces the Vite frontend.
 | Step | Feature | Status | Notes |
 |------|---------|--------|-------|
 | 1 | Moroccan color palette | ✅ DONE | ~30 min |
-| 2 | Interactive map page `/carte` | ⬜ TODO | Needs Google Maps API key |
+| 2 | Interactive map page `/carte` | ✅ DONE | Needs Google Maps API key |
 | 3 | Geolocation "near me" | ⬜ TODO | Uses existing CompanyProfile lat/lng |
 | 4 | Booking + Stripe payment | ⬜ TODO | Needs Stripe account |
 | 5 | Newsletter + WhatsApp button | ⬜ TODO | Fastest win |
