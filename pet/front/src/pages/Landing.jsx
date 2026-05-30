@@ -96,8 +96,8 @@ export default function Landing() {
       <Navbar />
 
       {/* Hero */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #0F0C29, #302B63, #24243e)' }}>
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(232,99,74,0.25), transparent 70%)', filter: 'blur(80px)' }} />
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #2C1A0E, #6B2E15, #C8962A)' }}>
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(139,37,0,0.25), transparent 70%)', filter: 'blur(80px)' }} />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-teal/5 rounded-full blur-[100px]" />
 
         <Floating sensitivity={-0.5} className="h-full w-full">
@@ -211,7 +211,7 @@ export default function Landing() {
       </section>
 
       {/* About Us */}
-      <section className="py-28" style={{ background: 'linear-gradient(135deg, #0F0C29, #302B63, #24243e)' }}>
+      <section className="py-28" style={{ background: '#1C0F07' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -264,7 +264,7 @@ export default function Landing() {
       </section>
 
       {/* Featured Pets */}
-      <section className="py-28" style={{ background: '#1A1A2E' }}>
+      <section className="py-28" style={{ background: '#1C0F07' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
           <h2 className="section-title">Featured Pets</h2>
@@ -297,7 +297,7 @@ export default function Landing() {
       </section>
 
       {/* Find Us — Geolocation */}
-      <section className="py-28" style={{ background: '#1A1A2E' }}>
+      <section className="py-28" style={{ background: '#1C0F07' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <h2 className="section-title">Find Us</h2>
@@ -357,7 +357,7 @@ export default function Landing() {
       </section>
 
       {/* Success Stories */}
-      <section className="py-28" style={{ background: '#24243e' }}>
+      <section className="py-28" style={{ background: '#251208' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <h2 className="section-title">Happy Tails</h2>
@@ -385,7 +385,7 @@ export default function Landing() {
       </section>
 
       {/* How It Works */}
-      <section className="py-28" style={{ background: '#1A1A2E' }}>
+      <section className="py-28" style={{ background: '#1C0F07' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
             <h2 className="section-title">How It Works</h2>
@@ -412,7 +412,7 @@ export default function Landing() {
 
       {/* CTA */}
       <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #e8634a, #1a8a7a)' }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #8B2500, #1a8a7a)' }} />
         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1), transparent 60%)' }} />
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative z-10 max-w-3xl mx-auto text-center px-4">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Ready to Find Your Companion?</h2>

@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --sh-coral: #D85A30;
+    --sh-coral: #8B2500;
     --sh-coral-light: #fef2ef;
     --sh-teal: #1a8a7a;
     --sh-teal-dark: #0F6E56;
@@ -14,6 +14,9 @@
     --sh-muted: #8c7e74;
     --sh-dark: #1a1a2e;
     --sh-amber: #f0a030;
+    --sh-cream: #F5E6D3;
+    --sh-gold: #C8962A;
+    --sh-terracotta: #A0522D;
 
     --background: 30 40% 96%;
     --foreground: 20 14% 4%;
