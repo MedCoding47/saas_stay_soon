@@ -1,54 +1,45 @@
 # PawFinds — Pet Adoption SaaS
 
-## Latest Update: Vet Dashboard Redesign + PetCareRecommendations
+## 🔧 Critical: DB Password Hash Fix (Jun 3, 2026)
 
-### What's new (commit `735fa16` → now)
+The password hashes for `enterprise@pawfinds.com` and `vet@pawfinds.com` were **corrupted** in the database — they didn't match their expected passwords, causing "Invalid credentials" on login.
 
-#### Backend
-- **`PetCareRecommendation` entity** — vets can add product care tips with target species/age range
-- **Public vet endpoint enhanced** — returns full doctor info: name, email, profile picture, lat/lng, formation, **2 latest advices**, all recommendations
-- **Vet profile response enhanced** — now includes `UserName`, `UserEmail`, `ProfilePictureUrl` from the User entity
+**Root cause**: The `PasswordHasher<TUser>` generated hashes that `VerifyHashedPassword` rejected for those 2 users during the initial seed. This was a data integrity issue in the local DB, not a code bug.
 
-#### Frontend
-- **Bento-grid vet dashboard** — animated 3-column grid layout (avatar center, info around)
-- **Doctors public page** (`/doctors`) — lists all vets with embedded Google Maps, advices, recommendations
-- **Navbar** — "Adopted" replaced with "Doctors" link
-- **Advice tab** — fully working (add modal + delete button)
-- **Recommendations tab** — vets can add/delete product care tips
-- **Bookings tab** — Confirm/Cancel/Complete buttons
-- **shadcn UI components** — Card, Badge, Avatar, BentoGridShowcase added
+**Fixed by**: Running a C# tool that re-hashed fresh passwords with `PasswordHasher.HashPassword()` and updated the `PasswordHash` column for those 2 accounts.
 
-### Database Migration Required
+### If You Pull / Clone Fresh
 
-This update adds a new table `PetCareRecommendations`. To apply the migration:
+The seeder (`DbSeeder.cs`) will create all 4 users with correct hashes automatically on first run. **No action needed** — just start the API.
 
-```bash
-cd PawFindsBackend/PawFinds.Api
-dotnet ef database update
-```
+### If You Have an Existing DB with "Invalid Credentials"
 
-The migration file is:
-`PawFindsBackend/PawFinds.Infrastructure/Migrations/20260518152726_AddPetCareRecommendations.cs`
-
-If you are cloning fresh, just run the backend — all migrations apply automatically on startup.
-
-### How to Reset the Database
-
-Run the SQL script against your `PawFindsDb`:
+Run this SQL to see if your hashes are broken:
 
 ```sql
--- Run reset_db.sql in SQL Server Management Studio
--- Then restart the backend to re-seed
+-- Query your existing hashes (the PawFindsBackend repo has a hashcheck/ tool)
+SELECT Email, LEFT(PasswordHash, 40) AS HashPrefix, Role FROM Users;
 ```
+
+Then either:
+- **Option A**: Drop and re-seed (loses all data):
+  ```sql
+  USE master;
+  ALTER DATABASE PawFindsDb SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+  DROP DATABASE PawFindsDb;
+  ```
+  Then restart the API — it recreates + seeds fresh.
+
+- **Option B**: Fix user passwords via the API's register-like logic (contact admin).
 
 ### Updated Credentials
 
 | Role | Email | Password |
 |---|---|---|
 | SuperAdmin | `superadmin@pawfinds.com` | `Super@123` |
-| Enterprise | `enterprise@pawfinds.com` | `Temp@9ca6fb5a!` |
+| Enterprise | `enterprise@pawfinds.com` | `Enterprise@123` |
 | Client | `client@pawfinds.com` | `Client@123` |
-| Vet | `vet@pawfinds.com` | `Temp@268a4a5c!` |
+| Vet | `vet@pawfinds.com` | `Vet@123` |
 
 ### Run the Project
 
