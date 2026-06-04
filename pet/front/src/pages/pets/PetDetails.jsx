@@ -5,12 +5,8 @@ import api from '../../api/client';
 import samplePets from '../../data/samplePets';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-import Button from '../../components/ui/Button';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import PageTransition from '../../components/animations/PageTransition';
-import ProductCard from '../../components/pets/ProductCard';
-import ShelterInfoCard from '../../components/pets/ShelterInfoCard';
-import SimilarPets from '../../components/pets/SimilarPets';
 
 const speciesEmoji = {
   Dog: '🐕', Cat: '🐈', Rabbit: '🐰', Bird: '🐦', Parrot: '🦜',
@@ -31,17 +27,23 @@ function formatAge(years) {
 }
 
 function BoolIcon({ value }) {
-  if (value === true) return <span className="text-emerald-500 font-bold">✓</span>;
-  if (value === false) return <span className="text-red-400 font-bold">✗</span>;
-  return <span className="text-muted-light">—</span>;
+  if (value === true) return <span className="text-teal font-bold">✓</span>;
+  if (value === false) return <span className="text-coral font-bold">✗</span>;
+  return <span className="text-[#b8aaa0]">—</span>;
 }
+
+const accessories = [
+  { emoji: '🎾', name: 'Toys', price: 'From 25 MAD' },
+  { emoji: '🛏️', name: 'Bed', price: 'From 150 MAD' },
+  { emoji: '🥣', name: 'Bowl', price: 'From 30 MAD' },
+  { emoji: '📿', name: 'Collar', price: 'From 45 MAD' },
+];
 
 export default function PetDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [pet, setPet] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [photoIndex, setPhotoIndex] = useState(0);
 
   const token = localStorage.getItem('sh-token');
 
@@ -49,9 +51,7 @@ export default function PetDetails() {
     let cancelled = false;
     setLoading(true);
     api.get(`/pets/${id}`)
-      .then(({ data }) => {
-        if (!cancelled) setPet(data);
-      })
+      .then(({ data }) => { if (!cancelled) setPet(data); })
       .catch(() => {
         if (!cancelled) {
           const found = samplePets.find((p) => String(p.id) === String(id));
@@ -85,7 +85,7 @@ export default function PetDetails() {
     return (
       <PageTransition>
         <Navbar />
-        <div className="min-h-screen pt-24 flex items-center justify-center bg-warm">
+        <div className="min-h-screen pt-24 flex items-center justify-center bg-[#FAF7F2]">
           <LoadingSpinner text="Loading pet..." />
         </div>
         <Footer />
@@ -97,245 +97,191 @@ export default function PetDetails() {
   return (
     <PageTransition>
       <Navbar />
-      <main className="min-h-screen bg-white pb-20">
-        {/* Breadcrumb */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-4 text-sm text-muted"
-        >
-          <Link to="/" className="hover:text-coral transition-colors">Home</Link>
-          <span className="mx-2">›</span>
-          <Link to="/pets" className="hover:text-coral transition-colors">Browse</Link>
-          <span className="mx-2">›</span>
-          <span className="text-gray-900 font-medium">{pet.name}</span>
-        </motion.div>
+      <main className="min-h-screen bg-[#FAF7F2]">
+        {/* TOP SECTION — two column */}
+        <div className="max-w-6xl mx-auto px-8 pt-28 pb-0 grid md:grid-cols-2 gap-12">
+          {/* LEFT */}
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+            <p className="text-xs text-[#8c7e74] mb-6">
+              <Link to="/" className="hover:text-[#0D0D0D] transition-colors">Home</Link>
+              <span className="mx-2">/</span>
+              <Link to="/pets" className="hover:text-[#0D0D0D] transition-colors">Browse</Link>
+              <span className="mx-2">/</span>
+              <span className="text-[#0D0D0D]">{pet.name}</span>
+            </p>
 
-        {/* TOP SECTION */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-5 gap-10">
-            {/* Left - Info */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="md:col-span-3 space-y-6"
-            >
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">{pet.name}</h1>
+            <h1 className="font-display font-black text-[72px] leading-none tracking-tight text-[#0D0D0D]">
+              {pet.name}
+            </h1>
 
-              {/* Badges */}
-              <div className="flex flex-wrap gap-2">
-                <span className="px-4 py-1.5 bg-coral text-white rounded-pill text-sm font-semibold">
-                  {speciesEmoji[pet.type] || ''} {pet.type}
-                </span>
-                {pet.breed && (
-                  <span className="px-4 py-1.5 bg-gray-100 text-gray-700 rounded-pill text-sm font-medium">
-                    {pet.breed}
-                  </span>
+            <div className="flex gap-2 mt-4">
+              <span className="tag tag-dark">{speciesEmoji[pet.type] || '🐾'} {pet.type}</span>
+              {pet.breed && <span className="tag px-4 py-1.5 rounded-full border border-[#E8E0D8] text-[#8c7e74] text-[10px] font-bold tracking-widest uppercase">{pet.breed}</span>}
+              <span className="tag px-4 py-1.5 rounded-full border border-[#E8E0D8] text-[#8c7e74] text-[10px] font-bold tracking-widest uppercase">{formatAge(pet.age)}</span>
+            </div>
+
+            <div className="flex gap-6 mt-6 text-sm text-[#8c7e74]">
+              <span>📅 {formatAge(pet.age)}</span>
+              <span>📍 {pet.location || 'Unknown location'}</span>
+            </div>
+
+            {pet.description && (
+              <p className="text-lg text-[#2A2A2A] mt-6 leading-relaxed font-serif italic">
+                "{pet.description}"
+              </p>
+            )}
+
+            {/* Health */}
+            <div className="mt-8">
+              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-4">Health Status</p>
+              <div className="space-y-0">
+                {[
+                  { label: 'Vaccinated', value: pet.isVaccinated },
+                  { label: 'Sterilized / Neutered', value: pet.isSterilized },
+                  { label: 'Dewormed', value: pet.isDewormed },
+                ].map((item) => (
+                  <div key={item.label} className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
+                    <span className="text-[#2A2A2A]">{item.label}</span>
+                    <BoolIcon value={item.value} />
+                  </div>
+                ))}
+                {pet.healthNotes && (
+                  <div className="flex items-center justify-between py-3 text-sm">
+                    <span className="text-[#2A2A2A]">Notes</span>
+                    <span className="text-[#8c7e74] text-xs text-right max-w-[200px]">{pet.healthNotes}</span>
+                  </div>
                 )}
-                <span className="px-4 py-1.5 bg-gray-100 text-gray-700 rounded-pill text-sm font-medium">
-                  {formatAge(pet.age)}
-                </span>
               </div>
+            </div>
 
-              {/* Info rows */}
-              <div className="space-y-2 text-sm text-gray-700">
-                <div className="flex items-center gap-2">
-                  <span>📅</span>
-                  <span>Age: <strong>{formatAge(pet.age)}</strong></span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span>📍</span>
-                  <span>{pet.location || 'Unknown location'}</span>
-                </div>
+            {/* Behavior */}
+            <div className="mt-8">
+              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-4">Behavior</p>
+              <div className="space-y-0">
+                {[
+                  { label: 'Good with kids', value: pet.goodWithKids },
+                  { label: 'Good with dogs', value: pet.goodWithDogs },
+                  { label: 'Good with cats', value: pet.goodWithCats },
+                ].map((item) => (
+                  <div key={item.label} className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
+                    <span className="text-[#2A2A2A]">{item.label}</span>
+                    <BoolIcon value={item.value} />
+                  </div>
+                ))}
+                {pet.behaviorNotes && (
+                  <div className="py-3 text-sm"><span className="text-[#8c7e74] text-xs">{pet.behaviorNotes}</span></div>
+                )}
               </div>
+            </div>
 
-              {/* Description */}
-              {pet.description && (
-                <p className="text-gray-600 leading-relaxed">{pet.description}</p>
+            {/* CTA */}
+            <div className="flex gap-3 mt-10 pb-8">
+              <button onClick={handleAdoptClick} disabled={!isAvailable} className="btn-dark px-8">
+                I want to adopt
+              </button>
+              <button onClick={handleInfoClick} className="btn-outline px-8">
+                Get more info
+              </button>
+            </div>
+          </motion.div>
+
+          {/* RIGHT */}
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
+            <div className="bg-white rounded-3xl border border-[#E8E0D8] h-96 flex items-center justify-center text-[120px] overflow-hidden">
+              {imgSrc ? (
+                <img src={imgSrc} alt={pet.name} className="w-full h-full object-cover" />
+              ) : (
+                <span>{speciesEmoji[pet.type] || '🐾'}</span>
               )}
-
-              {/* Santé */}
-              <div>
-                <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Health</h3>
-                <div className="bg-warm rounded-xl p-4 space-y-1.5 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Vaccinated</span>
-                    <BoolIcon value={pet.isVaccinated} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Sterilized / Neutered</span>
-                    <BoolIcon value={pet.isSterilized} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Dewormed</span>
-                    <BoolIcon value={pet.isDewormed} />
-                  </div>
-                  {pet.healthNotes && (
-                    <div className="flex items-center justify-between pt-1.5 border-t border-warm-dark/50">
-                      <span className="text-gray-600">Notes</span>
-                      <span className="text-gray-500 text-xs text-right max-w-[200px]">{pet.healthNotes}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Comportement */}
-              <div>
-                <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Behavior</h3>
-                <div className="bg-warm rounded-xl p-4 space-y-1.5 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Good with kids</span>
-                    <BoolIcon value={pet.goodWithKids} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Good with dogs</span>
-                    <BoolIcon value={pet.goodWithDogs} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Good with cats</span>
-                    <BoolIcon value={pet.goodWithCats} />
-                  </div>
-                  {pet.behaviorNotes && (
-                    <div className="pt-1.5 border-t border-warm-dark/50">
-                      <span className="text-gray-500 text-xs">{pet.behaviorNotes}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <Button
-                  variant="primary"
-                  className="flex-1 !rounded-pill !py-3"
-                  onClick={handleAdoptClick}
-                  disabled={!isAvailable}
-                >
-                  ♥ I want to adopt {pet.name}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1 !rounded-pill !border-coral/30 !py-3"
-                  style={{ borderColor: '#0F6E56', color: '#0F6E56' }}
-                  onClick={handleInfoClick}
-                >
-                  ℹ️ Get more info about {pet.name}
-                </Button>
-              </div>
-            </motion.div>
-
-            {/* Right - Photo */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="md:col-span-2"
-            >
-              <div className="relative">
-                <div className="h-80 md:h-96 bg-warm rounded-3xl flex items-center justify-center text-8xl overflow-hidden shadow-card">
-                  {imgSrc ? (
-                    <motion.img
-                      key={photoIndex}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                      src={imgSrc}
-                      alt={pet.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span>{speciesEmoji[pet.type] || '🐾'}</span>
-                  )}
-                </div>
-                {/* Dots */}
-                <div className="flex justify-center gap-2 mt-4">
-                  <span className="w-2.5 h-2.5 rounded-full bg-coral" />
-                </div>
-                {/* Heart + Share */}
-                <div className="absolute top-4 right-4 flex gap-2">
-                  <button className="w-9 h-9 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm text-muted hover:text-coral transition-all">♥</button>
-                  <button className="w-9 h-9 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm text-muted hover:text-coral transition-all">↗</button>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+            </div>
+            <div className="flex justify-center gap-2 mt-4">
+              <span className="w-2.5 h-2.5 rounded-full bg-coral" />
+            </div>
+          </motion.div>
         </div>
 
-        {/* Product Showcase */}
-        <section className="mt-16 py-12" style={{ backgroundColor: '#FAEEDA' }}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">To welcome your companion</h2>
-            <div className="flex gap-4 overflow-x-auto pb-4">
-              <ProductCard emoji="🎾" title="Toys" price="From 25 MAD" delay={0} />
-              <ProductCard emoji="🛏️" title="Bed" price="From 150 MAD" delay={0.1} />
-              <ProductCard emoji="🥣" title="Bowl" price="From 30 MAD" delay={0.2} />
-              <ProductCard emoji="📿" title="Collar" price="From 45 MAD" delay={0.3} />
+        {/* ACCESSORIES STRIP */}
+        <section className="bg-white border-y border-[#E8E0D8] py-12 px-8 mt-8">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mb-8">Welcome your companion</h2>
+            <div className="flex gap-4 overflow-x-auto no-scrollbar">
+              {accessories.map((item, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-[#FAF7F2] rounded-2xl p-6 border border-[#E8E0D8] text-center w-48 flex-shrink-0">
+                  <div className="text-4xl mb-3">{item.emoji}</div>
+                  <p className="font-bold text-sm text-[#0D0D0D]">{item.name}</p>
+                  <p className="text-coral font-bold text-sm mt-1">{item.price}</p>
+                  <button className="btn-dark w-full mt-3 text-xs py-2 rounded-xl">Shop now</button>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Shelter Info */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid md:grid-cols-2 gap-8">
+        {/* SHELTER INFO */}
+        <section className="max-w-6xl mx-auto px-8 py-16 grid md:grid-cols-2 gap-8">
+          <div className="rounded-3xl overflow-hidden border border-[#E8E0D8] h-72">
+            <div className="w-full h-full bg-[#FAF7F2] flex items-center justify-center text-6xl text-[#b8aaa0]">🗺️</div>
+          </div>
+          <div className="bg-[#0D0D0D] rounded-3xl p-8">
+            <p className="font-display font-bold text-white text-2xl">{pet.ownerName || 'Nino Shelter'}</p>
+            <div className="mt-4 space-y-2 text-sm">
+              <p className="text-white/50 flex items-center gap-2">📍 {pet.location || 'Morocco'}</p>
+              <p className="text-white/50 flex items-center gap-2">📞 +212 5XX XX XX XX</p>
+            </div>
+            <div className="text-white/40 text-xs mt-4 space-y-1">
+              <p>Mon-Fri: 9:00 – 17:00</p>
+              <p>Saturday: 10:00 – 16:00</p>
+              <p>Sunday: Closed</p>
+            </div>
+            <button className="btn-outline-white w-full mt-6 text-sm">Visit Shelter</button>
+          </div>
+        </section>
+
+        {/* SIMILAR PETS */}
+        <section className="bg-[#FAF7F2] py-16 px-8">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mb-10">Similar Pets</h2>
+            <div className="grid md:grid-cols-3 gap-5">
+              {similarPets.map((p, i) => (
+                <motion.div key={p.id || i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} onClick={() => navigate(`/pets/${p.id}`)} className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300">
+                  <div className="bg-[#FAF7F2] h-40 flex items-center justify-center text-5xl">
+                    {speciesEmoji[p.type] || '🐾'}
+                  </div>
+                  <div className="p-5">
+                    <p className="font-bold text-[#0D0D0D]">{p.name}</p>
+                    <p className="text-sm text-[#8c7e74] mt-0.5">{p.breed || 'Mixed Breed'}</p>
+                    <button onClick={(e) => { e.stopPropagation(); navigate(`/pets/${p.id}`); }} className="btn-dark w-full mt-3 rounded-xl py-2.5 text-sm">View Pet</button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ADOPTION CONDITIONS */}
+        <section className="bg-white border-t border-[#E8E0D8] py-16 px-8">
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start">
             <div>
-              <div className="bg-gray-200 rounded-3xl h-64 flex items-center justify-center text-gray-400 text-6xl">
-                🗺️
-              </div>
-              <p className="text-sm text-muted mt-4">
-                <span className="font-medium text-gray-900">{pet.location || 'Super-hayawan Shelter'}</span>
+              <span className="tag tag-outline mb-4">Conditions</span>
+              <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mt-4">Adoption Conditions</h2>
+              <p className="text-[#8c7e74] leading-relaxed mt-6">
+                Adopting an animal is a long-term commitment. We ensure each adoption is well-prepared by verifying
+                the living conditions, availability, and motivation of the adopter.
               </p>
-              <Button variant="primary" className="!rounded-pill mt-3">Get directions</Button>
+              <p className="text-[#8c7e74] leading-relaxed mt-3">
+                All our animals are vaccinated, sterilized, and identified before adoption.
+                Post-adoption follow-up is provided to ensure the well-being of the animal.
+              </p>
             </div>
-            <ShelterInfoCard
-              shelter={{
-                name: pet.ownerName || pet.location || 'Super-hayawan Shelter',
-                city: pet.location,
-                phone: '+212 5XX XX XX XX',
-                hours: {
-                  'Mon-Fri': '9:00 – 17:00',
-                  'Saturday': '10:00 – 16:00',
-                  'Sunday': 'Closed',
-                },
-              }}
-            />
-          </div>
-        </section>
-
-        {/* Similar Pets */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-          <SimilarPets pets={similarPets} />
-        </section>
-
-        {/* Adoption Conditions */}
-        <section className="bg-warm py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Adoption Conditions</h2>
-            <p className="text-gray-600 leading-relaxed max-w-3xl">
-              Adopting an animal is a long-term commitment. We ensure each adoption is well-prepared by verifying
-              the living conditions, availability, and motivation of the adopter. A responsible adoption means
-              providing a safe, loving, and permanent home.
-            </p>
-            <p className="text-gray-600 leading-relaxed mt-3 max-w-3xl">
-              All our animals are vaccinated, sterilized, and identified with a QR code collar before adoption.
-              Post-adoption follow-up is provided to ensure the well-being of the animal.
-            </p>
-
-            {/* Pricing Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 max-w-3xl">
+            <div className="grid md:grid-cols-3 gap-4">
               {[
                 { label: 'Dog', amount: '375 MAD' },
                 { label: 'Small dog (< 6 mo)', amount: '365 MAD' },
                 { label: 'Cat', amount: '175 MAD' },
               ].map((item, i) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="bg-white rounded-2xl shadow-card p-6 text-center"
-                >
-                  <p className="text-sm text-muted mb-1">{item.label}</p>
-                  <p className="text-3xl font-bold text-coral">{item.amount}</p>
-                  <p className="text-xs text-muted-light mt-2">Adoption fee</p>
+                <motion.div key={item.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-[#FAF7F2] rounded-3xl p-8 text-center border border-[#E8E0D8]">
+                  <p className="font-display font-black text-5xl text-coral">{item.amount}</p>
+                  <p className="text-[#8c7e74] text-sm mt-1">{item.label}</p>
                 </motion.div>
               ))}
             </div>

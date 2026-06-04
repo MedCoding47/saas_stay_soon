@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../hooks/useAuth';
-import Input from '../../components/ui/Input';
-import Button from '../../components/ui/Button';
 import PageTransition from '../../components/animations/PageTransition';
 
 export default function ClientLogin() {
@@ -25,35 +23,86 @@ export default function ClientLogin() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--sh-warm)' }}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-md"
-        >
-          <button onClick={() => navigate('/login')} className="text-sm text-coral hover:underline mb-4 inline-block">&larr; Back</button>
-          <div className="text-center mb-6">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-coral to-rose-500 flex items-center justify-center text-white mx-auto mb-4">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-              </svg>
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
-            <p className="text-gray-500 text-sm mt-1">Sign in to your personal account</p>
+      <div className="flex min-h-screen">
+        {/* LEFT - Form */}
+        <div className="w-full md:w-1/2 bg-[#FAF7F2] flex flex-col justify-center px-8 md:px-16 py-12 min-h-screen">
+          <div className="flex items-center justify-between mb-16">
+            <button onClick={() => navigate('/')} className="font-display font-black text-2xl text-[#0D0D0D]">Nino</button>
+            <p className="text-sm text-[#8c7e74]">
+              New here?{' '}
+              <button onClick={() => navigate('/client/register')} className="text-coral font-semibold hover:underline">Create account</button>
+            </p>
           </div>
-          <form onSubmit={handleSubmit}>
-            <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="john@example.com" required />
-            <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required />
-            {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-lg">{error}</p>}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </form>
-          <p className="text-center text-sm text-gray-500 mt-6">
-            Don't have an account?{' '}
-            <a href="/client/register" className="text-coral font-medium hover:underline">Create one</a>
-          </p>
-        </motion.div>
+
+          <div className="max-w-sm">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="font-display font-black text-[48px] leading-tight text-[#0D0D0D] tracking-tight"
+            >
+              Welcome back.
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-[#8c7e74] text-lg mt-2 mb-10"
+            >
+              Sign in to your personal account
+            </motion.p>
+
+            <motion.form
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              onSubmit={handleSubmit}
+            >
+              <div className="mb-5">
+                <label className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-2 block">Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="john@example.com"
+                  required
+                  className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors"
+                />
+              </div>
+              <div className="mb-5">
+                <label className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-2 block">Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors"
+                />
+              </div>
+              {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-lg border border-red-200">{error}</p>}
+              <button type="submit" disabled={loading} className="w-full btn-dark py-4 text-base rounded-2xl mt-6">
+                {loading ? 'Signing in...' : 'Sign In'}
+              </button>
+            </motion.form>
+          </div>
+        </div>
+
+        {/* RIGHT - Visual */}
+        <div className="hidden md:flex w-1/2 bg-[#0D0D0D] min-h-screen flex-col items-center justify-center p-16 relative overflow-hidden">
+          <span className="font-display font-black text-[18vw] text-white/5 absolute select-none pointer-events-none">Nino</span>
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-10 text-center relative z-10 max-w-sm">
+            <div className="text-7xl mb-4">🐾</div>
+            <h3 className="font-display font-bold text-white text-3xl">Adopt a friend</h3>
+            <p className="text-white/50 text-base mt-2 leading-relaxed">
+              Thousands of pets across Morocco are waiting for someone exactly like you.
+            </p>
+          </div>
+          <div className="flex gap-4 absolute bottom-10">
+            <span className="tag px-4 py-2 rounded-full border border-white/20 text-white/70 text-xs font-semibold">250+ Pets</span>
+            <span className="tag px-4 py-2 rounded-full border border-white/20 text-white/70 text-xs font-semibold">48 Shelters</span>
+            <span className="tag px-4 py-2 rounded-full border border-white/20 text-white/70 text-xs font-semibold">98% Success</span>
+          </div>
+        </div>
       </div>
     </PageTransition>
   );

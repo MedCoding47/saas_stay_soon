@@ -1,19 +1,24 @@
 import { motion } from 'framer-motion';
 
-const variantStyles = {
-  primary: 'bg-coral text-white shadow-md hover:shadow-coral',
-  teal: 'bg-teal text-white shadow-md hover:shadow-teal',
-  outline: 'border-2 border-coral/30 text-coral hover:bg-coral hover:text-white hover:border-coral',
-  'outline-white': 'border-2 border-white/30 text-white/90 hover:bg-white hover:text-dark hover:border-white',
-  ghost: 'text-muted hover:text-coral bg-transparent',
+const sizeStyles = {
+  sm: 'px-5 py-2.5 text-sm',
+  md: 'px-7 py-3.5 text-sm',
+  lg: 'px-9 py-4 text-sm',
 };
 
-export default function Button({ children, variant = 'primary', className = '', style, ...props }) {
+const variantStyles = {
+  primary: 'bg-[#0D0D0D] text-[#FAF7F2] hover:bg-[#2A2A2A]',
+  outline: 'border-2 border-[#0D0D0D] text-[#0D0D0D] bg-transparent hover:bg-[#0D0D0D] hover:text-[#FAF7F2]',
+  coral: 'bg-coral text-white hover:bg-coral-dark',
+  'outline-white': 'border-2 border-white/30 text-white/90 hover:bg-white hover:text-[#0D0D0D]',
+  ghost: 'text-[#8c7e74] hover:text-[#0D0D0D] bg-transparent',
+};
+
+export default function Button({ children, variant = 'primary', size = 'md', className = '', style, ...props }) {
   return (
     <motion.button
-      whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
-      className={`btn ${variantStyles[variant] || variantStyles.primary} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 font-semibold text-sm tracking-wide rounded-full transition-all duration-200 cursor-pointer ${sizeStyles[size] || sizeStyles.md} ${variantStyles[variant] || variantStyles.primary} ${className}`}
       style={style}
       {...props}
     >

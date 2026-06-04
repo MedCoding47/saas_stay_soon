@@ -4,7 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function CounterAnimation({ end, suffix = '', label, color = 'text-coral' }) {
+export default function CounterAnimation({ end, value, suffix = '', label, color = 'text-coral' }) {
+  const target = value ?? end;
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const [animated, setAnimated] = useState(false);
@@ -19,7 +20,7 @@ export default function CounterAnimation({ end, suffix = '', label, color = 'tex
         onEnter: () => {
           setAnimated(true);
           gsap.to({ val: 0 }, {
-            val: end,
+            val: target,
             duration: 2.5,
             ease: 'power2.out',
             onUpdate: function () { setCount(Math.floor(this.targets()[0].val)); },
@@ -29,7 +30,9 @@ export default function CounterAnimation({ end, suffix = '', label, color = 'tex
       });
     }, el);
     return () => ctx.revert();
-  }, [end, animated]);
+  }, [target, animated]);
+
+  if (!label) return <span ref={ref}>{count}</span>;
 
   return (
     <div ref={ref} className="text-center">

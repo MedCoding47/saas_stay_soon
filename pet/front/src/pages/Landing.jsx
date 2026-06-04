@@ -1,429 +1,345 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import gsap from 'gsap';
-import api from '../api/client';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import Badge from '../components/ui/Badge';
-import Button from '../components/ui/Button';
-import FloatingPets from '../components/animations/FloatingPets';
 import CounterAnimation from '../components/animations/CounterAnimation';
 import PageTransition from '../components/animations/PageTransition';
-import Floating, { FloatingElement } from '../components/ui/parallax-floating';
-import { TextRotate } from '../components/ui/text-rotate';
 
-const stagger = { initial: {}, animate: { transition: { staggerChildren: 0.08 } } };
-const fadeUp = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0, transition: { duration: 0.5 } } };
+const stats = [
+  { value: 250, label: 'Pets Adopted', suffix: '+' },
+  { value: 48, label: 'Partner Shelters', suffix: '' },
+  { value: 1500, label: 'Happy Families', suffix: '+' },
+  { value: 98, label: 'Success Rate', suffix: '%' },
+];
 
 const steps = [
-  { icon: '🔍', title: 'Browse Pets', desc: 'Swipe through hundreds of adoptable pets from shelters near you.', color: 'from-coral to-amber' },
-  { icon: '💌', title: 'Apply to Adopt', desc: 'Submit an adoption request with your details in minutes.', color: 'from-teal to-emerald' },
-  { icon: '🏠', title: 'Welcome Home', desc: 'Meet your new companion and start your journey together.', color: 'from-amber to-coral' },
+  { number: '01', title: 'Browse Pets', desc: 'Explore hundreds of adorable pets across Morocco waiting for a loving home.' },
+  { number: '02', title: 'Submit Request', desc: 'Send an adoption request directly to the shelter caring for your chosen pet.' },
+  { number: '03', title: 'Welcome Home', desc: 'Complete the process and bring your new family member home for good.' },
 ];
 
-const speciesEmoji = {
-  Dog: '🐕', Cat: '🐈', Rabbit: '🐰', Bird: '🐦', Parrot: '🦜',
-  Hamster: '🐹', Fish: '🐟', Turtle: '🐢', Horse: '🐴',
+const testimonials = [
+  { quote: 'Nino made it so easy to find our new best friend. The process was smooth and completely transparent.', name: 'Sarah M.', role: 'Pet Parent', location: 'Casablanca' },
+  { quote: 'As a shelter partner, Nino helps us find loving homes faster than ever before. Incredible platform.', name: 'Dr. Amine R.', role: 'Veterinarian', location: 'Rabat' },
+  { quote: 'I adopted my cat through Nino and couldn\'t be happier. The team was incredibly supportive throughout.', name: 'Fatima Z.', role: 'Pet Parent', location: 'Marrakech' },
+];
+
+const pets = [
+  { emoji: '🐕', name: 'Max', breed: 'Golden Retriever', age: '2 years', location: 'Casablanca' },
+  { emoji: '🐈', name: 'Luna', breed: 'Persian Cat', age: '1 year', location: 'Rabat' },
+  { emoji: '🐰', name: 'Oreo', breed: 'Holland Lop', age: '8 months', location: 'Marrakech' },
+  { emoji: '🐕', name: 'Bella', breed: 'Labrador', age: '3 years', location: 'Tangier' },
+  { emoji: '🐈', name: 'Simba', breed: 'Maine Coon', age: '2 years', location: 'Casablanca' },
+  { emoji: '🐕', name: 'Rocky', breed: 'Husky', age: '1 year', location: 'Fes' },
+];
+
+const marqueeItems = ['Golden Retriever', 'Persian Cat', 'Holland Lop', 'Labrador', 'Maine Coon', 'Husky', 'Beagle', 'Siamese Cat', 'Poodle', 'Corgi'];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i = 0) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } }),
 };
 
-const people = [
-  { name: 'Amira & Simba', img: '/images/person1.jpg', quote: 'I found Simba through PawFinds and it was love at first sight. He\'s been my shadow ever since.' },
-  { name: 'Omar & Bella', img: '/images/person2.jpg', quote: 'Bella was rescued from the streets. Now she sleeps on my pillow every night. Best decision I ever made.' },
-  { name: 'Nadia & Max', img: '/images/person3.jpg', quote: 'The swipe feature made it so easy to find the perfect match. Max and I are inseparable now!' },
-];
-
-const petImages = [
-  { url: '/images/bella.jpg', alt: 'Bella the dog', cls: 'w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 rotate-6 shadow-2xl' },
-  { url: '/images/charlie.jpg', alt: 'Charlie the cat', cls: 'w-36 h-28 sm:w-44 sm:h-36 md:w-48 md:h-40 -rotate-3 shadow-2xl' },
-  { url: '/images/coco.jpg', alt: 'Coco the dog', cls: 'w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 -rotate-12 shadow-2xl' },
-  { url: '/images/daisy.jpg', alt: 'Daisy the dog', cls: 'w-40 h-32 sm:w-48 sm:h-40 md:w-56 md:h-48 rotate-12 shadow-2xl' },
-  { url: '/images/leo.jpg', alt: 'Leo the cat', cls: 'w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 rotate-[19deg] shadow-2xl' },
-  { url: '/images/luna.jpg', alt: 'Luna the dog', cls: 'w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 -rotate-6 shadow-2xl' },
-  { url: '/images/max.jpg', alt: 'Max the dog', cls: 'w-20 h-16 sm:w-24 sm:h-20 md:w-28 md:h-24 rotate-3 shadow-2xl' },
-  { url: '/images/milo.jpg', alt: 'Milo the cat', cls: 'w-52 h-52 sm:w-60 sm:h-60 md:w-72 md:h-72 rotate-3 shadow-2xl' },
-  { url: '/images/oreo.jpg', alt: 'Oreo the dog', cls: 'w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 -rotate-8 shadow-2xl' },
-  { url: '/images/rocky.jpg', alt: 'Rocky the dog', cls: 'w-36 h-28 sm:w-44 sm:h-36 md:w-48 md:h-40 rotate-2 shadow-2xl' },
-];
-
 export default function Landing() {
-  const [pets, setPets] = useState([]);
-  const [stats, setStats] = useState({ total: 0, shelters: 12, families: 0 });
-  const [locations, setLocations] = useState({ companies: [], vets: [] });
-  const heroRef = useRef(null);
-  const gsapRef = useRef(null);
-
-  useEffect(() => {
-    if (gsapRef.current) return;
-    gsapRef.current = gsap.to('.pet-float', {
-      y: -20, rotation: 10, duration: 2, yoyo: true, repeat: -1,
-      stagger: 0.4, ease: 'power1.inOut',
-    });
-    return () => { gsapRef.current?.kill(); };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    api.get('/pets').then(({ data }) => {
-      if (cancelled) return;
-      const list = data.items || data.$values || [];
-      setPets(list.slice(0, 3));
-      setStats((s) => ({ ...s, total: list.length }));
-    }).catch(() => {});
-    return () => { cancelled = true; };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    Promise.all([
-      api.get('/public/companies'),
-      api.get('/public/veterinaires'),
-    ]).then(([companiesRes, vetsRes]) => {
-      if (cancelled) return;
-      setLocations({ companies: companiesRes.data || [], vets: vetsRes.data || [] });
-    }).catch(() => {});
-    return () => { cancelled = true; };
-  }, []);
-
-  const petStatus = (s) => {
-    if (typeof s === 'number') return ({ 1: 'Available', 2: 'Adopted', 3: 'Pending' })[s] || 'Available';
-    const map = { Available: 'Available', ApplicationReceived: 'Pending', UnderReview: 'Pending', Approved: 'Pending', Completed: 'Adopted' };
-    return map[s] || s || 'Available';
-  };
+  const navigate = useNavigate();
 
   return (
     <PageTransition>
       <Navbar />
 
-      {/* Hero */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #0F0C29, #302B63, #24243e)' }}>
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(232,99,74,0.25), transparent 70%)', filter: 'blur(80px)' }} />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-teal/5 rounded-full blur-[100px]" />
+      {/* ─── HERO ─── */}
+      <section className="relative min-h-screen bg-[#FAF7F2] flex flex-col pt-16 overflow-hidden">
+        {/* Eyebrow */}
+        <div className="flex items-center justify-between px-8 md:px-16 pt-12 pb-0 max-w-7xl mx-auto w-full">
+          <span className="tag tag-coral">🐾 Morocco's #1 Adoption Platform</span>
+          <div className="hidden md:flex items-center gap-2 text-sm text-[#8c7e74]">
+            <span className="w-2 h-2 rounded-full bg-teal animate-pulse inline-block" />
+            <span>250+ pets available now</span>
+          </div>
+        </div>
 
-        <Floating sensitivity={-0.5} className="h-full w-full">
-          <FloatingElement depth={0.5} className="top-[15%] left-[3%] md:top-[22%] md:left-[5%]">
-            <img src={petImages[0].url} alt={petImages[0].alt} className={`${petImages[0].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
-          </FloatingElement>
-          <FloatingElement depth={1} className="top-[3%] left-[9%] md:top-[6%] md:left-[12%]">
-            <img src={petImages[1].url} alt={petImages[1].alt} className={`${petImages[1].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
-          </FloatingElement>
-          <FloatingElement depth={4} className="top-[88%] left-[6%] md:top-[78%] md:left-[8%]">
-            <img src={petImages[2].url} alt={petImages[2].alt} className={`${petImages[2].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
-          </FloatingElement>
-          <FloatingElement depth={2} className="top-[2%] left-[82%] md:top-[4%] md:left-[82%]">
-            <img src={petImages[3].url} alt={petImages[3].alt} className={`${petImages[3].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
-          </FloatingElement>
-          <FloatingElement depth={1} className="top-[75%] left-[80%] md:top-[65%] md:left-[82%]">
-            <img src={petImages[4].url} alt={petImages[4].alt} className={`${petImages[4].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
-          </FloatingElement>
-          <FloatingElement depth={3} className="top-[45%] left-[1%] md:top-[48%] md:left-[2%]">
-            <img src={petImages[5].url} alt={petImages[5].alt} className={`${petImages[5].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
-          </FloatingElement>
-          <FloatingElement depth={2} className="top-[10%] left-[72%] md:top-[14%] md:left-[75%]">
-            <img src={petImages[6].url} alt={petImages[6].alt} className={`${petImages[6].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
-          </FloatingElement>
-          <FloatingElement depth={5} className="top-[60%] left-[70%] md:top-[55%] md:left-[72%]">
-            <img src={petImages[7].url} alt={petImages[7].alt} className={`${petImages[7].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
-          </FloatingElement>
-          <FloatingElement depth={3} className="top-[82%] left-[50%] md:top-[85%] md:left-[52%]">
-            <img src={petImages[8].url} alt={petImages[8].alt} className={`${petImages[8].cls} object-cover hover:scale-105 duration-200 cursor-pointer transition-transform rounded-xl`} />
-          </FloatingElement>
-        </Floating>
-
-        <div className="relative z-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col items-center text-center pointer-events-auto">
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.2, ease: 'easeOut', delay: 0.3 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/60 text-sm mb-6"
-          >
-            <span className="w-2 h-2 rounded-full bg-teal animate-pulse-soft" />
-            Now accepting new pet listings
-          </motion.div>
+        {/* Giant Headline */}
+        <div className="flex-1 flex flex-col items-center justify-center px-8 md:px-16 pt-10 pb-0 text-center max-w-7xl mx-auto w-full">
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl text-white leading-tight tracking-tight flex flex-col items-center"
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.2, ease: 'easeOut', delay: 0.3 }}
+            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="font-display font-black text-display-xl text-[#0D0D0D] leading-[0.88] tracking-[-0.04em] mb-8"
           >
-            <span>Find Your Perfect</span>
-            <span className="inline-flex items-center gap-3 flex-wrap justify-center">
-              <span className="text-gradient-teal">Companion</span>
-              <TextRotate
-                texts={[
-                  '🐕 woof',
-                  '🐈 meow',
-                  '🐰 hop',
-                  '🐦 chirp',
-                  '🐹 squeak',
-                  '❤️ love',
-                  '🏡 home',
-                  '✨ magic',
-                ]}
-                mainClassName="overflow-hidden text-coral py-0 pb-2 md:pb-4 rounded-xl"
-                staggerDuration={0.03}
-                staggerFrom="last"
-                rotationInterval={2500}
-                transition={{ type: 'spring', damping: 30, stiffness: 400 }}
-              />
-            </span>
+            Every Pet<br />
+            <em className="not-italic text-coral">Deserves</em><br />
+            A Home
           </motion.h1>
+
           <motion.p
-            className="mt-6 text-2xl text-white/50 font-light tracking-wider"
-            animate={{ opacity: 1, y: 0 }}
             initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.2, ease: 'easeOut', delay: 0.5 }}
-          >
-            Swipe. Match. Adopt.
-          </motion.p>
-          <motion.p
-            className="mt-2 text-lg text-white/30 max-w-lg"
             animate={{ opacity: 1, y: 0 }}
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.2, ease: 'easeOut', delay: 0.5 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-xl text-[#8c7e74] max-w-md leading-relaxed mb-10"
           >
-            Connect with pet lovers. Change a life. Every pet deserves a loving home.
+            Connect with shelters across Morocco. Find your perfect companion and give them the life they deserve.
           </motion.p>
+
           <motion.div
-            className="mt-10 flex flex-wrap gap-4 justify-center"
-            animate={{ opacity: 1, y: 0 }}
             initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.2, ease: 'easeOut', delay: 0.7 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="flex items-center gap-4 flex-wrap justify-center mb-20"
           >
-            <Link to="/swipe"><Button variant="primary" className="text-base px-8 py-4">Start Swiping 🐾</Button></Link>
-            <Link to="/client/register"><Button variant="outline-white" className="text-base px-8 py-4">List a Pet</Button></Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white/80 backdrop-blur-xl border border-white/30 rounded-3xl p-10 shadow-glass grid grid-cols-3 gap-8"
-        >
-          <CounterAnimation end={stats.total} suffix="+" label="Pets Available" color="text-coral" />
-          <CounterAnimation end={stats.shelters} suffix="" label="Partner Shelters" color="text-teal" />
-          <CounterAnimation end={380} suffix="+" label="Happy Families" color="text-coral" />
-        </motion.div>
-      </section>
-
-      {/* About Us */}
-      <section className="py-28" style={{ background: 'linear-gradient(135deg, #0F0C29, #302B63, #24243e)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="grid lg:grid-cols-2 gap-16 items-center"
-        >
-          <div className="grid grid-cols-2 gap-4">
-            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="rounded-3xl overflow-hidden h-64">
-              <img src="/images/family.jpg" alt="Happy family with adopted dog" className="w-full h-full object-cover" />
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.15 }} className="rounded-3xl overflow-hidden h-64 mt-8">
-              <img src="/images/kid.jpg" alt="Kid with adopted cat" className="w-full h-full object-cover" />
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="rounded-3xl overflow-hidden h-48">
-              <img src="/images/volunteer.jpg" alt="Volunteer at shelter" className="w-full h-full object-cover" />
-            </motion.div>
-            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.45 }} className="rounded-3xl overflow-hidden h-48 mt-4">
-              <img src="/images/person2.jpg" alt="Happy cat adoption" className="w-full h-full object-cover" />
-            </motion.div>
-          </div>
-          <div>
-            <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-coral font-semibold text-sm uppercase tracking-widest">Our Story</motion.span>
-            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="text-4xl md:text-5xl font-bold text-white mt-3 leading-tight">
-              Every Pet Deserves a <span className="text-coral">Loving Home</span>
-            </motion.h2>
-            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="text-white/60 mt-6 leading-relaxed text-lg">
-              PawFinds was born with a simple mission: connect every homeless pet with a loving family. 
-              We saw too many stray animals on the streets and too many empty food bowls — so we built a platform 
-              that makes adoption as easy as a swipe.
-            </motion.p>
-            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="text-white/40 mt-4 leading-relaxed">
-              Using technology to match pets with people. Find your perfect companion from the comfort of your 
-              home — because finding a best friend should feel magical, not complicated.
-            </motion.p>
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="flex items-center gap-6 mt-8">
-              <div className="flex -space-x-3">
-                <img src="/images/person1.jpg" className="w-12 h-12 rounded-full border-2 border-white object-cover" />
-                <img src="/images/person2.jpg" className="w-12 h-12 rounded-full border-2 border-white object-cover" />
-                <img src="/images/person3.jpg" className="w-12 h-12 rounded-full border-2 border-white object-cover" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-white">Trusted by <span className="text-coral">380+</span> families</p>
-                <p className="text-xs text-white/40">and 12 partner shelters</p>
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
-        </div>
-      </section>
-
-      {/* Featured Pets */}
-      <section className="py-28" style={{ background: '#1A1A2E' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-14">
-          <h2 className="section-title">Featured Pets</h2>
-          <p className="section-sub">Meet some of the wonderful pets waiting for their forever home</p>
-        </motion.div>
-
-        <motion.div variants={stagger} initial="initial" whileInView="animate" viewport={{ once: true }} className="grid md:grid-cols-3 gap-8">
-          {pets.length === 0 ? (
-            <p className="col-span-3 text-center text-white/30 py-12">Loading pets...</p>
-          ) : (
-            pets.map((pet) => (
-              <motion.div key={pet.id} variants={fadeUp}>
-                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 transition-all duration-300 hover:bg-white/10">
-                  <div className="h-48 rounded-xl mb-5 flex items-center justify-center overflow-hidden bg-white/5">
-                    {pet.imageUrl ? <img src={pet.imageUrl} alt={pet.name} className="w-full h-full object-cover" /> : <span className="text-6xl">{speciesEmoji[pet.type] || '🐾'}</span>}
-                  </div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-xl font-bold text-white">{pet.name}</h3>
-                    <Badge status={petStatus(pet.status)} />
-                  </div>
-                  <p className="text-white/40 text-sm mb-4">{pet.breed || 'Mixed Breed'}</p>
-                  <Link to="/swipe"><Button variant="teal" className="w-full text-sm">Meet Me</Button></Link>
-                </div>
-              </motion.div>
-            ))
-          )}
-        </motion.div>
-        <div className="text-center mt-10"><Link to="/pets"><Button variant="primary" className="px-10">View All Pets &rarr;</Button></Link></div>
-        </div>
-      </section>
-
-      {/* Find Us — Geolocation */}
-      <section className="py-28" style={{ background: '#1A1A2E' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <h2 className="section-title">Find Us</h2>
-            <p className="section-sub">Visit our partner shelters and clinics near you</p>
+            <button onClick={() => navigate('/pets')} className="btn-dark text-base">
+              Find a Pet
+            </button>
+            <button onClick={() => navigate('/shelters')} className="btn-outline text-base">
+              Partner Shelters
+            </button>
           </motion.div>
 
-          {locations.companies.length > 0 && (
-            <div className="mb-12">
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <span>🏪</span> Partner Shelters
-              </h3>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {locations.companies.map((c, i) => (
-                  <motion.div key={c.companyName + i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                    className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
-                    <h4 className="font-bold text-white mb-1">{c.companyName}</h4>
-                    <p className="text-sm text-white/50 mb-3">{c.location}{c.phone ? ` — ${c.phone}` : ''}</p>
-                    {c.googleMapsUrl && (
-                      <a href={c.googleMapsUrl} target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs text-teal hover:text-teal-light transition-colors">
-                        View on Google Maps &rarr;
-                      </a>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
+          {/* Pet cards horizontal scroll */}
+          <div className="w-full overflow-x-auto no-scrollbar -mx-8">
+            <div className="flex gap-4 px-8 pb-10" style={{ width: 'max-content' }}>
+              {pets.map((pet, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + i * 0.08, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  onClick={() => navigate('/pets')}
+                  className="w-44 bg-white rounded-2xl p-5 border border-[#E8E0D8] flex-shrink-0 cursor-pointer hover:-translate-y-2 hover:shadow-card-hover transition-all duration-300"
+                >
+                  <div className="text-4xl mb-3">{pet.emoji}</div>
+                  <p className="font-bold text-[#0D0D0D] text-sm">{pet.name}</p>
+                  <p className="text-[#8c7e74] text-xs mt-0.5">{pet.breed}</p>
+                  <p className="text-xs text-[#b8aaa0] mt-3">📍 {pet.location}</p>
+                </motion.div>
+              ))}
             </div>
-          )}
-
-          {locations.vets.length > 0 && (
-            <div>
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <span>🏥</span> Veterinary Clinics
-              </h3>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {locations.vets.map((v, i) => (
-                  <motion.div key={v.clinicName + i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                    className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
-                    <h4 className="font-bold text-white mb-1">{v.clinicName}</h4>
-                    <p className="text-sm text-white/50 mb-3">{v.location}{v.phone ? ` — ${v.phone}` : ''}</p>
-                    {v.googleMapsUrl && (
-                      <a href={v.googleMapsUrl} target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs text-teal hover:text-teal-light transition-colors">
-                        View on Google Maps &rarr;
-                      </a>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {locations.companies.length === 0 && locations.vets.length === 0 && (
-            <p className="text-center text-white/30">No locations listed yet. Check back soon!</p>
-          )}
-        </div>
-      </section>
-
-      {/* Success Stories */}
-      <section className="py-28" style={{ background: '#24243e' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <h2 className="section-title">Happy Tails</h2>
-            <p className="section-sub">Real stories from real families who found their perfect match</p>
-          </motion.div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {people.map((person, i) => (
-              <motion.div
-                key={person.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
-                className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center"
-              >
-                <div className="w-24 h-24 mx-auto rounded-full overflow-hidden mb-5 ring-2 ring-coral/30">
-                  <img src={person.img} alt={person.name} className="w-full h-full object-cover" />
-                </div>
-                <p className="text-white/70 text-sm leading-relaxed italic mb-4">"{person.quote}"</p>
-                <p className="text-coral font-semibold text-sm">{person.name}</p>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-28" style={{ background: '#1A1A2E' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-16">
-            <h2 className="section-title">How It Works</h2>
-            <p className="section-sub">Three simple steps to change a life</p>
-          </motion.div>
-          <div className="grid md:grid-cols-3 gap-10">
+      {/* ─── MARQUEE ─── */}
+      <div className="bg-coral py-4 overflow-hidden border-y border-coral-dark">
+        <div className="flex animate-marquee whitespace-nowrap">
+          {[...marqueeItems, ...marqueeItems].map((item, i) => (
+            <span key={i} className="text-white font-bold text-sm tracking-widest uppercase mx-8">
+              {item} <span className="text-white/40 mx-4">✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ─── STATS ─── */}
+      <section className="bg-[#0D0D0D] py-24 px-8">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={i}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              custom={i}
+              className="px-8 py-10 text-center"
+            >
+              <div className="font-display text-[64px] leading-none tracking-tight text-white">
+                <CounterAnimation value={stat.value} />{stat.suffix}
+              </div>
+              <p className="text-white/40 text-xs tracking-widest uppercase font-semibold mt-2">{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── HOW IT WORKS ─── */}
+      <section className="bg-[#FAF7F2] py-24 px-8">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16 items-start">
+          {/* Left sticky label */}
+          <div className="md:w-5/12 md:sticky md:top-28">
+            <span className="tag tag-dark mb-6">Process</span>
+            <h2 className="font-display font-black text-display-md text-[#0D0D0D] mt-4 leading-[0.92]">
+              How it<br /><em className="not-italic text-coral">works</em>
+            </h2>
+            <p className="text-[#8c7e74] mt-6 text-lg leading-relaxed max-w-xs">
+              Three simple steps between you and your new best friend.
+            </p>
+            <button onClick={() => navigate('/pets')} className="btn-dark mt-8">
+              Start Browsing
+            </button>
+          </div>
+          {/* Right steps */}
+          <div className="md:w-7/12 divide-y divide-[#E8E0D8]">
             {steps.map((step, i) => (
               <motion.div
-                key={step.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                key={i}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-                className="text-center"
+                custom={i}
+                className="flex items-start gap-8 py-10 group"
               >
-                <div className={`w-20 h-20 mx-auto bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center text-3xl mb-5 shadow-lg`}>{step.icon}</div>
-                <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
-                <p className="text-white/40 text-sm max-w-xs mx-auto">{step.desc}</p>
+                <span className="font-display font-black text-[72px] leading-none text-[#E8E0D8] group-hover:text-coral transition-colors duration-300 w-20 flex-shrink-0 text-right">
+                  {step.number}
+                </span>
+                <div className="pt-2">
+                  <h3 className="text-2xl font-bold text-[#0D0D0D] mb-2">{step.title}</h3>
+                  <p className="text-[#8c7e74] leading-relaxed">{step.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative py-28 overflow-hidden">
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #e8634a, #1a8a7a)' }} />
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1), transparent 60%)' }} />
-        <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="relative z-10 max-w-3xl mx-auto text-center px-4">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Ready to Find Your Companion?</h2>
-          <p className="text-white/70 text-lg mb-10 max-w-lg mx-auto">
-            Join PawFinds today and start your journey to finding a loving companion.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/client/register"><Button variant="outline-white" className="text-base px-10 py-4">Get Started Free</Button></Link>
-            <Link to="/pets"><Button variant="primary" className="text-base px-10 py-4 !bg-white !text-coral hover:!bg-gray-100">Browse Pets</Button></Link>
+      {/* ─── FEATURED PETS BENTO ─── */}
+      <section className="bg-white py-24 px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <span className="tag tag-coral mb-4">Available Now</span>
+              <h2 className="font-display font-black text-display-md text-[#0D0D0D] mt-4 leading-[0.92]">
+                Meet your<br /><em className="not-italic text-teal">new family</em>
+              </h2>
+            </div>
+            <button onClick={() => navigate('/pets')} className="btn-outline hidden md:flex">
+              View All Pets
+            </button>
           </div>
-        </motion.div>
+
+          {/* Bento grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {/* Large card */}
+            <motion.div
+              variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+              onClick={() => navigate('/pets')}
+              className="col-span-2 md:col-span-1 md:row-span-2 bg-[#FAF7F2] rounded-3xl p-8 border border-[#E8E0D8] cursor-pointer hover:border-coral/30 hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between min-h-[280px]"
+            >
+              <div className="text-7xl">{pets[0].emoji}</div>
+              <div>
+                <span className="tag tag-teal mb-3">Available</span>
+                <h3 className="text-2xl font-bold text-[#0D0D0D]">{pets[0].name}</h3>
+                <p className="text-[#8c7e74] mt-1">{pets[0].breed} · {pets[0].age}</p>
+                <p className="text-xs text-[#b8aaa0] mt-2">📍 {pets[0].location}</p>
+              </div>
+            </motion.div>
+
+            {/* Regular cards */}
+            {pets.slice(1, 5).map((pet, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i + 1}
+                onClick={() => navigate('/pets')}
+                className="bg-[#FAF7F2] rounded-3xl p-6 border border-[#E8E0D8] cursor-pointer hover:border-coral/30 hover:shadow-card-hover transition-all duration-300"
+              >
+                <div className="text-4xl mb-4">{pet.emoji}</div>
+                <h3 className="font-bold text-[#0D0D0D]">{pet.name}</h3>
+                <p className="text-[#8c7e74] text-sm mt-0.5">{pet.breed}</p>
+                <p className="text-xs text-[#b8aaa0] mt-3">📍 {pet.location}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <button onClick={() => navigate('/pets')} className="btn-outline w-full mt-6 md:hidden">
+            View All Pets
+          </button>
+        </div>
+      </section>
+
+      {/* ─── TESTIMONIALS ─── */}
+      <section className="bg-[#FAF7F2] py-24 px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="tag tag-outline mb-4">Stories</span>
+            <h2 className="font-display font-black text-display-md text-[#0D0D0D] mt-4 leading-[0.92]">
+              Happy families,<br /><em className="not-italic text-coral">real stories</em>
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-5">
+            {testimonials.map((t, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
+                className={`rounded-3xl p-8 border ${
+                  i === 1
+                    ? 'bg-[#0D0D0D] border-[#0D0D0D]'
+                    : 'bg-white border-[#E8E0D8]'
+                }`}
+              >
+                <p className={`font-serif text-xl leading-relaxed mb-8 ${i === 1 ? 'text-white/80' : 'text-[#2A2A2A]'}`}>
+                  "{t.quote}"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${i === 1 ? 'bg-white/15 text-white' : 'bg-coral text-white'}`}>
+                    {t.name[0]}
+                  </div>
+                  <div>
+                    <p className={`font-semibold text-sm ${i === 1 ? 'text-white' : 'text-[#0D0D0D]'}`}>{t.name}</p>
+                    <p className={`text-xs ${i === 1 ? 'text-white/40' : 'text-[#8c7e74]'}`}>{t.role} · {t.location}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SHELTER PARTNER STRIP ─── */}
+      <section className="bg-[#0D0D0D] py-20 px-8">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
+          <div>
+            <span className="tag tag-coral mb-4">For Shelters</span>
+            <h2 className="font-display font-black text-display-sm text-white mt-4 leading-tight">
+              Are you a shelter<br />or rescue org?
+            </h2>
+            <p className="text-white/50 mt-4 text-lg max-w-sm leading-relaxed">
+              List your animals on Nino and reach thousands of families looking to adopt across Morocco.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 flex-shrink-0">
+            <button onClick={() => navigate('/register')} className="btn-coral text-base px-10">
+              Partner With Us
+            </button>
+            <button onClick={() => navigate('/shelters')} className="btn-outline-white text-base px-10">
+              View All Shelters
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FINAL CTA ─── */}
+      <section className="bg-coral py-32 px-8 overflow-hidden relative">
+        {/* Big decorative text behind */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <span className="font-display font-black text-[20vw] text-white/10 whitespace-nowrap leading-none">
+            Nino
+          </span>
+        </div>
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <motion.h2
+            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
+            className="font-display font-black text-display-lg text-white leading-[0.88]"
+          >
+            Ready to find<br />your companion?
+          </motion.h2>
+          <motion.p
+            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
+            className="text-white/70 text-xl max-w-md mx-auto mt-8 mb-12 leading-relaxed"
+          >
+            Thousands of pets across Morocco are waiting for someone exactly like you.
+          </motion.p>
+          <motion.div
+            variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2}
+            className="flex items-center gap-4 justify-center flex-wrap"
+          >
+            <button onClick={() => navigate('/pets')} className="btn-white text-base px-10">
+              Browse Pets
+            </button>
+            <button onClick={() => navigate('/register')} className="btn-outline-white text-base px-10">
+              Create Account
+            </button>
+          </motion.div>
+        </div>
       </section>
 
       <Footer />
