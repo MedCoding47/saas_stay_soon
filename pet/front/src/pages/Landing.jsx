@@ -52,8 +52,17 @@ export default function Landing() {
 
       {/* ─── HERO ─── */}
       <section className="relative min-h-screen bg-[#FAF7F2] flex flex-col pt-16 overflow-hidden">
-        {/* Eyebrow */}
+        {/* Logo */}
         <div className="flex items-center justify-between px-8 md:px-16 pt-12 pb-0 max-w-7xl mx-auto w-full">
+          <img src="/logo.png" alt="Nino" className="h-8 w-auto" />
+          <div className="hidden md:flex items-center gap-2 text-sm text-[#8c7e74]">
+            <span className="w-2 h-2 rounded-full bg-teal animate-pulse inline-block" />
+            <span>{t('landing.hero.available')}</span>
+          </div>
+        </div>
+
+        {/* Eyebrow */}
+        <div className="flex items-center justify-between px-8 md:px-16 pt-6 pb-0 max-w-7xl mx-auto w-full">
           <span className="tag tag-coral">🐾 {t('landing.hero.badge')}</span>
           <div className="hidden md:flex items-center gap-2 text-sm text-[#8c7e74]">
             <span className="w-2 h-2 rounded-full bg-teal animate-pulse inline-block" />

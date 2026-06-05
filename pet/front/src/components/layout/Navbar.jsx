@@ -44,8 +44,8 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="font-display font-black text-xl text-[#0D0D0D] flex-shrink-0">
-          Nino
+        <Link to="/" className="flex-shrink-0">
+          <img src="/logo.png" alt="Nino" className="h-8 w-auto" />
         </Link>
 
         <button className="lg:hidden text-xl text-[#8c7e74] hover:text-[#0D0D0D]" onClick={() => setMenuOpen(!menuOpen)}>

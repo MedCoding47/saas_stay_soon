@@ -40,7 +40,7 @@ export default function RoleSelector() {
           className="w-full max-w-4xl"
         >
           <div className="text-center mb-12">
-            <button onClick={() => navigate('/')} className="font-display font-black text-3xl text-[#0D0D0D] mb-4 inline-block">Nino</button>
+            <button onClick={() => navigate('/')} className="mb-4 inline-block"><img src="/logo.png" alt="Nino" className="h-10 w-auto mx-auto" /></button>
             <h1 className="font-display font-black text-[56px] leading-tight text-[#0D0D0D] tracking-tight">
               {t('auth.roleSelector.title')}
             </h1>

@@ -6,9 +6,12 @@ export default function Footer() {
   return (
     <footer className="bg-[#0D0D0D] px-8 md:px-16 py-20">
       <div className="max-w-6xl mx-auto">
-        <h2 className="font-display font-black text-display-lg text-white leading-none">
-          Nino
-        </h2>
+        <div className="flex items-center gap-4">
+          <img src="/logo.png" alt="Nino" className="h-10 w-auto brightness-0 invert" />
+          <h2 className="font-display font-black text-display-lg text-white leading-none">
+            Nino
+          </h2>
+        </div>
         <p className="text-white/40 text-lg mt-4 max-w-md">
           {t('footer.tagline')}
         </p>

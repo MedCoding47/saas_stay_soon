@@ -29,7 +29,7 @@ export default function ClientLogin() {
         {/* LEFT - Form */}
         <div className="w-full md:w-1/2 bg-[#FAF7F2] flex flex-col justify-center px-8 md:px-16 py-12 min-h-screen">
           <div className="flex items-center justify-between mb-16">
-            <button onClick={() => navigate('/')} className="font-display font-black text-2xl text-[#0D0D0D]">Nino</button>
+            <button onClick={() => navigate('/')}><img src="/logo.png" alt="Nino" className="h-8 w-auto" /></button>
             <p className="text-sm text-[#8c7e74]">
               {t('auth.login.noAccount')}{' '}
               <button onClick={() => navigate('/client/register')} className="text-coral font-semibold hover:underline">{t('auth.login.signUp')}</button>
