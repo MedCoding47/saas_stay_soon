@@ -1,28 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import gsap from 'gsap';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
-import Input from '../../components/ui/Input';
-import Button from '../../components/ui/Button';
 import PageTransition from '../../components/animations/PageTransition';
 
 export default function AdminLogin() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [roleTab, setRoleTab] = useState('admin');
   const { login, loading, error } = useAuth();
   const navigate = useNavigate();
-  const floatRef = useRef(null);
-
-  useEffect(() => {
-    if (!floatRef.current) return;
-    const tl = gsap.timeline({ repeat: -1, yoyo: true });
-    tl.to(floatRef.current.children, {
-      y: -15, rotation: 8, duration: 2, stagger: 0.3, ease: 'power1.inOut',
-    });
-    return () => tl.kill();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,77 +26,75 @@ export default function AdminLogin() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen flex">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="hidden lg:flex w-1/2 items-center justify-center p-12 relative overflow-hidden"
-          style={{ background: 'var(--sh-coral-light)' }}
-        >
-          <div className="relative text-center max-w-sm" ref={floatRef}>
-            <div className="text-8xl mb-6 flex justify-center gap-4">
-              <span className="inline-block">🐕</span>
-              <span className="inline-block">🐈</span>
-              <span className="inline-block">🐰</span>
-            </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">Welcome Back</h1>
-            <p className="text-gray-600 text-lg">Sign in to manage your shelter dashboard</p>
+      <div className="flex min-h-screen">
+        <div className="w-full md:w-1/2 bg-[#FAF7F2] flex flex-col justify-center px-8 md:px-16 py-12 min-h-screen">
+          <div className="flex items-center justify-between mb-16">
+            <button onClick={() => navigate('/')}><img src="/logo.png" alt="Nino" className="h-8 w-auto" /></button>
+            <button onClick={() => navigate('/login')} className="text-sm text-[#8c7e74]">
+              <span className="text-[#8c7e74]">{t('auth.login.roleLabel')}</span>
+            </button>
           </div>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="w-full lg:w-1/2 flex items-center justify-center p-8"
-        >
-          <div className="w-full max-w-sm">
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-1">Sign In</h2>
-              <p className="text-gray-500 text-sm">Enter your credentials to continue</p>
+
+          <div className="max-w-sm">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="font-display font-black text-[48px] leading-tight text-[#0D0D0D] tracking-tight"
+            >
+              {t('auth.admin.title')}
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-[#8c7e74] text-lg mt-2 mb-8"
+            >
+              {t('auth.admin.subtitle')}
+            </motion.p>
+
+            {/* Role tabs */}
+            <div className="flex bg-[#E8E0D8] rounded-2xl p-1 mb-8 max-w-xs">
+              <button onClick={() => setRoleTab('admin')} className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all ${roleTab === 'admin' ? 'bg-white text-[#0D0D0D] shadow-sm' : 'text-[#8c7e74]'}`}>{t('auth.admin.tabAdmin')}</button>
+              <button onClick={() => setRoleTab('client')} className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all ${roleTab === 'client' ? 'bg-white text-[#0D0D0D] shadow-sm' : 'text-[#8c7e74]'}`}>{t('auth.admin.tabClient')}</button>
             </div>
 
-            <div className="flex bg-gray-100 rounded-xl p-1 mb-8">
-              <button
-                onClick={() => setRoleTab('admin')}
-                className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
-                  roleTab === 'admin' ? 'bg-white text-coral shadow-sm' : 'text-gray-500'
-                }`}
-              >
-                Admin
+            <motion.form
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              onSubmit={handleSubmit}
+            >
+              <div className="mb-5">
+                <label className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-2 block">{t('common.email')}</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t('common.emailPlaceholder')} required className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+              </div>
+              <div className="mb-5">
+                <label className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-2 block">{t('common.password')}</label>
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t('common.passwordPlaceholder')} required className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+              </div>
+              {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-lg border border-red-200">{error}</p>}
+              <button type="submit" disabled={loading} className="w-full btn-dark py-4 text-base rounded-2xl mt-6">
+                {loading ? t('common.loading') : t('common.signIn')}
               </button>
-              <button
-                onClick={() => setRoleTab('client')}
-                className={`flex-1 py-2.5 text-sm font-medium rounded-lg transition-all ${
-                  roleTab === 'client' ? 'bg-white text-coral shadow-sm' : 'text-gray-500'
-                }`}
-              >
-                Client
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-              <Input
-                label="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@super-hayawan.com"
-                required
-              />
-              <Input
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-              />
-              {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-lg">{error}</p>}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Signing in...' : 'Sign In'}
-              </Button>
-            </form>
+            </motion.form>
           </div>
-        </motion.div>
+        </div>
+
+        <div className="hidden md:flex w-1/2 bg-[#0D0D0D] min-h-screen flex-col items-center justify-center p-16 relative overflow-hidden">
+          <img src="/src/assets/logo.png" alt="Nino" className="h-16 w-auto object-contain brightness-0 invert mx-auto mb-8" />
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-10 text-center relative z-10 max-w-sm">
+            <div className="text-7xl mb-4">⚙️</div>
+            <h3 className="font-display font-bold text-white text-3xl">{t('auth.admin.rightTitle')}</h3>
+            <p className="text-white/50 text-base mt-2 leading-relaxed">
+              {t('auth.admin.rightDesc')}
+            </p>
+          </div>
+          <div className="flex gap-4 absolute bottom-10">
+            <span className="tag px-4 py-2 rounded-full border border-white/20 text-white/70 text-xs font-semibold">{t('common.petsCount')}</span>
+            <span className="tag px-4 py-2 rounded-full border border-white/20 text-white/70 text-xs font-semibold">{t('common.sheltersCount')}</span>
+            <span className="tag px-4 py-2 rounded-full border border-white/20 text-white/70 text-xs font-semibold">{t('common.successRate')}</span>
+          </div>
+        </div>
       </div>
     </PageTransition>
   );

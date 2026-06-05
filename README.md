@@ -1,104 +1,120 @@
-# PawFinds — Pet Adoption SaaS
+# Nino — Pet Adoption SaaS
 
-## Latest Update: Vet Dashboard Redesign + PetCareRecommendations
+A multi-tenant pet adoption platform rebuilt with ASP.NET Core (.NET 8) + React.
 
-### What's new (commit `735fa16` → now)
+---
 
-#### Backend
-- **`PetCareRecommendation` entity** — vets can add product care tips with target species/age range
-- **Public vet endpoint enhanced** — returns full doctor info: name, email, profile picture, lat/lng, formation, **2 latest advices**, all recommendations
-- **Vet profile response enhanced** — now includes `UserName`, `UserEmail`, `ProfilePictureUrl` from the User entity
+## How to Pull & Run
 
-#### Frontend
-- **Bento-grid vet dashboard** — animated 3-column grid layout (avatar center, info around)
-- **Doctors public page** (`/doctors`) — lists all vets with embedded Google Maps, advices, recommendations
-- **Navbar** — "Adopted" replaced with "Doctors" link
-- **Advice tab** — fully working (add modal + delete button)
-- **Recommendations tab** — vets can add/delete product care tips
-- **Bookings tab** — Confirm/Cancel/Complete buttons
-- **shadcn UI components** — Card, Badge, Avatar, BentoGridShowcase added
+### 1. Prerequisites
 
-### Database Migration Required
+- [Node.js](https://nodejs.org/) v18+
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (local or remote)
 
-This update adds a new table `PetCareRecommendations`. To apply the migration:
+### 2. Clone
 
 ```bash
+git clone https://github.com/MedCoding47/saas_stay_soon.git
+cd saas_stay_soon
+```
+
+### 3. Backend — .NET API
+
+```powershell
 cd PawFindsBackend/PawFinds.Api
-dotnet ef database update
+dotnet restore
+dotnet run --urls http://localhost:5000
 ```
 
-The migration file is:
-`PawFindsBackend/PawFinds.Infrastructure/Migrations/20260518152726_AddPetCareRecommendations.cs`
+The API will:
+- Auto-create the database `PawFindsDb` on first run
+- Seed 4 accounts (see Credentials below)
 
-If you are cloning fresh, just run the backend — all migrations apply automatically on startup.
+### 4. Frontend — React App
 
-### How to Reset the Database
-
-Run the SQL script against your `PawFindsDb`:
-
-```sql
--- Run reset_db.sql in SQL Server Management Studio
--- Then restart the backend to re-seed
+```powershell
+cd pet/front
+npm install
+npm run dev
 ```
 
-### Updated Credentials
+Opens at `http://localhost:5173`.
+
+### 5. Login Credentials
 
 | Role | Email | Password |
 |---|---|---|
 | SuperAdmin | `superadmin@pawfinds.com` | `Super@123` |
-| Enterprise | `enterprise@pawfinds.com` | `Temp@9ca6fb5a!` |
+| Enterprise (Shelter) | `enterprise@pawfinds.com` | `Enterprise@123` |
 | Client | `client@pawfinds.com` | `Client@123` |
-| Vet | `vet@pawfinds.com` | `Temp@268a4a5c!` |
+| Vet | `vet@pawfinds.com` | `Vet@123` |
 
-### Run the Project
+---
 
-**Backend** (PowerShell):
-```powershell
-cd PawFindsBackend/PawFinds.Api
-dotnet run --urls http://localhost:5000
-```
+## What's New — Full Redesign (June 2026)
 
-**Frontend** (PowerShell, separate terminal):
-```powershell
-cd pet/front
-npm run dev
-```
+Complete visual overhaul of every page with a consistent editorial design system.
 
-### Project Structure
+| Page | What Changed |
+|---|---|
+| **Landing** | Rebranded PawFinds→Nino, new hero, stats, features, testimonials, shelter section |
+| **Navbar + Footer** | Rebranded, clean dark/light layout |
+| **Login Pages** (all 4) | Split-screen layout — left form (cream), right dark panel with role-specific visuals |
+| **Role Selector** | 3-card grid (Adopter / Shelter / Veterinarian) |
+| **Register** | Split-screen with confirm password validation |
+| **Pet Browser** | Hero banner, inline filter sidebar with custom radios, pet cards, shelter section, donation tiers |
+| **Pet Details** | 72px pet name, health/behavior tables, accessories strip, shelter info + map, similar pets, adoption fee cards |
+| **Client Dashboard** | Tab pills, stat cards grid, data tables, request modals |
+| **Vet Dashboard** | Dark profile card replacing gradient, bento-grid layout, tabbed advice/recommendations/bookings |
+| **Enterprise Dashboard** | Pet CRUD grid, adoption requests table, catalog products, profile editing — all redesigned |
+| **SuperAdmin Dashboard** | Users/Organizations/Settings tabs with data tables, role badges, create-account modal |
+| **Doctors Page** | Hero banner, vet cards with avatar/tags/CTA, embedded map section |
+
+### Design System
+
+- **Background**: `#FAF7F2` (warm cream)
+- **Text**: `#0D0D0D` (near-black), `#8c7e74` (muted)
+- **Accent**: `coral` (#FF6B6B style)
+- **Borders**: `#E8E0D8`
+- **Cards**: white `rounded-3xl` with `border-[#E8E0D8]`, hover lift
+- **Tab pills**: rounded-full, dark active / cream inactive
+- **Typography**: `font-display font-black` for headings, `text-xs font-bold tracking-widest uppercase` for labels
+- **Buttons**: `btn-dark` (filled), `btn-outline` (bordered), `btn-coral`
+- **Tags**: `tag-coral`, `tag-teal`, `tag-outline`, `tag-dark`
+
+---
+
+## Tech Stack
+
+- **Backend**: .NET 8, EF Core, SQL Server, JWT, Clean Architecture
+- **Frontend**: Vite 6, React 18, Tailwind CSS 3, Framer Motion
+- **Architecture**: PawFinds.Api → PawFinds.Application → PawFinds.Domain → PawFinds.Infrastructure
+
+## Project Structure
 
 ```
 PawFindsBackend/
-├── PawFinds.Api/          # Controllers, Contracts
-├── PawFinds.Application/  # Service interfaces, DTOs
-├── PawFinds.Domain/       # Entities, Enums
-└── PawFinds.Infrastructure/ # Services, EF Core, Migrations
+├── PawFinds.Api/              # Controllers, Contracts
+├── PawFinds.Application/      # Service interfaces, DTOs
+├── PawFinds.Domain/           # Entities, Enums
+└── PawFinds.Infrastructure/   # Services, EF Core, Migrations
 
 pet/front/src/
-├── api/                   # Axios client
+├── api/                       # Axios client
 ├── components/
-│   ├── layout/            # Navbar, Footer, AdminSidebar
-│   ├── pets/              # PetCard, FilterBar, etc.
-│   └── ui/                # Button, Card, Badge, Avatar, Modal, BentoGrid, etc.
-├── hooks/                 # useAuth, usePets, etc.
+│   ├── layout/                # Navbar, Footer
+│   ├── pets/                  # PetCard, FilterBar, etc.
+│   └── ui/                    # Button, Card, Badge, Avatar, Modal, BentoGrid, etc.
 ├── pages/
-│   ├── admin/             # SuperAdmin pages
-│   ├── auth/              # Role-based logins
-│   ├── client/            # Client dashboard
-│   ├── doctors/           # Public doctors page (new)
-│   ├── enterprise/        # Enterprise dashboard
-│   ├── pets/              # Pet browser, details
-│   ├── superadmin/        # SuperAdmin management
-│   ├── veterinaire/       # Vet dashboard (redesigned)
-│   └── swipe/             # Swipe mode
-└── components/ui/         # Reusable UI library
-    ├── Badge.jsx          # Hybrid: supports status + shadcn variant
-    ├── Card.jsx           # Card, CardHeader, CardTitle, CardContent, etc.
-    ├── avatar.jsx         # Avatar, AvatarImage, AvatarFallback
-    └── bento-grid.jsx     # BentoGridShowcase animated 3-column grid
+│   ├── admin/                 # Admin login
+│   ├── auth/                  # Role-based logins + RoleSelector
+│   ├── client/                # Client dashboard + register
+│   ├── doctors/               # Public doctors listing
+│   ├── enterprise/            # Enterprise dashboard
+│   ├── pets/                  # Pet browser + details
+│   ├── superadmin/            # SuperAdmin dashboard
+│   ├── veterinaire/           # Vet dashboard
+│   └── swipe/                 # Swipe mode
+└── hooks/                     # useAuth, usePets, etc.
 ```
-
-### Tech Stack
-
-- **Backend**: .NET 8, EF Core, SQL Server, JWT, Clean Architecture
-- **Frontend**: Vite 6, React 18, Tailwind CSS 3, Framer Motion, shadcn-style components
-- **DB**: SQL Server (default instance `.`, database `PawFindsDb`)

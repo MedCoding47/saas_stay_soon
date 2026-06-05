@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
+  const { t, i18n } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -10,7 +12,7 @@ export default function Navbar() {
   const role = localStorage.getItem('sh-role');
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -22,71 +24,89 @@ export default function Navbar() {
     navigate('/');
   };
 
-  const navClass = scrolled
-    ? 'bg-white/80 backdrop-blur-xl border-b border-warm-dark/20 shadow-sm'
-    : 'bg-transparent';
+  const switchLang = (lng) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem('i18nextLng', lng);
+    window.dispatchEvent(new Event('languageChanged'));
+  };
 
-  const textClass = scrolled ? 'text-dark' : 'text-white/80';
-  const textClassHover = scrolled ? 'hover:text-coral' : 'hover:text-white';
+  const currentLang = i18n.language?.startsWith('ar') ? 'ar' : i18n.language?.startsWith('fr') ? 'fr' : 'en';
 
   return (
     <motion.nav
       initial={{ y: -80 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navClass}`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#E8E0D8] shadow-sm'
+          : 'bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#E8E0D8]'
+      }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-xl font-bold">
-          <span className="text-coral">🐾</span>
-          <span className={`${scrolled ? 'text-dark' : 'text-white'} transition-colors`}>Paw</span>
-          <span className="text-coral">Finds</span>
+      <div className="max-w-6xl mx-auto px-8 h-16 flex items-center justify-between">
+        <Link to="/" className="flex-shrink-0">
+          <img src="/src/assets/logo.png" alt="Nino" className="h-12 w-auto object-contain" />
         </Link>
 
-        <button className="lg:hidden text-2xl" onClick={() => setMenuOpen(!menuOpen)} style={{ color: scrolled ? '#1a1a2e' : 'rgba(255,255,255,0.8)' }}>
+        <button className="lg:hidden text-xl text-[#8c7e74] hover:text-[#0D0D0D]" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? '✕' : '☰'}
         </button>
 
-        <div className="hidden lg:flex items-center gap-6 text-sm font-medium">
-          {user?.profilePictureUrl && (
-            <img src={user.profilePictureUrl} alt="" className="w-8 h-8 rounded-full object-cover border-2 border-coral/50" />
-          )}
-          <Link to="/" className={`${textClass} ${textClassHover} transition-colors`}>Home</Link>
-          <Link to="/pets" className={`${textClass} ${textClassHover} transition-colors`}>Browse</Link>
-          <Link to="/doctors" className={`${textClass} ${textClassHover} transition-colors`}>Docteurs</Link>
-          <Link to="/carte" className={`${textClass} ${textClassHover} transition-colors`}>Carte</Link>
+        <div className="hidden lg:flex items-center gap-8 text-sm font-medium">
+          <Link to="/" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.home')}</Link>
+          <Link to="/pets" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.browse')}</Link>
+          <Link to="/doctors" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.doctors')}</Link>
+          <Link to="/carte" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.carte', 'Carte')}</Link>
+          <Link to="/donate" className="text-coral hover:text-coral/80 transition-colors font-bold">{t('navbar.donate')}</Link>
 
           {role === 'SuperAdmin' && (
             <>
-              <Link to="/superadmin/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
-              <Link to="/superadmin/create-account" className={`${textClass} ${textClassHover} transition-colors`}>Create Account</Link>
-              <button onClick={handleLogout} className="btn-primary text-sm px-4 py-2">Logout</button>
+              <Link to="/superadmin/dashboard" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.dashboard')}</Link>
+              <Link to="/superadmin/create-account" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.createAccount')}</Link>
+              <button onClick={handleLogout} className="btn-dark text-sm px-5 py-2">{t('navbar.logout')}</button>
             </>
           )}
           {role === 'Enterprise' && (
             <>
-              <Link to="/enterprise/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
-              <button onClick={handleLogout} className={`btn-outline text-sm px-4 py-2 ${scrolled ? 'border-coral/30 text-coral hover:bg-coral hover:text-white' : ''}`}>Logout</button>
+              <Link to="/enterprise/dashboard" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.dashboard')}</Link>
+              <button onClick={handleLogout} className="btn-dark text-sm px-5 py-2">{t('navbar.logout')}</button>
             </>
           )}
           {role === 'Veterinaire' && (
             <>
-              <Link to="/veterinaire/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
-              <button onClick={handleLogout} className={`btn-outline text-sm px-4 py-2 ${scrolled ? 'border-coral/30 text-coral hover:bg-coral hover:text-white' : ''}`}>Logout</button>
+              <Link to="/veterinaire/dashboard" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.dashboard')}</Link>
+              <button onClick={handleLogout} className="btn-dark text-sm px-5 py-2">{t('navbar.logout')}</button>
             </>
           )}
           {role === 'Client' && (
             <>
-              <Link to="/client/dashboard" className={`${textClass} ${textClassHover} transition-colors`}>Dashboard</Link>
-              <button onClick={handleLogout} className={`btn-outline text-sm px-4 py-2 ${scrolled ? 'border-coral/30 text-coral hover:bg-coral hover:text-white' : ''}`}>Logout</button>
+              <Link to="/client/dashboard" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.dashboard')}</Link>
+              <button onClick={handleLogout} className="btn-dark text-sm px-5 py-2">{t('navbar.logout')}</button>
             </>
           )}
           {!user && (
             <>
-              <Link to="/login" className={`${textClass} ${textClassHover} transition-colors`}>Sign In</Link>
-              <Link to="/login/client" className="btn-primary text-sm px-4 py-2">Get Started</Link>
+              <Link to="/login" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.signIn')}</Link>
+              <Link to="/login/client" className="btn-dark text-sm px-5 py-2">{t('navbar.getStarted')}</Link>
             </>
           )}
+
+          {/* Language Switcher */}
+          <div className="flex items-center gap-1 border-l border-[#E8E0D8] pl-6">
+            {['en', 'fr', 'ar'].map((l) => (
+              <button
+                key={l}
+                onClick={() => switchLang(l)}
+                className={`text-xs font-bold px-2 py-1 rounded-full transition-all ${
+                  currentLang === l
+                    ? 'bg-[#0D0D0D] text-[#FAF7F2]'
+                    : 'text-[#8c7e74] hover:text-[#0D0D0D]'
+                }`}
+              >
+                {l === 'en' ? 'EN' : l === 'fr' ? 'FR' : 'AR'}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -96,33 +116,58 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-warm-dark/20 px-4 py-4 space-y-3 shadow-glass"
+            className="lg:hidden bg-white border-t border-[#E8E0D8] px-8 py-6 space-y-4"
           >
-            <Link to="/" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Home</Link>
-            <Link to="/pets" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Browse</Link>
-            <Link to="/doctors" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Docteurs</Link>
-            <Link to="/carte" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Carte</Link>
+            <Link to="/" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.home')}</Link>
+            <Link to="/pets" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.browse')}</Link>
+            <Link to="/doctors" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.doctors')}</Link>
+            <Link to="/carte" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.carte', 'Carte')}</Link>
+            <Link to="/donate" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-coral hover:text-coral/80 transition-colors">{t('navbar.donate')}</Link>
+
+            <div className="w-full h-px bg-[#E8E0D8]" />
             {role === 'SuperAdmin' && (
               <>
-                <Link to="/superadmin/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>
-                <Link to="/superadmin/create-account" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Create Account</Link>
+                <Link to="/superadmin/dashboard" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.dashboard')}</Link>
+                <Link to="/superadmin/create-account" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.createAccount')}</Link>
               </>
             )}
             {role === 'Enterprise' && (
-              <Link to="/enterprise/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>
+              <Link to="/enterprise/dashboard" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.dashboard')}</Link>
             )}
             {role === 'Veterinaire' && (
-              <Link to="/veterinaire/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>
+              <Link to="/veterinaire/dashboard" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.dashboard')}</Link>
             )}
             {role === 'Client' && (
-              <Link to="/client/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Dashboard</Link>
+              <Link to="/client/dashboard" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.dashboard')}</Link>
             )}
             {!user && (
               <>
-                <Link to="/login" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Sign In</Link>
-                <Link to="/login/client" onClick={() => setMenuOpen(false)} className="block text-dark/70 hover:text-coral">Get Started</Link>
+                <div className="pt-2">
+                  <Link to="/login" onClick={() => setMenuOpen(false)} className="block w-full text-center bg-[#0D0D0D] text-[#FAF7F2] rounded-full py-3 font-semibold hover:bg-[#2A2A2A] transition-colors">{t('navbar.signIn')}</Link>
+                </div>
+                <Link to="/login/client" onClick={() => setMenuOpen(false)} className="block w-full text-center border-2 border-[#0D0D0D] rounded-full py-3 font-semibold text-[#0D0D0D] hover:bg-[#0D0D0D] hover:text-[#FAF7F2] transition-colors">{t('navbar.getStarted')}</Link>
               </>
             )}
+            {user && (
+              <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="block w-full text-center bg-[#0D0D0D] text-[#FAF7F2] rounded-full py-3 font-semibold hover:bg-[#2A2A2A] transition-colors">{t('navbar.logout')}</button>
+            )}
+
+            {/* Mobile Language Switcher */}
+            <div className="flex items-center justify-center gap-2 pt-4 border-t border-[#E8E0D8]">
+              {['en', 'fr', 'ar'].map((l) => (
+                <button
+                  key={l}
+                  onClick={() => { switchLang(l); setMenuOpen(false); }}
+                  className={`text-sm font-bold px-4 py-2 rounded-full transition-all ${
+                    currentLang === l
+                      ? 'bg-[#0D0D0D] text-[#FAF7F2]'
+                      : 'bg-[#FAF7F2] text-[#8c7e74]'
+                  }`}
+                >
+                  {l === 'en' ? 'English' : l === 'fr' ? 'Français' : 'العربية'}
+                </button>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

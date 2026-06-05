@@ -1,96 +1,78 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import PageTransition from '../../components/animations/PageTransition';
 
 const roles = [
   {
+    key: 'client',
+    titleKey: 'auth.roleSelector.client',
+    descriptionKey: 'auth.roleSelector.clientDesc',
+    emoji: '🐾',
+    path: '/login/client',
+  },
+  {
     key: 'organization',
-    title: 'Organization',
-    description: 'For pet adoption agencies and shelters. Sign in with your work account.',
-    icon: (
-      <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-      </svg>
-    ),
+    titleKey: 'auth.roleSelector.enterprise',
+    descriptionKey: 'auth.roleSelector.enterpriseDesc',
+    emoji: '🏢',
     path: '/login/organization',
-    color: 'from-teal-500 to-emerald-600',
   },
   {
     key: 'veterinaire',
-    title: 'Veterinaire',
-    description: 'For veterinary professionals. Sign in with your clinic account.',
-    icon: (
-      <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
-      </svg>
-    ),
+    titleKey: 'auth.roleSelector.vet',
+    descriptionKey: 'auth.roleSelector.vetDesc',
+    emoji: '🩺',
     path: '/login/veterinaire',
-    color: 'from-blue-500 to-indigo-600',
-  },
-  {
-    key: 'client',
-    title: 'Normal User',
-    description: 'For individuals looking to adopt. Sign in or create your personal account.',
-    icon: (
-      <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-      </svg>
-    ),
-    path: '/login/client',
-    color: 'from-coral to-rose-500',
   },
 ];
 
 export default function RoleSelector() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
     <PageTransition>
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'var(--sh-warm)' }}>
+      <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center p-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-4xl"
         >
-          <div className="text-center mb-10">
-            <div className="text-5xl mb-3">🐾</div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Welcome to <span className="text-coral">PawFinds</span>
+          <div className="text-center mb-12">
+            <button onClick={() => navigate('/')} className="mb-4 inline-block"><img src="/logo.png" alt="Nino" className="h-10 w-auto mx-auto" /></button>
+            <h1 className="font-display font-black text-[56px] leading-tight text-[#0D0D0D] tracking-tight">
+              {t('auth.roleSelector.title')}
             </h1>
-            <p className="text-gray-500 mt-2">Choose your account type to continue</p>
+            <p className="text-[#8c7e74] text-lg mt-3">{t('auth.roleSelector.subtitle')}</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-5">
             {roles.map((role, index) => (
               <motion.div
                 key={role.key}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center text-center hover:shadow-xl transition-shadow cursor-pointer"
+                className="bg-white rounded-3xl border border-[#E8E0D8] p-8 flex flex-col items-center text-center hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 cursor-pointer"
                 onClick={() => navigate(role.path)}
               >
-                <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${role.color} flex items-center justify-center text-white mb-5`}>
-                  {role.icon}
-                </div>
-                <h2 className="text-xl font-bold text-gray-900 mb-2">{role.title}</h2>
-                <p className="text-gray-500 text-sm mb-6 flex-1">{role.description}</p>
+                <div className="text-6xl mb-5">{role.emoji}</div>
+                <h2 className="text-xl font-bold text-[#0D0D0D] mb-2">{t(role.titleKey)}</h2>
+                <p className="text-[#8c7e74] text-sm mb-6 flex-1 leading-relaxed">{t(role.descriptionKey)}</p>
                 <button
                   onClick={(e) => { e.stopPropagation(); navigate(role.path); }}
-                  className={`w-full py-2.5 rounded-xl text-white font-medium text-sm bg-gradient-to-r ${role.color} hover:opacity-90 transition-opacity`}
+                  className="btn-dark w-full text-sm"
                 >
-                  {role.key === 'client' ? 'Sign In / Register' : 'Sign In'}
+                  {role.key === 'client' ? t('auth.roleSelector.signInRegister') : t('common.signIn')}
                 </button>
               </motion.div>
             ))}
           </div>
 
           <div className="text-center mt-8">
-            <button
-              onClick={() => navigate('/admin')}
-              className="text-sm text-gray-400 hover:text-coral transition-colors"
-            >
-              Admin Login
+            <button onClick={() => navigate('/admin')} className="text-sm text-[#8c7e74] hover:text-coral transition-colors">
+              {t('auth.roleSelector.adminLogin')}
             </button>
           </div>
         </motion.div>
