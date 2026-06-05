@@ -73,6 +73,12 @@
 
   "auth.roleSelector.title": "Qui êtes-vous ?",
   "auth.roleSelector.subtitle": "Choisissez votre type de compte pour continuer",
+  "auth.roleSelector.client": "Adopteur",
+  "auth.roleSelector.clientDesc": "Pour les particuliers souhaitant adopter. Connectez-vous ou créez votre compte personnel.",
+  "auth.roleSelector.enterprise": "Refuge",
+  "auth.roleSelector.enterpriseDesc": "Pour les agences d'adoption et refuges cherchant une plateforme centralisée.",
+  "auth.roleSelector.vet": "Vétérinaire",
+  "auth.roleSelector.vetDesc": "Pour les professionnels vétérinaires. Connectez-vous avec votre compte clinique.",
   "auth.roleSelector.signInRegister": "Connexion / Inscription",
   "auth.roleSelector.adminLogin": "Connexion Admin",
 

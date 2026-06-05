@@ -73,6 +73,12 @@
 
   "auth.roleSelector.title": "Who are you?",
   "auth.roleSelector.subtitle": "Choose your account type to continue",
+  "auth.roleSelector.client": "Adopter",
+  "auth.roleSelector.clientDesc": "For individuals looking to adopt. Sign in or create your personal account.",
+  "auth.roleSelector.enterprise": "Shelter",
+  "auth.roleSelector.enterpriseDesc": "For pet adoption agencies and shelters seeking a centralized platform.",
+  "auth.roleSelector.vet": "Veterinarian",
+  "auth.roleSelector.vetDesc": "For veterinary professionals. Sign in with your clinic account.",
   "auth.roleSelector.signInRegister": "Sign In / Register",
   "auth.roleSelector.adminLogin": "Admin Login",
 

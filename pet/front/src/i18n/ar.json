@@ -73,6 +73,12 @@
 
   "auth.roleSelector.title": "شكون أنت؟",
   "auth.roleSelector.subtitle": "ختار نوع الحساب باش تكمل",
+  "auth.roleSelector.client": "متبنٍ",
+  "auth.roleSelector.clientDesc": "للأفراد لي كيدوّرو على التبني. سجل الدخول أو أنشئ حسابك الشخصي.",
+  "auth.roleSelector.enterprise": "مأوى",
+  "auth.roleSelector.enterpriseDesc": "لوكالات التبني والملاجئ لي كيدوّرو على منصة مركزية.",
+  "auth.roleSelector.vet": "طبيب بيطري",
+  "auth.roleSelector.vetDesc": "للمهنيين البيطريين. سجل الدخول بحساب العيادة ديالك.",
   "auth.roleSelector.signInRegister": "تسجيل الدخول / التسجيل",
   "auth.roleSelector.adminLogin": "دخول المشرف",
 
