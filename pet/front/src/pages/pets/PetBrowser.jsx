@@ -8,6 +8,7 @@ import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import PageTransition from '../../components/animations/PageTransition';
 import Pagination from '../../components/ui/Pagination';
+import { useFavorites } from '../../hooks/useFavorites';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const PAGE_SIZE = 9;
@@ -68,6 +69,7 @@ export default function PetBrowser() {
   const [page, setPage] = useState(1);
   const [selectedShelters, setSelectedShelters] = useState([]);
   const navigate = useNavigate();
+  const { isFavorited, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     let cancelled = false;
@@ -271,7 +273,9 @@ export default function PetBrowser() {
                     >
                       <div className="bg-[#FAF7F2] h-48 flex items-center justify-center text-7xl relative">
                         {speciesEmoji[pet.type] || '🐾'}
-                        <button onClick={(e) => { e.stopPropagation(); }} className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white border border-[#E8E0D8] flex items-center justify-center text-sm hover:border-coral hover:text-coral transition-colors">♡</button>
+                        <button onClick={(e) => { e.stopPropagation(); toggleFavorite(pet); }} className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white border flex items-center justify-center text-sm transition-all ${
+                          isFavorited(pet.id) ? 'border-coral bg-coral text-white' : 'border-[#E8E0D8] hover:border-coral hover:text-coral'
+                        }`}>{isFavorited(pet.id) ? '♥' : '♡'}</button>
                       </div>
                       <div className="p-5">
                         <h3 className="font-bold text-lg text-[#0D0D0D]">{pet.name}</h3>
@@ -325,7 +329,7 @@ export default function PetBrowser() {
                 <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center">
                   <p className="font-display font-black text-5xl text-white">{d.amt}</p>
                   <p className="text-white/30 text-xs mt-1">{t('common.taxDeductible')}</p>
-                  <button className="btn-outline-white w-full mt-6 text-sm">{t('pets.browser.donate')}</button>
+                  <button onClick={() => navigate('/donate')} className="btn-outline-white w-full mt-6 text-sm">{t('pets.browser.donate')}</button>
                 </motion.div>
               ))}
             </div>

@@ -56,6 +56,7 @@ export default function Navbar() {
           <Link to="/" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.home')}</Link>
           <Link to="/pets" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.browse')}</Link>
           <Link to="/doctors" className="text-[#8c7e74] hover:text-[#0D0D0D] transition-colors">{t('navbar.doctors')}</Link>
+          <Link to="/donate" className="text-coral hover:text-coral/80 transition-colors font-bold">{t('navbar.donate')}</Link>
 
           {role === 'SuperAdmin' && (
             <>
@@ -119,6 +120,7 @@ export default function Navbar() {
             <Link to="/" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.home')}</Link>
             <Link to="/pets" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.browse')}</Link>
             <Link to="/doctors" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-[#0D0D0D] hover:text-coral transition-colors">{t('navbar.doctors')}</Link>
+            <Link to="/donate" onClick={() => setMenuOpen(false)} className="block text-lg font-medium text-coral hover:text-coral/80 transition-colors">{t('navbar.donate')}</Link>
 
             <div className="w-full h-px bg-[#E8E0D8]" />
 

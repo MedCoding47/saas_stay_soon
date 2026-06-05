@@ -25,6 +25,7 @@ import SuperAdminDashboard from './pages/superadmin/Dashboard';
 import SuperAdminUserDetails from './pages/superadmin/UserDetails';
 import SuperAdminCreateAccount from './pages/superadmin/CreateAccount';
 import SuperAdminOrganizationDetail from './pages/superadmin/OrganizationDetail';
+import Donation from './pages/donate/Donation';
 
 function ProtectedRoute({ children, roles }) {
   const user = JSON.parse(localStorage.getItem('sh-user') || 'null');
@@ -46,6 +47,7 @@ function AnimatedRoutes() {
         <Route path="/pets/adopted" element={<AdoptedPets />} />
         <Route path="/swipe" element={<SwipeMode />} />
         <Route path="/doctors" element={<Doctors />} />
+        <Route path="/donate" element={<Donation />} />
         <Route path="/login" element={<RoleSelector />} />
         <Route path="/login/organization" element={<OrgLogin />} />
         <Route path="/login/veterinaire" element={<VetLogin />} />

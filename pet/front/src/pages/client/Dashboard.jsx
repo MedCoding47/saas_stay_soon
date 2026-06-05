@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import api from '../../api/client';
 import { useAuth } from '../../hooks/useAuth';
+import { useFavorites } from '../../hooks/useFavorites';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import Badge from '../../components/ui/Badge';
@@ -20,8 +21,8 @@ export default function ClientDashboard() {
   const { t } = useTranslation();
   const { uploadImage, updateProfile } = useAuth();
   const [tab, setTab] = useState('overview');
+  const { favorites, isFavorited, toggleFavorite, removeFavorite } = useFavorites();
   const [requests, setRequests] = useState([]);
-  const [favorites, setFavorites] = useState([]);
   const [adoptionCount, setAdoptionCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -92,15 +93,13 @@ export default function ClientDashboard() {
     let cancelled = false;
     const load = async () => {
       try {
-        const [reqRes, favRes, countRes, meRes] = await Promise.all([
+        const [reqRes, countRes, meRes] = await Promise.all([
           api.get('/adoptions/mine'),
-          api.get('/client/favorites'),
           api.get('/client/adoption-count'),
           api.get('/auth/me'),
         ]);
         if (cancelled) return;
         setRequests(reqRes.data?.items || reqRes.data?.$values || []);
-        setFavorites(favRes.data || []);
         setAdoptionCount(countRes.data || 0);
         const me = meRes.data;
         localStorage.setItem('sh-user', JSON.stringify(me));
@@ -315,9 +314,12 @@ export default function ClientDashboard() {
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {favorites.map((f) => (
                     <motion.div key={f.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                      className="bg-white rounded-3xl border border-[#E8E0D8] p-6 text-center">
-                      <div className="text-4xl mb-2">{speciesEmoji[f.petName] || '\u{1F43E}'}</div>
-                      <p className="font-medium text-[#0D0D0D]">{f.petName}</p>
+                      className="bg-white rounded-3xl border border-[#E8E0D8] p-6 text-center relative group">
+                      <button onClick={() => removeFavorite(f.id)} className="absolute top-3 right-3 w-7 h-7 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-xs text-red-400 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-100 hover:text-red-500">✕</button>
+                      <div className="text-4xl mb-2">{speciesEmoji[f.type] || '\u{1F43E}'}</div>
+                      <p className="font-medium text-[#0D0D0D]">{f.name}</p>
+                      {f.breed && <p className="text-xs text-[#8c7e74] mt-1">{f.breed}</p>}
+                      <Link to={`/pets/${f.id}`} className="text-xs text-coral font-semibold mt-3 inline-block hover:underline">{t('pets.details.viewPet')}</Link>
                     </motion.div>
                   ))}
                 </div>

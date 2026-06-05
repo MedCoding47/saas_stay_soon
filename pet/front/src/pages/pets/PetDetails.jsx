@@ -8,6 +8,8 @@ import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import PageTransition from '../../components/animations/PageTransition';
+import ReadinessQuiz from '../../components/adoption/ReadinessQuiz';
+import { useFavorites } from '../../hooks/useFavorites';
 
 const speciesEmoji = {
   Dog: '🐕', Cat: '🐈', Rabbit: '🐰', Bird: '🐦', Parrot: '🦜',
@@ -46,6 +48,8 @@ export default function PetDetails() {
   const navigate = useNavigate();
   const [pet, setPet] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const { isFavorited, toggleFavorite } = useFavorites();
 
   const token = localStorage.getItem('sh-token');
 
@@ -67,7 +71,7 @@ export default function PetDetails() {
 
   const handleAdoptClick = () => {
     if (!token) { navigate('/login/client'); return; }
-    navigate(`/client/dashboard?adopt=${pet.id}`);
+    setShowQuiz(true);
   };
 
   const handleInfoClick = () => {
@@ -184,6 +188,11 @@ export default function PetDetails() {
               <button onClick={handleInfoClick} className="btn-outline px-8">
                 {t('pets.details.contact')}
               </button>
+              <button onClick={() => toggleFavorite(pet)} className={`w-12 h-12 rounded-full border-2 flex items-center justify-center text-lg transition-all flex-shrink-0 ${
+                isFavorited(pet.id) ? 'bg-coral border-coral text-white' : 'bg-white border-[#E8E0D8] text-[#8c7e74] hover:border-coral hover:text-coral'
+              }`}>
+                {isFavorited(pet.id) ? '♥' : '♡'}
+              </button>
             </div>
           </motion.div>
 
@@ -262,33 +271,61 @@ export default function PetDetails() {
 
         {/* ADOPTION CONDITIONS */}
         <section className="bg-white border-t border-[#E8E0D8] py-16 px-8">
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start">
-            <div>
-              <span className="tag tag-outline mb-4">{t('common.conditions')}</span>
-              <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mt-4">{t('pets.details.adoptionFee')}</h2>
-              <p className="text-[#8c7e74] leading-relaxed mt-6">
-                {t('pets.details.conditions.p1')}
-              </p>
-              <p className="text-[#8c7e74] leading-relaxed mt-3">
-                {t('pets.details.conditions.p2')}
-              </p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-4">
-              {[
-                { labelKey: 'pets.details.fee.dog', defaultLabel: 'Dog', amount: '375 MAD' },
-                { labelKey: 'pets.details.fee.smallDog', defaultLabel: 'Small dog (< 6 mo)', amount: '365 MAD' },
-                { labelKey: 'pets.details.fee.cat', defaultLabel: 'Cat', amount: '175 MAD' },
-              ].map((item, i) => (
-                <motion.div key={item.labelKey} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-[#FAF7F2] rounded-3xl p-8 text-center border border-[#E8E0D8]">
-                  <p className="font-display font-black text-5xl text-coral">{item.amount}</p>
-                  <p className="text-[#8c7e74] text-sm mt-1">{t(item.labelKey, item.defaultLabel)}</p>
-                </motion.div>
-              ))}
+          <div className="max-w-6xl mx-auto">
+            <span className="tag tag-outline mb-4">{t('common.conditions')}</span>
+            <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mt-4 mb-6">{t('pets.details.adoptionFee')}</h2>
+            <p className="text-[#8c7e74] leading-relaxed mb-3">{t('pets.details.conditions.p1')}</p>
+            <p className="text-[#8c7e74] leading-relaxed mb-10">{t('pets.details.conditions.p2')}</p>
+
+            <div className="grid md:grid-cols-2 gap-12 items-start">
+              {/* Left: required docs + financial */}
+              <div className="space-y-8">
+                <div>
+                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-4">{t('pets.details.conditions.requiredDocs')}</p>
+                  <ul className="space-y-3">
+                    {['docCIN', 'docAddress', 'docCommitment'].map((key) => (
+                      <li key={key} className="flex items-start gap-3 text-sm text-[#0D0D0D]">
+                        <span className="mt-0.5 w-5 h-5 rounded-full bg-coral-light text-coral flex items-center justify-center text-xs flex-shrink-0">✓</span>
+                        {t(`pets.details.conditions.${key}`)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+                  <p className="text-xs font-bold tracking-widest uppercase text-amber-800 mb-2">{t('pets.details.conditions.financial')}</p>
+                  <p className="text-sm text-amber-900 leading-relaxed">{t('pets.details.conditions.financialDesc')}</p>
+                </div>
+                <div className="bg-sky-50 border border-sky-200 rounded-2xl p-5">
+                  <p className="text-xs font-bold tracking-widest uppercase text-sky-800 mb-2">⏳ {t('pets.details.conditions.cecTitle')}</p>
+                  <p className="text-sm text-sky-900 leading-relaxed">{t('pets.details.conditions.cecDesc')}</p>
+                </div>
+              </div>
+
+              {/* Right: fee cards */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {[
+                  { labelKey: 'pets.details.fee.dog', amount: '800 DH' },
+                  { labelKey: 'pets.details.fee.puppy', amount: '1 000 DH' },
+                  { labelKey: 'pets.details.fee.cat', amount: '500 DH' },
+                  { labelKey: 'pets.details.fee.kitten', amount: '600 DH' },
+                  { labelKey: 'pets.details.fee.sos', amount: '150 DH' },
+                  { labelKey: 'pets.details.fee.nac', amount: '100 DH' },
+                ].map((item, i) => (
+                  <motion.div key={item.labelKey} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className={`rounded-3xl p-6 text-center border ${
+                    item.labelKey === 'pets.details.fee.sos' ? 'bg-coral/5 border-coral/20' : 'bg-[#FAF7F2] border-[#E8E0D8]'
+                  }`}>
+                    <p className="font-display font-black text-4xl text-coral">{item.amount}</p>
+                    <p className="text-[#8c7e74] text-xs mt-1">{t(item.labelKey)}</p>
+                    {item.labelKey === 'pets.details.fee.sos' && <span className="tag tag-coral text-[9px] mt-2 inline-block">{t('common.minimum', 'Min')}</span>}
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
       </main>
       <Footer />
+      {showQuiz && <ReadinessQuiz petId={pet.id} petName={pet.name} onClose={() => setShowQuiz(false)} />}
     </PageTransition>
   );
 }
