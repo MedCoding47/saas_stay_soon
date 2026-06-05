@@ -87,7 +87,7 @@ export default function ClientRegister() {
         </div>
 
         <div className="hidden md:flex w-1/2 bg-[#0D0D0D] min-h-screen flex-col items-center justify-center p-16 relative overflow-hidden">
-          <span className="font-display font-black text-[18vw] text-white/5 absolute select-none pointer-events-none">Nino</span>
+          <img src="/src/assets/logo.png" alt="Nino" className="h-16 w-auto object-contain brightness-0 invert mx-auto mb-8" />
           <div className="bg-white/5 border border-white/10 rounded-3xl p-10 text-center relative z-10 max-w-sm">
             <div className="text-7xl mb-4">🐾</div>
             <h3 className="font-display font-bold text-white text-3xl">{t('auth.register.rightTitle')}</h3>

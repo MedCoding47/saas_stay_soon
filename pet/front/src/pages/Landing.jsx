@@ -54,7 +54,7 @@ export default function Landing() {
       <section className="relative min-h-screen bg-[#FAF7F2] flex flex-col pt-16 overflow-hidden">
         {/* Logo */}
         <div className="flex items-center justify-between px-8 md:px-16 pt-12 pb-0 max-w-7xl mx-auto w-full">
-          <img src="/logo.png" alt="Nino" className="h-8 w-auto" />
+          <img src="/src/assets/logo.png" alt="Nino" className="h-10 w-auto object-contain" />
           <div className="hidden md:flex items-center gap-2 text-sm text-[#8c7e74]">
             <span className="w-2 h-2 rounded-full bg-teal animate-pulse inline-block" />
             <span>{t('landing.hero.available')}</span>
@@ -322,9 +322,9 @@ export default function Landing() {
       <section className="bg-coral py-32 px-8 overflow-hidden relative">
         {/* Big decorative text behind */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
-          <span className="font-display font-black text-[20vw] text-white/10 whitespace-nowrap leading-none">
-            Nino
-          </span>
+          <div className="flex items-center justify-center">
+            <img src="/src/assets/logo.png" alt="" className="h-48 w-auto opacity-10 object-contain" />
+          </div>
         </div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <motion.h2
