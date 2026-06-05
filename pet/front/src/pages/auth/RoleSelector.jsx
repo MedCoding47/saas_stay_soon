@@ -1,32 +1,34 @@
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import PageTransition from '../../components/animations/PageTransition';
 
 const roles = [
   {
     key: 'client',
-    title: 'Adopter',
-    description: 'For individuals looking to adopt. Sign in or create your personal account.',
+    titleKey: 'auth.roleSelector.client',
+    descriptionKey: 'auth.roleSelector.clientDesc',
     emoji: '🐾',
     path: '/login/client',
   },
   {
     key: 'organization',
-    title: 'Shelter',
-    description: 'For pet adoption agencies and shelters. Sign in with your work account.',
+    titleKey: 'auth.roleSelector.enterprise',
+    descriptionKey: 'auth.roleSelector.enterpriseDesc',
     emoji: '🏢',
     path: '/login/organization',
   },
   {
     key: 'veterinaire',
-    title: 'Veterinarian',
-    description: 'For veterinary professionals. Sign in with your clinic account.',
+    titleKey: 'auth.roleSelector.vet',
+    descriptionKey: 'auth.roleSelector.vetDesc',
     emoji: '🩺',
     path: '/login/veterinaire',
   },
 ];
 
 export default function RoleSelector() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -40,9 +42,9 @@ export default function RoleSelector() {
           <div className="text-center mb-12">
             <button onClick={() => navigate('/')} className="font-display font-black text-3xl text-[#0D0D0D] mb-4 inline-block">Nino</button>
             <h1 className="font-display font-black text-[56px] leading-tight text-[#0D0D0D] tracking-tight">
-              Who are you?
+              {t('auth.roleSelector.title')}
             </h1>
-            <p className="text-[#8c7e74] text-lg mt-3">Choose your account type to continue</p>
+            <p className="text-[#8c7e74] text-lg mt-3">{t('auth.roleSelector.subtitle')}</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-5">
@@ -56,13 +58,13 @@ export default function RoleSelector() {
                 onClick={() => navigate(role.path)}
               >
                 <div className="text-6xl mb-5">{role.emoji}</div>
-                <h2 className="text-xl font-bold text-[#0D0D0D] mb-2">{role.title}</h2>
-                <p className="text-[#8c7e74] text-sm mb-6 flex-1 leading-relaxed">{role.description}</p>
+                <h2 className="text-xl font-bold text-[#0D0D0D] mb-2">{t(role.titleKey)}</h2>
+                <p className="text-[#8c7e74] text-sm mb-6 flex-1 leading-relaxed">{t(role.descriptionKey)}</p>
                 <button
                   onClick={(e) => { e.stopPropagation(); navigate(role.path); }}
                   className="btn-dark w-full text-sm"
                 >
-                  {role.key === 'client' ? 'Sign In / Register' : 'Sign In'}
+                  {role.key === 'client' ? t('auth.roleSelector.signInRegister') : t('common.signIn')}
                 </button>
               </motion.div>
             ))}
@@ -70,7 +72,7 @@ export default function RoleSelector() {
 
           <div className="text-center mt-8">
             <button onClick={() => navigate('/admin')} className="text-sm text-[#8c7e74] hover:text-coral transition-colors">
-              Admin Login
+              {t('auth.roleSelector.adminLogin')}
             </button>
           </div>
         </motion.div>

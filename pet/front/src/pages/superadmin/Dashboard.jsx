@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/client';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
@@ -19,6 +20,7 @@ const roleBadgeClass = (role) => {
 };
 
 export default function SuperAdminDashboard() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
@@ -66,13 +68,13 @@ export default function SuperAdminDashboard() {
       <main className="min-h-screen bg-[#FAF7F2] pt-24 pb-20">
         <div className="bg-white border-b border-[#E8E0D8]">
           <div className="max-w-7xl mx-auto px-8 py-6 flex items-center justify-between">
-            <h1 className="font-display font-black text-3xl text-[#0D0D0D]">Super Admin Dashboard</h1>
+            <h1 className="font-display font-black text-3xl text-[#0D0D0D]">{t('dashboard.superadmin.title')}</h1>
             <div className="flex gap-2">
               {[
-                { key: 'overview', label: 'Overview' },
-                { key: 'users', label: `Users (${users.length})` },
-                { key: 'orgs', label: `Organizations (${orgs.length})` },
-                { key: 'requests', label: `Adopt Requests (${adoptRequests.length})` },
+                { key: 'overview', label: t('dashboard.superadmin.tabs.overview') },
+                { key: 'users', label: `${t('dashboard.superadmin.tabs.users')} (${users.length})` },
+                { key: 'orgs', label: `${t('dashboard.superadmin.tabs.organizations')} (${orgs.length})` },
+                { key: 'requests', label: `${t('dashboard.superadmin.tabs.requests')} (${adoptRequests.length})` },
               ].map((t) => (
                 <button key={t.key} onClick={() => setTab(t.key)}
                   className={`rounded-full px-5 py-2 text-sm font-semibold transition-all ${
@@ -91,12 +93,12 @@ export default function SuperAdminDashboard() {
           {tab === 'overview' && stats && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
-                { label: 'Total Users', value: stats.totalUsers },
-                { label: 'Organizations', value: stats.totalOrgs },
-                { label: 'Total Pets', value: stats.totalPets },
-                { label: 'Adoptions', value: stats.totalAdoptions },
-                { label: 'Pending Requests', value: stats.pendingAdoptRequests },
-                { label: 'Veterinaires', value: stats.totalVets },
+                { label: t('dashboard.superadmin.stats.totalUsers'), value: stats.totalUsers },
+                { label: t('dashboard.superadmin.stats.organizations'), value: stats.totalOrgs },
+                { label: t('dashboard.superadmin.stats.totalPets'), value: stats.totalPets },
+                { label: t('dashboard.superadmin.stats.adoptions'), value: stats.totalAdoptions },
+                { label: t('dashboard.superadmin.stats.pendingRequests'), value: stats.pendingAdoptRequests },
+                { label: t('dashboard.superadmin.stats.veterinaires'), value: stats.totalVets },
               ].map((s, idx) => (
                 <motion.div key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   className={`bg-white rounded-3xl border border-[#E8E0D8] p-8 ${idx === 0 ? 'border-l-4 border-l-coral' : ''}`}>
@@ -110,18 +112,18 @@ export default function SuperAdminDashboard() {
           {tab === 'users' && (
             <div className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden">
               <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E0D8]">
-                <span className="text-xs font-bold tracking-widest uppercase text-[#8c7e74]">{users.length} users</span>
-                <Link to="/superadmin/create-account" className="btn-dark text-sm px-5 py-2">+ Create Account</Link>
+                <span className="text-xs font-bold tracking-widest uppercase text-[#8c7e74]">{t('dashboard.superadmin.usersCount', { count: users.length })}</span>
+                <Link to="/superadmin/create-account" className="btn-dark text-sm px-5 py-2">{t('dashboard.superadmin.createAccount')}</Link>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="bg-[#FAF7F2] border-b border-[#E8E0D8]">
                     <tr>
-                      <th className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] px-6 py-4 text-left">Name</th>
-                      <th className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] px-6 py-4 text-left">Email</th>
-                      <th className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] px-6 py-4 text-left">Role</th>
-                      <th className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] px-6 py-4 text-left">Organization</th>
-                      <th className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] px-6 py-4 text-left">Status</th>
+                      <th className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] px-6 py-4 text-left">{t('common.name')}</th>
+                      <th className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] px-6 py-4 text-left">{t('common.email')}</th>
+                      <th className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] px-6 py-4 text-left">{t('common.role')}</th>
+                      <th className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] px-6 py-4 text-left">{t('dashboard.superadmin.organization')}</th>
+                      <th className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] px-6 py-4 text-left">{t('common.status')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -139,10 +141,10 @@ export default function SuperAdminDashboard() {
                           {u.isActive ? (
                             <span className="inline-flex items-center gap-1.5 text-teal font-semibold">
                               <span className="w-1.5 h-1.5 rounded-full bg-teal" />
-                              Active
+                              {t('common.active')}
                             </span>
                           ) : (
-                            <span className="text-[#8c7e74]">Inactive</span>
+                            <span className="text-[#8c7e74]">{t('common.inactive')}</span>
                           )}
                         </td>
                       </tr>
@@ -164,10 +166,10 @@ export default function SuperAdminDashboard() {
                         {o.name}
                       </button>
                     </h3>
-                    <p className="text-xs text-[#8c7e74] mt-1">Slug: {o.slug} &middot; {o.userCount} users &middot; {o.petCount} pets</p>
+                    <p className="text-xs text-[#8c7e74] mt-1">{t('dashboard.superadmin.slug')}: {o.slug} &middot; {o.userCount} {t('dashboard.superadmin.users').toLowerCase()} &middot; {o.petCount} {t('dashboard.superadmin.pets').toLowerCase()}</p>
                   </div>
                   <span className={`text-xs font-semibold px-3 py-1 rounded-full ${o.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                    {o.isActive ? 'Active' : 'Inactive'}
+                    {o.isActive ? t('common.active') : t('common.inactive')}
                   </span>
                 </motion.div>
               ))}
@@ -177,7 +179,7 @@ export default function SuperAdminDashboard() {
           {tab === 'requests' && (
             <div>
               {adoptRequests.length === 0 ? (
-                <div className="text-center py-16 text-[#8c7e74] bg-white rounded-3xl border border-[#E8E0D8]">No pending adopt requests.</div>
+                <div className="text-center py-16 text-[#8c7e74] bg-white rounded-3xl border border-[#E8E0D8]">{t('dashboard.superadmin.noPendingRequests')}</div>
               ) : (
                 <div className="grid gap-4">
                   {adoptRequests.map((r) => (
@@ -186,16 +188,16 @@ export default function SuperAdminDashboard() {
                       <div className="flex items-start justify-between">
                         <div>
                           <h3 className="font-display font-bold text-lg text-[#0D0D0D]">{r.petName} ({r.species})</h3>
-                          <p className="text-xs text-[#8c7e74] mt-1">By: {r.userName}</p>
-                          <p className="text-xs text-[#8c7e74] mt-1">Created: {new Date(r.createdAt).toLocaleDateString()}</p>
-                          {r.isOverdue && <p className="text-xs text-red-500 font-semibold mt-1">{'\u26A0'} Overdue (response over 24h)</p>}
+                          <p className="text-xs text-[#8c7e74] mt-1">{t('dashboard.superadmin.by')}: {r.userName}</p>
+                          <p className="text-xs text-[#8c7e74] mt-1">{t('dashboard.superadmin.created')}: {new Date(r.createdAt).toLocaleDateString()}</p>
+                          {r.isOverdue && <p className="text-xs text-red-500 font-semibold mt-1">{'\u26A0'} {t('dashboard.superadmin.overdue')}</p>}
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${r.status === 'Pending' ? 'bg-amber-100 text-amber-700' : r.status === 'Approved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{r.status}</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${r.status === 'Pending' ? 'bg-amber-100 text-amber-700' : r.status === 'Approved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{t('common.status.' + r.status)}</span>
                       </div>
                       {r.status === 'Pending' && (
                         <div className="flex gap-2 mt-4">
-                          <Button variant="primary" className="!rounded-pill !px-4 !py-1.5 text-xs" onClick={() => handleRespond(r.id, true)}>Approve</Button>
-                          <Button variant="outline" className="!rounded-pill !px-4 !py-1.5 text-xs !border-red-400 !text-red-500" onClick={() => handleRespond(r.id, false)}>Reject</Button>
+                          <Button variant="primary" className="!rounded-pill !px-4 !py-1.5 text-xs" onClick={() => handleRespond(r.id, true)}>{t('dashboard.superadmin.approve')}</Button>
+                          <Button variant="outline" className="!rounded-pill !px-4 !py-1.5 text-xs !border-red-400 !text-red-500" onClick={() => handleRespond(r.id, false)}>{t('dashboard.superadmin.reject')}</Button>
                         </div>
                       )}
                     </motion.div>

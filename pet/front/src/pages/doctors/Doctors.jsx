@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import api from '../../api/client';
 import Navbar from '../../components/layout/Navbar';
@@ -7,6 +8,7 @@ import PageTransition from '../../components/animations/PageTransition';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 export default function Doctors() {
+  const { t } = useTranslation();
   const [vets, setVets] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,10 +30,10 @@ export default function Doctors() {
         <section className="bg-[#0D0D0D] py-16 px-8">
           <div className="max-w-6xl mx-auto">
             <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-display font-black text-[56px] text-white leading-[0.9]">
-              Our<br />Veterinaires
+              {t('doctors.hero.title')}
             </motion.h1>
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-white/50 text-lg mt-4 max-w-lg">
-              Professional veterinary doctors ready to care for your pets.
+              {t('doctors.hero.subtitle')}
             </motion.p>
           </div>
         </section>
@@ -39,7 +41,7 @@ export default function Doctors() {
         {/* VET CARDS */}
         <section className="max-w-6xl mx-auto px-8 py-16">
           {vets.length === 0 ? (
-            <div className="text-center py-20 text-[#8c7e74]">No veterinarians available at the moment.</div>
+            <div className="text-center py-20 text-[#8c7e74]">{t('doctors.noResults')}</div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
               {vets.map((vet, i) => (
@@ -66,7 +68,7 @@ export default function Doctors() {
                     {vet.formation && (
                       <span className="tag tag-teal mt-4 inline-flex">{vet.formation}</span>
                     )}
-                    <button className="btn-dark w-full mt-4 rounded-2xl text-sm">Book Consultation</button>
+                    <button className="btn-dark w-full mt-4 rounded-2xl text-sm">{t('doctors.bookConsultation')}</button>
                   </div>
                 </motion.div>
               ))}
@@ -77,7 +79,7 @@ export default function Doctors() {
         {/* MAP SECTION */}
         <section className="bg-white border-t border-[#E8E0D8] py-16 px-8">
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mb-8">Find a vet near you</h2>
+            <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mb-8">{t('doctors.findNearby')}</h2>
             <div className="rounded-3xl overflow-hidden border border-[#E8E0D8] h-80 w-full">
               {vets.length > 0 && vets[0]?.latitude && vets[0]?.longitude ? (
                 <iframe

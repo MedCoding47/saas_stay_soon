@@ -1,29 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import CounterAnimation from '../components/animations/CounterAnimation';
 import PageTransition from '../components/animations/PageTransition';
-
-const stats = [
-  { value: 250, label: 'Pets Adopted', suffix: '+' },
-  { value: 48, label: 'Partner Shelters', suffix: '' },
-  { value: 1500, label: 'Happy Families', suffix: '+' },
-  { value: 98, label: 'Success Rate', suffix: '%' },
-];
-
-const steps = [
-  { number: '01', title: 'Browse Pets', desc: 'Explore hundreds of adorable pets across Morocco waiting for a loving home.' },
-  { number: '02', title: 'Submit Request', desc: 'Send an adoption request directly to the shelter caring for your chosen pet.' },
-  { number: '03', title: 'Welcome Home', desc: 'Complete the process and bring your new family member home for good.' },
-];
-
-const testimonials = [
-  { quote: 'Nino made it so easy to find our new best friend. The process was smooth and completely transparent.', name: 'Sarah M.', role: 'Pet Parent', location: 'Casablanca' },
-  { quote: 'As a shelter partner, Nino helps us find loving homes faster than ever before. Incredible platform.', name: 'Dr. Amine R.', role: 'Veterinarian', location: 'Rabat' },
-  { quote: 'I adopted my cat through Nino and couldn\'t be happier. The team was incredibly supportive throughout.', name: 'Fatima Z.', role: 'Pet Parent', location: 'Marrakech' },
-];
 
 const pets = [
   { emoji: '🐕', name: 'Max', breed: 'Golden Retriever', age: '2 years', location: 'Casablanca' },
@@ -43,6 +25,26 @@ const fadeUp = {
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const stats = [
+    { value: 250, label: t('landing.stats.adopted'), suffix: '+' },
+    { value: 48, label: t('landing.stats.shelters'), suffix: '' },
+    { value: 1500, label: t('landing.stats.families'), suffix: '+' },
+    { value: 98, label: t('landing.stats.success_rate'), suffix: '%' },
+  ];
+
+  const steps = [
+    { number: '01', title: t('landing.steps.browse.title'), desc: t('landing.steps.browse.description') },
+    { number: '02', title: t('landing.steps.request.title'), desc: t('landing.steps.request.description') },
+    { number: '03', title: t('landing.steps.home.title'), desc: t('landing.steps.home.description') },
+  ];
+
+  const testimonials = [
+    { quote: t('landing.testimonials.quote_1'), name: 'Sarah M.', role: t('landing.testimonials.role_pet_parent'), location: 'Casablanca' },
+    { quote: t('landing.testimonials.quote_2'), name: 'Dr. Amine R.', role: t('landing.testimonials.role_veterinarian'), location: 'Rabat' },
+    { quote: t('landing.testimonials.quote_3'), name: 'Fatima Z.', role: t('landing.testimonials.role_pet_parent'), location: 'Marrakech' },
+  ];
 
   return (
     <PageTransition>
@@ -52,10 +54,10 @@ export default function Landing() {
       <section className="relative min-h-screen bg-[#FAF7F2] flex flex-col pt-16 overflow-hidden">
         {/* Eyebrow */}
         <div className="flex items-center justify-between px-8 md:px-16 pt-12 pb-0 max-w-7xl mx-auto w-full">
-          <span className="tag tag-coral">🐾 Morocco's #1 Adoption Platform</span>
+          <span className="tag tag-coral">🐾 {t('landing.hero.badge')}</span>
           <div className="hidden md:flex items-center gap-2 text-sm text-[#8c7e74]">
             <span className="w-2 h-2 rounded-full bg-teal animate-pulse inline-block" />
-            <span>250+ pets available now</span>
+            <span>{t('landing.hero.available')}</span>
           </div>
         </div>
 
@@ -67,9 +69,9 @@ export default function Landing() {
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="font-display font-black text-display-xl text-[#0D0D0D] leading-[0.88] tracking-[-0.04em] mb-8"
           >
-            Every Pet<br />
-            <em className="not-italic text-coral">Deserves</em><br />
-            A Home
+            {t('landing.hero.title_line1')}<br />
+            <em className="not-italic text-coral">{t('landing.hero.title_line2')}</em><br />
+            {t('landing.hero.title_line3')}
           </motion.h1>
 
           <motion.p
@@ -78,7 +80,7 @@ export default function Landing() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-xl text-[#8c7e74] max-w-md leading-relaxed mb-10"
           >
-            Connect with shelters across Morocco. Find your perfect companion and give them the life they deserve.
+            {t('landing.hero.description')}
           </motion.p>
 
           <motion.div
@@ -88,10 +90,10 @@ export default function Landing() {
             className="flex items-center gap-4 flex-wrap justify-center mb-20"
           >
             <button onClick={() => navigate('/pets')} className="btn-dark text-base">
-              Find a Pet
+              {t('landing.hero.find_pet')}
             </button>
             <button onClick={() => navigate('/shelters')} className="btn-outline text-base">
-              Partner Shelters
+              {t('landing.hero.partner_shelters')}
             </button>
           </motion.div>
 
@@ -156,15 +158,15 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16 items-start">
           {/* Left sticky label */}
           <div className="md:w-5/12 md:sticky md:top-28">
-            <span className="tag tag-dark mb-6">Process</span>
+            <span className="tag tag-dark mb-6">{t('landing.how_it_works.badge')}</span>
             <h2 className="font-display font-black text-display-md text-[#0D0D0D] mt-4 leading-[0.92]">
-              How it<br /><em className="not-italic text-coral">works</em>
+              {t('landing.how_it_works.title_prefix')}<br /><em className="not-italic text-coral">{t('landing.how_it_works.title_highlight')}</em>
             </h2>
             <p className="text-[#8c7e74] mt-6 text-lg leading-relaxed max-w-xs">
-              Three simple steps between you and your new best friend.
+              {t('landing.how_it_works.description')}
             </p>
             <button onClick={() => navigate('/pets')} className="btn-dark mt-8">
-              Start Browsing
+              {t('landing.how_it_works.cta')}
             </button>
           </div>
           {/* Right steps */}
@@ -197,13 +199,13 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between mb-12">
             <div>
-              <span className="tag tag-coral mb-4">Available Now</span>
+              <span className="tag tag-coral mb-4">{t('landing.featured.badge')}</span>
               <h2 className="font-display font-black text-display-md text-[#0D0D0D] mt-4 leading-[0.92]">
-                Meet your<br /><em className="not-italic text-teal">new family</em>
+                {t('landing.featured.title_prefix')}<br /><em className="not-italic text-teal">{t('landing.featured.title_highlight')}</em>
               </h2>
             </div>
             <button onClick={() => navigate('/pets')} className="btn-outline hidden md:flex">
-              View All Pets
+              {t('landing.featured.view_all')}
             </button>
           </div>
 
@@ -217,7 +219,7 @@ export default function Landing() {
             >
               <div className="text-7xl">{pets[0].emoji}</div>
               <div>
-                <span className="tag tag-teal mb-3">Available</span>
+                <span className="tag tag-teal mb-3">{t('landing.featured.available')}</span>
                 <h3 className="text-2xl font-bold text-[#0D0D0D]">{pets[0].name}</h3>
                 <p className="text-[#8c7e74] mt-1">{pets[0].breed} · {pets[0].age}</p>
                 <p className="text-xs text-[#b8aaa0] mt-2">📍 {pets[0].location}</p>
@@ -241,7 +243,7 @@ export default function Landing() {
           </div>
 
           <button onClick={() => navigate('/pets')} className="btn-outline w-full mt-6 md:hidden">
-            View All Pets
+            {t('landing.featured.view_all')}
           </button>
         </div>
       </section>
@@ -250,13 +252,13 @@ export default function Landing() {
       <section className="bg-[#FAF7F2] py-24 px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <span className="tag tag-outline mb-4">Stories</span>
+            <span className="tag tag-outline mb-4">{t('landing.testimonials.badge')}</span>
             <h2 className="font-display font-black text-display-md text-[#0D0D0D] mt-4 leading-[0.92]">
-              Happy families,<br /><em className="not-italic text-coral">real stories</em>
+              {t('landing.testimonials.title_prefix')}<br /><em className="not-italic text-coral">{t('landing.testimonials.title_highlight')}</em>
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-5">
-            {testimonials.map((t, i) => (
+            {testimonials.map((item, i) => (
               <motion.div
                 key={i}
                 variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
@@ -267,15 +269,15 @@ export default function Landing() {
                 }`}
               >
                 <p className={`font-serif text-xl leading-relaxed mb-8 ${i === 1 ? 'text-white/80' : 'text-[#2A2A2A]'}`}>
-                  "{t.quote}"
+                  "{item.quote}"
                 </p>
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${i === 1 ? 'bg-white/15 text-white' : 'bg-coral text-white'}`}>
-                    {t.name[0]}
+                    {item.name[0]}
                   </div>
                   <div>
-                    <p className={`font-semibold text-sm ${i === 1 ? 'text-white' : 'text-[#0D0D0D]'}`}>{t.name}</p>
-                    <p className={`text-xs ${i === 1 ? 'text-white/40' : 'text-[#8c7e74]'}`}>{t.role} · {t.location}</p>
+                    <p className={`font-semibold text-sm ${i === 1 ? 'text-white' : 'text-[#0D0D0D]'}`}>{item.name}</p>
+                    <p className={`text-xs ${i === 1 ? 'text-white/40' : 'text-[#8c7e74]'}`}>{item.role} · {item.location}</p>
                   </div>
                 </div>
               </motion.div>
@@ -288,20 +290,20 @@ export default function Landing() {
       <section className="bg-[#0D0D0D] py-20 px-8">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
           <div>
-            <span className="tag tag-coral mb-4">For Shelters</span>
+            <span className="tag tag-coral mb-4">{t('landing.shelter.badge')}</span>
             <h2 className="font-display font-black text-display-sm text-white mt-4 leading-tight">
-              Are you a shelter<br />or rescue org?
+              {t('landing.shelter.title_line1')}<br />{t('landing.shelter.title_line2')}
             </h2>
             <p className="text-white/50 mt-4 text-lg max-w-sm leading-relaxed">
-              List your animals on Nino and reach thousands of families looking to adopt across Morocco.
+              {t('landing.shelter.description')}
             </p>
           </div>
           <div className="flex flex-col gap-3 flex-shrink-0">
             <button onClick={() => navigate('/register')} className="btn-coral text-base px-10">
-              Partner With Us
+              {t('landing.shelter.partner_cta')}
             </button>
             <button onClick={() => navigate('/shelters')} className="btn-outline-white text-base px-10">
-              View All Shelters
+              {t('landing.shelter.view_all')}
             </button>
           </div>
         </div>
@@ -320,23 +322,23 @@ export default function Landing() {
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="font-display font-black text-display-lg text-white leading-[0.88]"
           >
-            Ready to find<br />your companion?
+            {t('landing.cta.title_line1')}<br />{t('landing.cta.title_line2')}
           </motion.h2>
           <motion.p
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1}
             className="text-white/70 text-xl max-w-md mx-auto mt-8 mb-12 leading-relaxed"
           >
-            Thousands of pets across Morocco are waiting for someone exactly like you.
+            {t('landing.cta.description')}
           </motion.p>
           <motion.div
             variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2}
             className="flex items-center gap-4 justify-center flex-wrap"
           >
             <button onClick={() => navigate('/pets')} className="btn-white text-base px-10">
-              Browse Pets
+              {t('landing.cta.browse_pets')}
             </button>
             <button onClick={() => navigate('/register')} className="btn-outline-white text-base px-10">
-              Create Account
+              {t('landing.cta.create_account')}
             </button>
           </motion.div>
         </div>

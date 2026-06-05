@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import api from '../../api/client';
 import samplePets from '../../data/samplePets';
 import Navbar from '../../components/layout/Navbar';
@@ -19,11 +20,11 @@ const petStatusLabel = (s) => {
   return map[s] || s || 'Available';
 };
 
-function formatAge(years) {
+function formatAge(years, t) {
   if (years == null) return '—';
-  if (years === 0) return 'Less than 1 year';
-  if (years === 1) return '1 year';
-  return `${years} years`;
+  if (years === 0) return t('pets.details.age.lessThan1', 'Less than 1 year');
+  if (years === 1) return '1 ' + t('pets.details.age.year', 'year');
+  return `${years} ` + t('pets.details.age.years', 'years');
 }
 
 function BoolIcon({ value }) {
@@ -33,13 +34,14 @@ function BoolIcon({ value }) {
 }
 
 const accessories = [
-  { emoji: '🎾', name: 'Toys', price: 'From 25 MAD' },
-  { emoji: '🛏️', name: 'Bed', price: 'From 150 MAD' },
-  { emoji: '🥣', name: 'Bowl', price: 'From 30 MAD' },
-  { emoji: '📿', name: 'Collar', price: 'From 45 MAD' },
+  { emoji: '🎾', nameKey: 'pets.details.accessories.toys', defaultName: 'Toys', price: 'From 25 MAD' },
+  { emoji: '🛏️', nameKey: 'pets.details.accessories.bed', defaultName: 'Bed', price: 'From 150 MAD' },
+  { emoji: '🥣', nameKey: 'pets.details.accessories.bowl', defaultName: 'Bowl', price: 'From 30 MAD' },
+  { emoji: '📿', nameKey: 'pets.details.accessories.collar', defaultName: 'Collar', price: 'From 45 MAD' },
 ];
 
 export default function PetDetails() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [pet, setPet] = useState(null);
@@ -86,7 +88,7 @@ export default function PetDetails() {
       <PageTransition>
         <Navbar />
         <div className="min-h-screen pt-24 flex items-center justify-center bg-[#FAF7F2]">
-          <LoadingSpinner text="Loading pet..." />
+          <LoadingSpinner text={t('common.loadingPet')} />
         </div>
         <Footer />
       </PageTransition>
@@ -103,9 +105,9 @@ export default function PetDetails() {
           {/* LEFT */}
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
             <p className="text-xs text-[#8c7e74] mb-6">
-              <Link to="/" className="hover:text-[#0D0D0D] transition-colors">Home</Link>
+              <Link to="/" className="hover:text-[#0D0D0D] transition-colors">{t('common.home')}</Link>
               <span className="mx-2">/</span>
-              <Link to="/pets" className="hover:text-[#0D0D0D] transition-colors">Browse</Link>
+              <Link to="/pets" className="hover:text-[#0D0D0D] transition-colors">{t('common.browse')}</Link>
               <span className="mx-2">/</span>
               <span className="text-[#0D0D0D]">{pet.name}</span>
             </p>
@@ -117,12 +119,12 @@ export default function PetDetails() {
             <div className="flex gap-2 mt-4">
               <span className="tag tag-dark">{speciesEmoji[pet.type] || '🐾'} {pet.type}</span>
               {pet.breed && <span className="tag px-4 py-1.5 rounded-full border border-[#E8E0D8] text-[#8c7e74] text-[10px] font-bold tracking-widest uppercase">{pet.breed}</span>}
-              <span className="tag px-4 py-1.5 rounded-full border border-[#E8E0D8] text-[#8c7e74] text-[10px] font-bold tracking-widest uppercase">{formatAge(pet.age)}</span>
+              <span className="tag px-4 py-1.5 rounded-full border border-[#E8E0D8] text-[#8c7e74] text-[10px] font-bold tracking-widest uppercase">{formatAge(pet.age, t)}</span>
             </div>
 
             <div className="flex gap-6 mt-6 text-sm text-[#8c7e74]">
-              <span>📅 {formatAge(pet.age)}</span>
-              <span>📍 {pet.location || 'Unknown location'}</span>
+              <span>📅 {formatAge(pet.age, t)}</span>
+              <span>📍 {pet.location || t('common.unknownLocation')}</span>
             </div>
 
             {pet.description && (
@@ -133,12 +135,12 @@ export default function PetDetails() {
 
             {/* Health */}
             <div className="mt-8">
-              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-4">Health Status</p>
+              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-4">{t('pets.details.health')}</p>
               <div className="space-y-0">
                 {[
-                  { label: 'Vaccinated', value: pet.isVaccinated },
-                  { label: 'Sterilized / Neutered', value: pet.isSterilized },
-                  { label: 'Dewormed', value: pet.isDewormed },
+                  { label: t('pets.details.health.vaccinated', 'Vaccinated'), value: pet.isVaccinated },
+                  { label: t('pets.details.health.sterilized', 'Sterilized / Neutered'), value: pet.isSterilized },
+                  { label: t('pets.details.health.dewormed', 'Dewormed'), value: pet.isDewormed },
                 ].map((item) => (
                   <div key={item.label} className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
                     <span className="text-[#2A2A2A]">{item.label}</span>
@@ -147,7 +149,7 @@ export default function PetDetails() {
                 ))}
                 {pet.healthNotes && (
                   <div className="flex items-center justify-between py-3 text-sm">
-                    <span className="text-[#2A2A2A]">Notes</span>
+                    <span className="text-[#2A2A2A]">{t('common.notes')}</span>
                     <span className="text-[#8c7e74] text-xs text-right max-w-[200px]">{pet.healthNotes}</span>
                   </div>
                 )}
@@ -156,12 +158,12 @@ export default function PetDetails() {
 
             {/* Behavior */}
             <div className="mt-8">
-              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-4">Behavior</p>
+              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-4">{t('pets.details.behavior')}</p>
               <div className="space-y-0">
                 {[
-                  { label: 'Good with kids', value: pet.goodWithKids },
-                  { label: 'Good with dogs', value: pet.goodWithDogs },
-                  { label: 'Good with cats', value: pet.goodWithCats },
+                  { label: t('pets.details.behavior.goodWithKids', 'Good with kids'), value: pet.goodWithKids },
+                  { label: t('pets.details.behavior.goodWithDogs', 'Good with dogs'), value: pet.goodWithDogs },
+                  { label: t('pets.details.behavior.goodWithCats', 'Good with cats'), value: pet.goodWithCats },
                 ].map((item) => (
                   <div key={item.label} className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
                     <span className="text-[#2A2A2A]">{item.label}</span>
@@ -177,10 +179,10 @@ export default function PetDetails() {
             {/* CTA */}
             <div className="flex gap-3 mt-10 pb-8">
               <button onClick={handleAdoptClick} disabled={!isAvailable} className="btn-dark px-8">
-                I want to adopt
+                {t('pets.details.adopt')}
               </button>
               <button onClick={handleInfoClick} className="btn-outline px-8">
-                Get more info
+                {t('pets.details.contact')}
               </button>
             </div>
           </motion.div>
@@ -203,14 +205,14 @@ export default function PetDetails() {
         {/* ACCESSORIES STRIP */}
         <section className="bg-white border-y border-[#E8E0D8] py-12 px-8 mt-8">
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mb-8">Welcome your companion</h2>
+            <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mb-8">{t('pets.details.accessories')}</h2>
             <div className="flex gap-4 overflow-x-auto no-scrollbar">
               {accessories.map((item, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-[#FAF7F2] rounded-2xl p-6 border border-[#E8E0D8] text-center w-48 flex-shrink-0">
                   <div className="text-4xl mb-3">{item.emoji}</div>
-                  <p className="font-bold text-sm text-[#0D0D0D]">{item.name}</p>
+                  <p className="font-bold text-sm text-[#0D0D0D]">{t(item.nameKey, item.defaultName)}</p>
                   <p className="text-coral font-bold text-sm mt-1">{item.price}</p>
-                  <button className="btn-dark w-full mt-3 text-xs py-2 rounded-xl">Shop now</button>
+                  <button className="btn-dark w-full mt-3 text-xs py-2 rounded-xl">{t('common.shopNow')}</button>
                 </motion.div>
               ))}
             </div>
@@ -223,24 +225,24 @@ export default function PetDetails() {
             <div className="w-full h-full bg-[#FAF7F2] flex items-center justify-center text-6xl text-[#b8aaa0]">🗺️</div>
           </div>
           <div className="bg-[#0D0D0D] rounded-3xl p-8">
-            <p className="font-display font-bold text-white text-2xl">{pet.ownerName || 'Nino Shelter'}</p>
+            <p className="font-display font-bold text-white text-2xl">{pet.ownerName || t('pets.details.shelter.defaultName', 'Nino Shelter')}</p>
             <div className="mt-4 space-y-2 text-sm">
-              <p className="text-white/50 flex items-center gap-2">📍 {pet.location || 'Morocco'}</p>
+              <p className="text-white/50 flex items-center gap-2">📍 {pet.location || t('common.morocco')}</p>
               <p className="text-white/50 flex items-center gap-2">📞 +212 5XX XX XX XX</p>
             </div>
             <div className="text-white/40 text-xs mt-4 space-y-1">
-              <p>Mon-Fri: 9:00 – 17:00</p>
-              <p>Saturday: 10:00 – 16:00</p>
-              <p>Sunday: Closed</p>
+              <p>{t('pets.details.shelter.hoursWeekdays', 'Mon-Fri: 9:00 – 17:00')}</p>
+              <p>{t('pets.details.shelter.hoursSaturday', 'Saturday: 10:00 – 16:00')}</p>
+              <p>{t('pets.details.shelter.hoursSunday', 'Sunday: Closed')}</p>
             </div>
-            <button className="btn-outline-white w-full mt-6 text-sm">Visit Shelter</button>
+            <button className="btn-outline-white w-full mt-6 text-sm">{t('pets.details.shelter.visit', 'Visit Shelter')}</button>
           </div>
         </section>
 
         {/* SIMILAR PETS */}
         <section className="bg-[#FAF7F2] py-16 px-8">
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mb-10">Similar Pets</h2>
+            <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mb-10">{t('pets.details.similar')}</h2>
             <div className="grid md:grid-cols-3 gap-5">
               {similarPets.map((p, i) => (
                 <motion.div key={p.id || i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} onClick={() => navigate(`/pets/${p.id}`)} className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300">
@@ -249,8 +251,8 @@ export default function PetDetails() {
                   </div>
                   <div className="p-5">
                     <p className="font-bold text-[#0D0D0D]">{p.name}</p>
-                    <p className="text-sm text-[#8c7e74] mt-0.5">{p.breed || 'Mixed Breed'}</p>
-                    <button onClick={(e) => { e.stopPropagation(); navigate(`/pets/${p.id}`); }} className="btn-dark w-full mt-3 rounded-xl py-2.5 text-sm">View Pet</button>
+                    <p className="text-sm text-[#8c7e74] mt-0.5">{p.breed || t('common.mixedBreed')}</p>
+                    <button onClick={(e) => { e.stopPropagation(); navigate(`/pets/${p.id}`); }} className="btn-dark w-full mt-3 rounded-xl py-2.5 text-sm">{t('pets.details.viewPet')}</button>
                   </div>
                 </motion.div>
               ))}
@@ -262,26 +264,24 @@ export default function PetDetails() {
         <section className="bg-white border-t border-[#E8E0D8] py-16 px-8">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-start">
             <div>
-              <span className="tag tag-outline mb-4">Conditions</span>
-              <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mt-4">Adoption Conditions</h2>
+              <span className="tag tag-outline mb-4">{t('common.conditions')}</span>
+              <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mt-4">{t('pets.details.adoptionFee')}</h2>
               <p className="text-[#8c7e74] leading-relaxed mt-6">
-                Adopting an animal is a long-term commitment. We ensure each adoption is well-prepared by verifying
-                the living conditions, availability, and motivation of the adopter.
+                {t('pets.details.conditions.p1')}
               </p>
               <p className="text-[#8c7e74] leading-relaxed mt-3">
-                All our animals are vaccinated, sterilized, and identified before adoption.
-                Post-adoption follow-up is provided to ensure the well-being of the animal.
+                {t('pets.details.conditions.p2')}
               </p>
             </div>
             <div className="grid md:grid-cols-3 gap-4">
               {[
-                { label: 'Dog', amount: '375 MAD' },
-                { label: 'Small dog (< 6 mo)', amount: '365 MAD' },
-                { label: 'Cat', amount: '175 MAD' },
+                { labelKey: 'pets.details.fee.dog', defaultLabel: 'Dog', amount: '375 MAD' },
+                { labelKey: 'pets.details.fee.smallDog', defaultLabel: 'Small dog (< 6 mo)', amount: '365 MAD' },
+                { labelKey: 'pets.details.fee.cat', defaultLabel: 'Cat', amount: '175 MAD' },
               ].map((item, i) => (
-                <motion.div key={item.label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-[#FAF7F2] rounded-3xl p-8 text-center border border-[#E8E0D8]">
+                <motion.div key={item.labelKey} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-[#FAF7F2] rounded-3xl p-8 text-center border border-[#E8E0D8]">
                   <p className="font-display font-black text-5xl text-coral">{item.amount}</p>
-                  <p className="text-[#8c7e74] text-sm mt-1">{item.label}</p>
+                  <p className="text-[#8c7e74] text-sm mt-1">{t(item.labelKey, item.defaultLabel)}</p>
                 </motion.div>
               ))}
             </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation, Trans } from 'react-i18next';
 import api from '../../api/client';
 import samplePets from '../../data/samplePets';
 import Navbar from '../../components/layout/Navbar';
@@ -59,6 +60,7 @@ function matchesStatus(pet, filter) {
 }
 
 export default function PetBrowser() {
+  const { t } = useTranslation();
   const [allPets, setAllPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState(defaultFilters);
@@ -117,7 +119,7 @@ export default function PetBrowser() {
       <PageTransition>
         <Navbar />
         <div className="min-h-screen pt-24 flex items-center justify-center bg-[#FAF7F2]">
-          <LoadingSpinner text="Loading animals..." />
+          <LoadingSpinner text={t('common.loading')} />
         </div>
         <Footer />
       </PageTransition>
@@ -132,13 +134,13 @@ export default function PetBrowser() {
         <section className="bg-[#0D0D0D] py-16 px-8">
           <div className="max-w-6xl mx-auto">
             <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-display font-black text-[56px] text-white leading-[0.9] tracking-tight">
-              Find Your<br />Companion
+              <Trans i18nKey="pets.browser.title">Find Your<br />Companion</Trans>
             </motion.h1>
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-white/50 text-lg mt-4 max-w-md">
-              Browse pets available for adoption across Morocco
+              {t('pets.browser.subtitle')}
             </motion.p>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mt-6">
-              <span className="tag tag-coral">{allPets.length} pets available</span>
+              <span className="tag tag-coral">{t('pets.browser.count', { count: allPets.length })}</span>
             </motion.div>
           </div>
         </section>
@@ -151,16 +153,16 @@ export default function PetBrowser() {
               <div className="bg-white border border-[#E8E0D8] rounded-3xl overflow-hidden">
                 {/* Species */}
                 <div className="border-b border-[#E8E0D8] py-6 px-6">
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">Species</p>
+                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.species')}</p>
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="radio" name="species" checked={!filters.species} onChange={() => setFilters(f => ({ ...f, species: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                      <span className="text-sm text-[#0D0D0D] font-medium">All</span>
+                      <span className="text-sm text-[#0D0D0D] font-medium">{t('common.all')}</span>
                     </label>
                     {speciesOptions.map(s => (
                       <label key={s} className="flex items-center gap-2 cursor-pointer">
                         <input type="radio" name="species" checked={filters.species === s} onChange={() => setFilters(f => ({ ...f, species: s }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{s}</span>
+                        <span className="text-sm text-[#0D0D0D] font-medium">{t('species.' + s, s)}</span>
                       </label>
                     ))}
                   </div>
@@ -168,16 +170,16 @@ export default function PetBrowser() {
 
                 {/* Age */}
                 <div className="border-b border-[#E8E0D8] py-6 px-6">
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">Age</p>
+                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.age')}</p>
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="radio" name="age" checked={!filters.age} onChange={() => setFilters(f => ({ ...f, age: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                      <span className="text-sm text-[#0D0D0D] font-medium">Any</span>
+                      <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
                     </label>
                     {ageOptions.map(a => (
                       <label key={a.value} className="flex items-center gap-2 cursor-pointer">
                         <input type="radio" name="age" checked={filters.age === a.value} onChange={() => setFilters(f => ({ ...f, age: a.value }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{a.label}</span>
+                        <span className="text-sm text-[#0D0D0D] font-medium">{t('age.' + a.value, a.label)}</span>
                       </label>
                     ))}
                   </div>
@@ -185,16 +187,16 @@ export default function PetBrowser() {
 
                 {/* Size */}
                 <div className="border-b border-[#E8E0D8] py-6 px-6">
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">Size</p>
+                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('common.size')}</p>
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="radio" name="size" checked={!filters.size} onChange={() => setFilters(f => ({ ...f, size: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                      <span className="text-sm text-[#0D0D0D] font-medium">Any</span>
+                      <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
                     </label>
                     {sizeOptions.map(s => (
                       <label key={s} className="flex items-center gap-2 cursor-pointer">
                         <input type="radio" name="size" checked={filters.size === s} onChange={() => setFilters(f => ({ ...f, size: s }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{s}</span>
+                        <span className="text-sm text-[#0D0D0D] font-medium">{t('size.' + s, s)}</span>
                       </label>
                     ))}
                   </div>
@@ -202,16 +204,16 @@ export default function PetBrowser() {
 
                 {/* Gender */}
                 <div className="border-b border-[#E8E0D8] py-6 px-6">
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">Gender</p>
+                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('common.gender')}</p>
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="radio" name="gender" checked={!filters.gender} onChange={() => setFilters(f => ({ ...f, gender: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                      <span className="text-sm text-[#0D0D0D] font-medium">Any</span>
+                      <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
                     </label>
                     {genderOptions.map(g => (
                       <label key={g} className="flex items-center gap-2 cursor-pointer">
                         <input type="radio" name="gender" checked={filters.gender === g} onChange={() => setFilters(f => ({ ...f, gender: g }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{g}</span>
+                        <span className="text-sm text-[#0D0D0D] font-medium">{t('gender.' + g, g)}</span>
                       </label>
                     ))}
                   </div>
@@ -219,24 +221,24 @@ export default function PetBrowser() {
 
                 {/* Status */}
                 <div className="border-b border-[#E8E0D8] py-6 px-6">
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">Status</p>
+                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.status')}</p>
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="radio" name="status" checked={!filters.status} onChange={() => setFilters(f => ({ ...f, status: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                      <span className="text-sm text-[#0D0D0D] font-medium">Any</span>
+                      <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
                     </label>
                     {statusOptions.map(s => (
                       <label key={s} className="flex items-center gap-2 cursor-pointer">
                         <input type="radio" name="status" checked={filters.status === s} onChange={() => setFilters(f => ({ ...f, status: s }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{s}</span>
+                        <span className="text-sm text-[#0D0D0D] font-medium">{t('status.' + s, s)}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 <div className="p-6">
-                  <button onClick={handleReset} className="btn-dark w-full rounded-2xl">Apply Filters</button>
-                  <button onClick={handleReset} className="text-sm text-coral hover:underline mt-3 block w-full text-center">Reset all</button>
+                  <button onClick={handleReset} className="btn-dark w-full rounded-2xl">{t('pets.browser.filter.apply')}</button>
+                  <button onClick={handleReset} className="text-sm text-coral hover:underline mt-3 block w-full text-center">{t('pets.browser.filter.clear')}</button>
                 </div>
               </div>
             </div>
@@ -246,16 +248,16 @@ export default function PetBrowser() {
               {/* Top bar */}
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                 <p className="text-sm text-[#8c7e74]">
-                  <strong className="text-[#0D0D0D]">{filtered.length}</strong> pets found
+                  <strong className="text-[#0D0D0D]">{filtered.length}</strong> {t('pets.browser.found')}
                 </p>
                 <select value={sort} onChange={(e) => { setSort(e.target.value); setPage(1); }} className="px-4 py-2.5 rounded-xl border-2 border-[#E8E0D8] bg-white text-sm text-[#0D0D0D] outline-none focus:border-[#0D0D0D] transition-colors cursor-pointer">
-                  {sortOptions.map((opt) => (<option key={opt.value} value={opt.value}>{opt.label}</option>))}
+                  {sortOptions.map((opt) => (<option key={opt.value} value={opt.value}>{t('sort.' + opt.value, opt.label)}</option>))}
                 </select>
               </div>
 
               {/* Grid */}
               {paged.length === 0 ? (
-                <p className="text-center text-[#8c7e74] py-20">No pets match your criteria. Try adjusting the filters.</p>
+                <p className="text-center text-[#8c7e74] py-20">{t('pets.browser.noResults')}</p>
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                   {paged.map((pet, i) => (
@@ -273,12 +275,12 @@ export default function PetBrowser() {
                       </div>
                       <div className="p-5">
                         <h3 className="font-bold text-lg text-[#0D0D0D]">{pet.name}</h3>
-                        <p className="text-sm text-[#8c7e74] mt-0.5">{pet.breed || 'Mixed Breed'} · {pet.location || 'Morocco'}</p>
+                        <p className="text-sm text-[#8c7e74] mt-0.5">{pet.breed || t('common.mixedBreed')} · {pet.location || t('common.morocco')}</p>
                         <div className="flex gap-2 mt-3">
-                          <span className="tag px-3 py-1 rounded-full bg-coral-light text-coral border border-coral/20 text-[10px] font-bold tracking-widest uppercase">{pet.type || 'Pet'}</span>
-                          <span className="tag px-3 py-1 rounded-full bg-teal-light text-teal border border-teal/20 text-[10px] font-bold tracking-widest uppercase">{petAgeLabel(pet) || 'Adult'}</span>
+                          <span className="tag px-3 py-1 rounded-full bg-coral-light text-coral border border-coral/20 text-[10px] font-bold tracking-widest uppercase">{pet.type || t('common.pet')}</span>
+                          <span className="tag px-3 py-1 rounded-full bg-teal-light text-teal border border-teal/20 text-[10px] font-bold tracking-widest uppercase">{petAgeLabel(pet) || t('common.adult')}</span>
                         </div>
-                        <button onClick={(e) => { e.stopPropagation(); navigate(`/pets/${pet.id}`); }} className="btn-dark w-full mt-4 rounded-xl py-3 text-sm">Adopt Me</button>
+                        <button onClick={(e) => { e.stopPropagation(); navigate(`/pets/${pet.id}`); }} className="btn-dark w-full mt-4 rounded-xl py-3 text-sm">{t('pets.browser.adopt')}</button>
                       </div>
                     </motion.div>
                   ))}
@@ -293,7 +295,7 @@ export default function PetBrowser() {
         {/* SHELTER FILTER SECTION */}
         <section className="bg-white border-t border-[#E8E0D8] py-12 px-8">
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mb-6">Filter by Shelter</h2>
+            <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mb-6">{t('pets.browser.filter.location')}</h2>
             <div className="flex flex-wrap gap-3">
               {shelterNames.map((name) => {
                 const active = selectedShelters.includes(name);
@@ -316,14 +318,14 @@ export default function PetBrowser() {
         {/* DONATION SECTION */}
         <section className="bg-[#0D0D0D] py-16 px-8">
           <div className="max-w-6xl mx-auto text-center">
-            <h2 className="font-display font-black text-display-sm text-white">Support our mission</h2>
-            <p className="text-white/40 text-lg mt-4 mb-12 max-w-lg mx-auto">Your donation helps us rescue and care for more animals</p>
+            <h2 className="font-display font-black text-display-sm text-white">{t('pets.browser.donationTitle')}</h2>
+            <p className="text-white/40 text-lg mt-4 mb-12 max-w-lg mx-auto">{t('pets.browser.donationSubtitle')}</p>
             <div className="grid md:grid-cols-3 gap-5 max-w-3xl mx-auto">
               {[{ amt: '60 MAD' }, { amt: '120 MAD' }, { amt: '200 MAD' }].map((d, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center">
                   <p className="font-display font-black text-5xl text-white">{d.amt}</p>
-                  <p className="text-white/30 text-xs mt-1">Tax deductible</p>
-                  <button className="btn-outline-white w-full mt-6 text-sm">Donate Now</button>
+                  <p className="text-white/30 text-xs mt-1">{t('common.taxDeductible')}</p>
+                  <button className="btn-outline-white w-full mt-6 text-sm">{t('pets.browser.donate')}</button>
                 </motion.div>
               ))}
             </div>
