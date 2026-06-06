@@ -83,7 +83,7 @@ public sealed class PaymentsController : ControllerBase
                 Request.Headers["Stripe-Signature"],
                 webhookSecret);
 
-            if (stripeEvent.Type == EventTypes.PaymentIntentSucceeded)
+            if (stripeEvent.Type == "payment_intent.succeeded")
             {
                 var intent = stripeEvent.Data.Object as PaymentIntent;
                 if (intent is not null)
@@ -91,7 +91,7 @@ public sealed class PaymentsController : ControllerBase
                     await UpdatePaymentStatus(intent.Id, "succeeded", BookingStatus.Confirmed, ct);
                 }
             }
-            else if (stripeEvent.Type == EventTypes.PaymentIntentPaymentFailed)
+            else if (stripeEvent.Type == "payment_intent.payment_failed")
             {
                 var intent = stripeEvent.Data.Object as PaymentIntent;
                 if (intent is not null)

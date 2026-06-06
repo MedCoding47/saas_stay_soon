@@ -8,6 +8,7 @@
   "navbar.signIn": "Connexion",
   "navbar.getStarted": "Commencer",
   "navbar.donate": "Donner",
+  "navbar.guides": "Guides",
 
   "footer.tagline": "Connecter les animaux aux familles aimantes à travers le Maroc.",
   "footer.copyright": "© 2024 Nino. Tous droits réservés.",
@@ -109,6 +110,7 @@
   "auth.register.name": "Nom complet",
   "auth.register.confirmPassword": "Confirmer le mot de passe",
   "auth.register.passwordMismatch": "Les mots de passe ne correspondent pas",
+  "auth.register.createAccount": "Créer un compte",
   "auth.register.alreadyAccount": "Vous avez déjà un compte ?",
   "auth.register.rightTitle": "Commencez votre parcours",
   "auth.register.rightDesc": "Créez votre compte et trouvez votre compagnon idéal dès aujourd'hui.",
@@ -555,5 +557,54 @@
   "adoptQuiz.values.preferredAge.baby": "Bébé",
   "adoptQuiz.values.preferredAge.young": "Jeune",
   "adoptQuiz.values.preferredAge.adult": "Adulte",
-  "adoptQuiz.values.preferredAge.senior": "Senior"
+  "adoptQuiz.values.preferredAge.senior": "Senior",
+
+  "guides.hero.title": "Guides de soins pour animaux",
+  "guides.hero.subtitle": "Tout ce que vous devez savoir pour prendre soin de votre futur compagnon. Apprenez-en plus sur la nutrition, la santé, le toilettage et le comportement de chaque espèce.",
+
+  "guides.section.dog": "Chien",
+  "guides.section.cat": "Chat",
+  "guides.section.rabbit": "Lapin",
+  "guides.section.bird": "Oiseau",
+  "guides.section.other": "Autres animaux",
+
+  "guides.dog.title": "Guide du chien",
+  "guides.dog.overview": "Les chiens sont des compagnons loyaux et affectueux qui s'épanouissent grâce à la routine et aux interactions sociales. Ils ont besoin d'exercice quotidien, d'une alimentation équilibrée, de soins vétérinaires réguliers et de beaucoup d'amour.",
+  "guides.dog.nutrition": "Nourrissez votre chien avec des aliments secs ou humides de haute qualité, adaptés à son âge, sa taille et son niveau d'activité. Les chiots ont besoin de 3 à 4 petits repas par jour, tandis que les chiens adultes se contentent de 2 repas.",
+  "guides.dog.health": "Planifiez des visites vétérinaires annuelles et tenez les vaccins à jour. Les problèmes de santé courants incluent la dysplasie de la hanche, les infections auriculaires et les maladies dentaires.",
+  "guides.dog.grooming": "Brossez le pelage de votre chien chaque semaine — quotidiennement pour les races à poils longs. Baignez-le toutes les 4 à 8 semaines avec un shampoing spécial chien.",
+  "guides.dog.behavior": "Les chiens sont des animaux de meute qui ont besoin d'un leadership clair et d'un dressage cohérent. Commencez la socialisation tôt — exposez votre chiot à différentes personnes, animaux et environnements.",
+  "guides.dog.housing": "Les chiens ont besoin d'un espace intérieur sûr et confortable. Fournissez un lit, des jouets et de l'eau fraîche. Les chiens ayant accès à l'extérieur doivent dormir à l'intérieur.",
+
+  "guides.cat.title": "Guide du chat",
+  "guides.cat.overview": "Les chats sont des compagnons indépendants mais affectueux qui apportent chaleur et joie à tout foyer. Naturellement propres et calmes, ils sont parfaitement adaptés à la vie en appartement.",
+  "guides.cat.nutrition": "Les chats sont des carnivores stricts — ils ont besoin de protéines animales. Proposez des aliments humides de haute qualité comme aliment principal, complétés par des croquettes.",
+  "guides.cat.health": "Les visites vétérinaires annuelles sont cruciales. Gardez les vaccinations à jour et utilisez une prévention antiparasitaire régulière. Les chats d'intérieur vivent plus longtemps (15-20 ans) mais ont besoin d'enrichissement.",
+  "guides.cat.grooming": "Les chats se toilettent eux-mêmes, mais un brossage régulier réduit les boules de poils et la perte de poils. Les races à poils longs ont besoin d'un brossage quotidien.",
+  "guides.cat.behavior": "Les chats communiquent par le langage corporel — position de la queue, orientation des oreilles et ronronnements. Offrez des espaces verticaux (arbres à chat, étagères) et des cachettes.",
+  "guides.cat.housing": "Créez un foyer adapté aux chats avec des perchoirs, des coins douillets et des jouets interactifs. Un environnement calme et prévisible est la clé d'un chat heureux.",
+
+  "guides.rabbit.title": "Guide du lapin",
+  "guides.rabbit.overview": "Les lapins sont des animaux intelligents et sociaux qui font de merveilleux compagnons d'intérieur. Avec des soins appropriés, ils peuvent vivre 8 à 12 ans.",
+  "guides.rabbit.nutrition": "Le foin est la base de l'alimentation du lapin — à volonté. Complétez avec des légumes verts frais (laitue romaine, chou frisé, persil) et une petite portion de granulés riches en fibres.",
+  "guides.rabbit.health": "Les lapins ont besoin de consultations vétérinaires annuelles. Les problèmes courants incluent la surcroissance dentaire, le stase gastro-intestinale et les infections respiratoires.",
+  "guides.rabbit.grooming": "Les lapins se toilettent méticuleusement mais ont besoin d'un brossage régulier pendant les périodes de mue. Ne lavez jamais un lapin — cela cause un stress extrême.",
+  "guides.rabbit.behavior": "Les lapins sont des proies et peuvent être facilement effrayés. Déplacez-vous lentement et parlez doucement. Ils communiquent en tapant des pattes et en donnant des coups de museau.",
+  "guides.rabbit.housing": "Les lapins ont besoin d'un enclos spacieux avec de la place pour sauter et s'étirer. Ils nécessitent 4 heures ou plus d'exercice supervisé par jour en dehors de leur enclos.",
+
+  "guides.bird.title": "Guide des oiseaux",
+  "guides.bird.overview": "Les oiseaux sont des créatures intelligentes et sociales qui peuvent former des liens profonds avec leurs propriétaires. Chaque espèce a des besoins uniques.",
+  "guides.bird.nutrition": "Une alimentation équilibrée se compose de granulés de haute qualité (60-70 %), de légumes et fruits frais (20-30 %) et de graines limitées (10 %).",
+  "guides.bird.health": "Les oiseaux cachent bien leur maladie — surveillez les changements d'appétit, de déjections ou d'activité. Les examens vétérinaires annuels sont essentiels.",
+  "guides.bird.grooming": "Les oiseaux lissent leurs plumes quotidiennement. Offrez un bain peu profond ou vaporisez de l'eau tiède 2 à 3 fois par semaine.",
+  "guides.bird.behavior": "Les oiseaux ont besoin de temps quotidien hors de leur cage pour faire de l'exercice et créer des liens. Ce sont des animaux de volée qui ont besoin d'interaction sociale.",
+  "guides.bird.housing": "La cage doit être la plus grande possible. L'espacement des barreaux doit être adapté à l'espèce. Incluez des perchoirs de différents diamètres et des jouets.",
+  "guides.bird.outdoor": "Certains oiseaux peuvent être entraînés pour un temps supervisé à l'extérieur avec un harnais. Ne laissez jamais un oiseau sans surveillance à l'extérieur.",
+  "guides.bird.social": "Les oiseaux ont besoin de 1 à 3 heures d'interaction sociale directe par jour. Parlez à votre oiseau, apprenez-lui des tours et incluez-le dans les activités familiales.",
+
+  "guides.other.title": "Guide des autres animaux",
+  "guides.other.hamster": "Les hamsters sont des animaux nocturnes et solitaires qui ont besoin d'une cage spacieuse avec une litière profonde pour creuser. Nourrissez-les avec un mélange équilibré et des légumes frais.",
+  "guides.other.guineaPig": "Les cochons d'Inde sont des rongeurs sociaux qui doivent être gardés en paires ou en groupes. Ils ont besoin de foin à volonté, de granulés riches en vitamine C et de légumes frais.",
+  "guides.other.fish": "L'aquariophilie nécessite un aquarium correctement cyclé avec une filtration, un chauffage et un éclairage appropriés. Les changements d'eau réguliers (20-25 % par semaine) sont essentiels.",
+  "guides.other.reptile": "Les reptiles ont des besoins environnementaux très spécifiques : gradient de température, éclairage UVB et humidité appropriée. Renseignez-vous avant d'en acquérir un."
 }

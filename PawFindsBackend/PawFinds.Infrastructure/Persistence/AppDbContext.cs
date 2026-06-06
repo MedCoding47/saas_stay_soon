@@ -51,6 +51,12 @@ public sealed class AppDbContext : DbContext
 
     public DbSet<AdoptRequest> AdoptRequests => Set<AdoptRequest>();
 
+    public DbSet<Payment> Payments => Set<Payment>();
+
+    public DbSet<NewsletterSubscriber> NewsletterSubscribers => Set<NewsletterSubscriber>();
+
+    public DbSet<Review> Reviews => Set<Review>();
+
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var now = DateTimeOffset.UtcNow;

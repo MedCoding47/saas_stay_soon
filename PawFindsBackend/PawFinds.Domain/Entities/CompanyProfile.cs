@@ -27,4 +27,6 @@ public sealed class CompanyProfile : BaseEntity
     public double? Longitude { get; set; }
 
     public Organization? Organization { get; set; }
+
+    public ICollection<Review> Reviews { get; set; } = [];
 }

@@ -8,6 +8,7 @@
   "navbar.signIn": "Sign In",
   "navbar.getStarted": "Get Started",
   "navbar.donate": "Donate",
+  "navbar.guides": "Guides",
 
   "footer.tagline": "Connecting pets with loving families across Morocco.",
   "footer.copyright": "© 2024 Nino. All rights reserved.",
@@ -109,6 +110,7 @@
   "auth.register.name": "Full Name",
   "auth.register.confirmPassword": "Confirm Password",
   "auth.register.passwordMismatch": "Passwords do not match",
+  "auth.register.createAccount": "Create Account",
   "auth.register.alreadyAccount": "Already have an account?",
   "auth.register.rightTitle": "Start your journey",
   "auth.register.rightDesc": "Create your account and find your perfect companion today.",
@@ -557,5 +559,54 @@
   "adoptQuiz.values.preferredAge.baby": "Baby",
   "adoptQuiz.values.preferredAge.young": "Young",
   "adoptQuiz.values.preferredAge.adult": "Adult",
-  "adoptQuiz.values.preferredAge.senior": "Senior"
+  "adoptQuiz.values.preferredAge.senior": "Senior",
+
+  "guides.hero.title": "Pet Care Guides",
+  "guides.hero.subtitle": "Everything you need to know about caring for your future companion. Learn about nutrition, health, grooming, and behavior for each species.",
+
+  "guides.section.dog": "Dog",
+  "guides.section.cat": "Cat",
+  "guides.section.rabbit": "Rabbit",
+  "guides.section.bird": "Bird",
+  "guides.section.other": "Other Pets",
+
+  "guides.dog.title": "Dog Care Guide",
+  "guides.dog.overview": "Dogs are loyal, affectionate companions that thrive on routine and social interaction. They require daily exercise, a balanced diet, regular veterinary care, and plenty of love. Whether you live in an apartment or a house with a garden, there is a breed suited to your lifestyle.",
+  "guides.dog.nutrition": "Feed your dog high-quality dry or wet food appropriate for their age, size, and activity level. Puppies need 3-4 small meals per day, while adult dogs do well with 2 meals. Always provide fresh, clean water. Avoid feeding chocolate, grapes, onions, or xylitol — these are toxic to dogs.",
+  "guides.dog.health": "Schedule annual vet check-ups and keep vaccinations up to date. Common health concerns include hip dysplasia, ear infections, and dental disease. Regular parasite prevention (fleas, ticks, heartworm) is essential. Spay/neuter your dog unless you plan to breed responsibly.",
+  "guides.dog.grooming": "Brush your dog's coat weekly — daily for long-haired breeds. Bathe every 4-8 weeks using dog-specific shampoo. Trim nails monthly, clean ears weekly, and brush teeth daily to prevent periodontal disease.",
+  "guides.dog.behavior": "Dogs are pack animals that need clear leadership and consistent training. Start socialization early — expose your puppy to different people, animals, and environments. Positive reinforcement works best. Common issues like barking, chewing, or digging are often signs of boredom or anxiety.",
+  "guides.dog.housing": "Dogs need a safe, comfortable space indoors. Provide a bed, toys, and access to fresh water. Even dogs with outdoor access should sleep indoors. Secure your garden with adequate fencing. Never leave a dog chained or confined for long periods.",
+
+  "guides.cat.title": "Cat Care Guide",
+  "guides.cat.overview": "Cats are independent yet affectionate companions that bring warmth and joy to any home. They are naturally clean, quiet, and well-suited to apartment living. Each cat has a unique personality — some are cuddly lap cats, others prefer their independence.",
+  "guides.cat.nutrition": "Cats are obligate carnivores — they need meat-based protein. Provide high-quality wet food as the primary diet, supplemented with dry kibble. Always have fresh water available; consider a pet fountain as cats prefer running water. Avoid milk and raw fish.",
+  "guides.cat.health": "Annual vet visits are crucial. Keep vaccinations current and use regular parasite prevention. Indoor cats live longer (15-20 years) but need enrichment. Watch for signs of urinary issues, dental disease, and obesity — common in indoor cats. Spay/neuter is strongly recommended.",
+  "guides.cat.grooming": "Cats groom themselves, but regular brushing reduces hairballs and shedding. Long-haired breeds need daily brushing. Trim claws every 2-3 weeks and provide a scratching post. Dental hygiene is important — use cat-safe toothpaste or dental treats.",
+  "guides.cat.behavior": "Cats communicate through body language — tail position, ear orientation, and purring. Provide vertical space (cat trees, shelves) and hiding spots. Litter box placement matters: one per cat plus one extra, in quiet accessible locations. Scratching is normal — provide appropriate surfaces.",
+  "guides.cat.housing": "Create a cat-friendly home with perches, window seats, and cozy hiding spots. Secure windows and balconies if your cat goes outside. Provide interactive toys and rotate them to prevent boredom. A calm, predictable environment is key to a happy cat.",
+
+  "guides.rabbit.title": "Rabbit Care Guide",
+  "guides.rabbit.overview": "Rabbits are intelligent, social animals that make wonderful indoor companions. They form strong bonds with their owners and have distinct personalities. With proper care, rabbits can live 8-12 years. They thrive on routine and gentle handling.",
+  "guides.rabbit.nutrition": "Hay is the cornerstone of a rabbit's diet — unlimited timothy, orchard, or meadow hay. Supplement with fresh leafy greens (romaine, kale, parsley) and a small portion of high-fiber pellets. Treats like fruit should be limited. Fresh water must always be available in a bowl or bottle.",
+  "guides.rabbit.health": "Rabbits need annual vet check-ups with a rabbit-savvy veterinarian. Common health issues include dental overgrowth, GI stasis, and respiratory infections. Spay/neuter is recommended — it prevents reproductive cancers and improves behavior. Check teeth and nails monthly.",
+  "guides.rabbit.grooming": "Rabbits groom themselves meticulously but need regular brushing during shedding seasons. Long-haired breeds require daily grooming. Check and clean their rear end daily. Never bathe a rabbit — it causes extreme stress. Trim nails every 4-6 weeks.",
+  "guides.rabbit.behavior": "Rabbits are prey animals and can be easily frightened. Move slowly and speak softly. They communicate through thumping, circling, and gentle nudges. Provide enrichment: tunnels, cardboard boxes, and chew toys. A bonded pair of rabbits is happier than a single rabbit.",
+  "guides.rabbit.housing": "Rabbits need a spacious enclosure (x-pen or large cage) with room to hop and stretch. They require 4+ hours of supervised exercise daily outside their enclosure. Protect electrical cords and baseboards. Keep temperature between 15-20°C — rabbits are sensitive to heat.",
+
+  "guides.bird.title": "Bird Care Guide",
+  "guides.bird.overview": "Birds are intelligent, social creatures that can form deep bonds with their owners. From budgies to cockatiels to parrots, each species has unique needs. Birds require daily interaction, mental stimulation, and proper nutrition to thrive in captivity.",
+  "guides.bird.nutrition": "A balanced diet consists of high-quality pellets (60-70%), fresh vegetables and fruits (20-30%), and limited seeds (10%). Avoid avocado, chocolate, caffeine, and salty foods. Clean water must be changed daily. Cuttlebone provides essential calcium.",
+  "guides.bird.health": "Birds hide illness well — watch for changes in appetite, droppings, or activity. Annual vet exams are essential. Common issues include feather plucking (often behavioral), respiratory infections, and vitamin deficiencies. Avoid non-stick cookware fumes — they are lethal to birds.",
+  "guides.bird.grooming": "Birds preen their feathers daily. Provide a shallow bath dish or mist with lukewarm water 2-3 times per week. Nail and beak trims should be done by a vet. Wings can be clipped for safety — consult an avian veterinarian.",
+  "guides.bird.behavior": "Birds need daily out-of-cage time for exercise and bonding. They are naturally flock animals and need social interaction. Provide foraging toys, puzzles, and chewable items. Biting often indicates fear or territoriality — never punish, use positive reinforcement instead.",
+  "guides.bird.housing": "The cage should be the largest you can afford and fit. Bar spacing must be appropriate for the species. Include perches of varying diameters, toys (rotated weekly), and a cuttlebone. Place the cage in a busy family area but away from drafts and direct sunlight.",
+  "guides.bird.outdoor": "Some birds can be trained for supervised outdoor time with a harness. Never leave a bird unattended outdoors. Close windows and doors when your bird is out of its cage. Be aware of other household pets that may pose a threat.",
+  "guides.bird.social": "Birds need 1-3 hours of direct social interaction daily. Talk to your bird, teach it tricks, and include it in family activities. A bored bird develops behavioral problems. Consider getting a pair if you're away from home frequently.",
+
+  "guides.other.title": "Other Pets Care Guide",
+  "guides.other.hamster": "Hamsters are nocturnal, solitary animals that need a spacious cage with deep bedding for burrowing. Provide a wheel (solid surface, not wire), hideouts, and chew toys. Feed a balanced hamster mix with fresh vegetables. Clean the cage weekly. Handle gently and allow them to wake up naturally before interaction.",
+  "guides.other.guineaPig": "Guinea pigs are social, vocal rodents that must be kept in pairs or groups. They need a large cage with soft bedding, unlimited hay, vitamin C-rich pellets, and fresh vegetables. They cannot produce their own vitamin C, so deficiency is a serious risk. Handle with care and two hands.",
+  "guides.other.fish": "Fish keeping requires a properly cycled aquarium with appropriate filtration, heating, and lighting. Research your species' requirements before setting up. Regular water changes (20-25% weekly) are essential. Overfeeding is the most common mistake — feed small amounts once or twice daily.",
+  "guides.other.reptile": "Reptiles have very specific environmental needs: temperature gradient, UVB lighting, and proper humidity. Research extensively before acquiring any reptile. They require a specialized diet (live insects, supplemented with calcium and vitamins). Regular vet check-ups with a reptile specialist are important."
 }
