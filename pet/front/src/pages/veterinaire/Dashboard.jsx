@@ -9,8 +9,8 @@ import PageTransition from '../../components/animations/PageTransition';
 import Button from '../../components/ui/Button';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import Modal from '../../components/ui/Modal';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
 import { Avatar, AvatarImage, AvatarFallback } from '../../components/ui/avatar';
 import { BentoGridShowcase } from '../../components/ui/bento-grid';
 

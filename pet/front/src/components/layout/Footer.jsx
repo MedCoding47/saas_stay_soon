@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import logo from '../../assets/logo.png';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -7,7 +8,7 @@ export default function Footer() {
     <footer className="bg-[#0D0D0D] px-8 md:px-16 py-20">
       <div className="max-w-6xl mx-auto">
         <div>
-          <img src="/src/assets/logo.png" alt="Nino" className="h-8 w-auto object-contain brightness-0 invert" />
+          <img src={logo} alt="Nino" className="h-8 w-auto object-contain brightness-0 invert" />
         </div>
         <p className="text-white/40 text-lg mt-4 max-w-md">
           {t('footer.tagline')}

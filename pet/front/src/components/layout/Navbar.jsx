@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import logo from '../../assets/logo.png';
 
 export default function Navbar() {
   const { t, i18n } = useTranslation();
@@ -45,7 +46,7 @@ export default function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-8 h-16 flex items-center justify-between">
         <Link to="/" className="flex-shrink-0">
-          <img src="/src/assets/logo.png" alt="Nino" className="h-12 w-auto object-contain" />
+          <img src={logo} alt="Nino" className="h-12 w-auto object-contain" />
         </Link>
 
         <button className="lg:hidden text-xl text-[#8c7e74] hover:text-[#0D0D0D]" onClick={() => setMenuOpen(!menuOpen)}>
