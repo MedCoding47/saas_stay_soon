@@ -6,8 +6,6 @@ import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import PageTransition from '../../components/animations/PageTransition';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
-import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
 
 export default function SuperAdminUserDetails() {
   const { id } = useParams();
@@ -120,15 +118,15 @@ export default function SuperAdminUserDetails() {
     setDeleting(false);
   };
 
-  if (loading) return <PageTransition><Navbar /><div className="min-h-screen pt-24 flex items-center justify-center"><LoadingSpinner /></div><Footer /></PageTransition>;
+  if (loading) return <PageTransition><Navbar /><div className="min-h-screen bg-[#FAF7F2] pt-24 flex items-center justify-center"><LoadingSpinner /></div><Footer /></PageTransition>;
   if (!user) return null;
 
-  const roleBadgeColor = {
-    SuperAdmin: 'bg-purple-100 text-purple-700',
-    Enterprise: 'bg-blue-100 text-blue-700',
-    Client: 'bg-green-100 text-green-700',
-    Veterinaire: 'bg-amber-100 text-amber-700',
-  }[user.role] || 'bg-gray-100 text-gray-700';
+  const roleBadgeColors = {
+    SuperAdmin: 'bg-purple-50 text-purple-600 border border-purple-200',
+    Enterprise: 'bg-coral-light text-coral',
+    Client: 'bg-teal-light text-teal',
+    Veterinaire: 'bg-amber-50 text-amber-600 border border-amber-200',
+  }[user.role] || 'bg-[#FAF7F2] text-[#8c7e74] border border-[#E8E0D8]';
 
   const tabs = [
     { key: 'overview', label: 'Overview' },
@@ -141,40 +139,44 @@ export default function SuperAdminUserDetails() {
   return (
     <PageTransition>
       <Navbar />
-      <main className="min-h-screen bg-warm pt-24 pb-20">
+      <main className="min-h-screen bg-[#FAF7F2] pt-24 pb-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <button onClick={() => navigate('/superadmin/dashboard')} className="text-sm text-coral hover:underline mb-4 inline-block">&larr; Back to Dashboard</button>
 
-          <div className="bg-white rounded-2xl shadow-card overflow-hidden">
-            <div className="bg-gradient-to-r from-coral to-coral-dark p-6 text-white flex items-start justify-between">
+          <div className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden">
+            <div className="px-8 py-6 border-b border-[#E8E0D8] flex items-start justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold">
+                <div className="w-14 h-14 rounded-2xl bg-[#FAF7F2] border-2 border-[#E8E0D8] flex items-center justify-center text-xl font-bold text-[#0D0D0D]">
                   {user.fullName?.charAt(0)?.toUpperCase() || '?'}
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold">{user.fullName}</h1>
-                  <p className="text-white/80 text-sm">{user.email}</p>
-                  <span className={`inline-block mt-1 px-3 py-0.5 rounded-full text-xs font-semibold ${roleBadgeColor}`}>{user.role}</span>
+                  <h1 className="font-display font-black text-2xl text-[#0D0D0D]">{user.fullName}</h1>
+                  <p className="text-sm text-[#8c7e74]">{user.email}</p>
+                  <span className={`inline-block mt-1 px-3 py-0.5 rounded-full text-xs font-semibold ${roleBadgeColors}`}>{user.role}</span>
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => handleEdit('user')} className="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-medium transition-colors">Edit</button>
-                <button onClick={handleResetPassword} disabled={resetting} className="px-3 py-1.5 bg-amber-400/30 hover:bg-amber-400/50 rounded-lg text-xs font-medium transition-colors">{resetting ? '...' : 'Reset PW'}</button>
-                <button onClick={handleDelete} disabled={deleting} className="px-3 py-1.5 bg-red-500/30 hover:bg-red-500/50 rounded-lg text-xs font-medium transition-colors">{deleting ? '...' : 'Deactivate'}</button>
+                <button onClick={() => handleEdit('user')} className="px-4 py-2 rounded-xl border-2 border-[#E8E0D8] text-[#8c7e74] text-sm font-semibold hover:border-[#0D0D0D] hover:text-[#0D0D0D] transition-colors">Edit</button>
+                <button onClick={handleResetPassword} disabled={resetting} className="px-4 py-2 rounded-xl border-2 border-[#E8E0D8] text-[#8c7e74] text-sm font-semibold hover:border-amber-400 hover:text-amber-600 transition-colors disabled:opacity-50">{resetting ? '...' : 'Reset PW'}</button>
+                <button onClick={handleDelete} disabled={deleting} className="px-4 py-2 rounded-xl border-2 border-red-200 text-red-500 text-sm font-semibold hover:bg-red-50 transition-colors disabled:opacity-50">{deleting ? '...' : 'Deactivate'}</button>
               </div>
             </div>
 
-            <div className="flex gap-1 px-6 pt-4 border-b border-warm-dark/20">
+            <div className="flex gap-2 px-8 pt-4 pb-0 border-b border-[#E8E0D8]">
               {tabs.map((t) => (
                 <button key={t.key} onClick={() => setTab(t.key)}
-                  className={`px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${tab === t.key ? 'bg-warm text-coral border-b-2 border-coral' : 'text-muted hover:text-gray-700'}`}>
+                  className={`rounded-full px-5 py-2 text-sm font-semibold transition-all ${
+                    tab === t.key
+                      ? 'bg-[#0D0D0D] text-[#FAF7F2]'
+                      : 'bg-[#FAF7F2] text-[#8c7e74] border border-[#E8E0D8]'
+                  }`}>
                   {t.label}
                 </button>
               ))}
             </div>
 
-            <div className="p-6">
-              {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-lg">{error}</p>}
+            <div className="p-8">
+              {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-xl">{error}</p>}
 
               {tab === 'overview' && (
                 <div className="space-y-6">
@@ -183,23 +185,23 @@ export default function SuperAdminUserDetails() {
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <h2 className="text-lg font-bold text-gray-900 mb-3">Account Info</h2>
-                        <dl className="space-y-3 text-sm">
-                          <Row label="Status" value={user.isActive ? 'Active' : 'Inactive'} className={user.isActive ? 'text-green-600' : 'text-red-500'} />
-                          <Row label="Phone" value={user.phone || '—'} />
+                        <h2 className="font-display font-black text-lg text-[#0D0D0D] mb-3">Account Info</h2>
+                        <dl className="space-y-3 text-sm bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-5">
+                          <Row label="Status" value={user.isActive ? 'Active' : 'Inactive'} className={user.isActive ? 'text-teal font-semibold' : 'text-red-500 font-semibold'} />
+                          <Row label="Phone" value={user.phone || '\u2014'} />
                           <Row label="Member since" value={new Date(user.createdAt).toLocaleDateString()} />
-                          <Row label="Last updated" value={user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : '—'} />
-                          <Row label="About" value={user.about || '—'} />
+                          <Row label="Last updated" value={user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : '\u2014'} />
+                          <Row label="About" value={user.about || '\u2014'} />
                         </dl>
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-gray-900 mb-3">Organization</h2>
-                        <dl className="space-y-3 text-sm">
-                          <Row label="Name" value={user.orgName || '—'} />
-                          <Row label="Slug" value={user.orgSlug || '—'} />
+                        <h2 className="font-display font-black text-lg text-[#0D0D0D] mb-3">Organization</h2>
+                        <dl className="space-y-3 text-sm bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-5">
+                          <Row label="Name" value={user.orgName || '\u2014'} />
+                          <Row label="Slug" value={user.orgSlug || '\u2014'} />
                           {user.orgName && (
                             <div className="pt-2">
-                              <Link to={`/superadmin/organizations/${user.organizationId}`} className="text-coral text-xs hover:underline">View Organization Details &rarr;</Link>
+                              <Link to={`/superadmin/organizations/${user.organizationId}`} className="text-coral text-sm font-semibold hover:underline">View Organization Details &rarr;</Link>
                             </div>
                           )}
                         </dl>
@@ -208,10 +210,18 @@ export default function SuperAdminUserDetails() {
                   )}
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <StatCard label="Pets" value={user.petsCount} />
-                    <StatCard label="Adoptions" value={user.adoptionsCount} />
-                    <StatCard label="Favorites" value={user.favoritesCount} />
-                    <StatCard label="Bookings" value={user.bookingsCount} />
+                    {[
+                      { label: 'Pets', value: user.petsCount },
+                      { label: 'Adoptions', value: user.adoptionsCount },
+                      { label: 'Favorites', value: user.favoritesCount },
+                      { label: 'Bookings', value: user.bookingsCount },
+                    ].map((s) => (
+                      <motion.div key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                        className="bg-[#FAF7F2] rounded-3xl border border-[#E8E0D8] p-6 text-center">
+                        <p className="font-display font-black text-[40px] leading-none text-[#0D0D0D]">{s.value}</p>
+                        <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mt-2">{s.label}</p>
+                      </motion.div>
+                    ))}
                   </div>
                 </div>
               )}
@@ -229,7 +239,7 @@ export default function SuperAdminUserDetails() {
                       { label: 'Description', key: 'description' },
                     ]} onEdit={() => handleEdit('company')} />
                     {(user.companyProfile.latitude != null && user.companyProfile.longitude != null) && (
-                      <div className="mt-4 rounded-xl overflow-hidden border border-gray-200">
+                      <div className="mt-4 rounded-2xl overflow-hidden border border-[#E8E0D8]">
                         <iframe
                           src={`https://maps.google.com/maps?q=${user.companyProfile.latitude},${user.companyProfile.longitude}&z=15&output=embed`}
                           width="100%" height="200" style={{ border: 0 }} allowFullScreen loading="lazy"
@@ -239,7 +249,7 @@ export default function SuperAdminUserDetails() {
                     )}
                     {user.companyProfile.googleMapsUrl && (
                       <a href={user.companyProfile.googleMapsUrl} target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm text-teal hover:text-teal-dark mt-3 transition-colors">
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-coral hover:underline mt-3 transition-colors">
                         View on Google Maps &rarr;
                       </a>
                     )}
@@ -254,12 +264,12 @@ export default function SuperAdminUserDetails() {
                       { label: 'Clinic', key: 'clinicName' },
                       { label: 'Location', key: 'location' },
                       { label: 'Phone', key: 'phone' },
-                      { label: 'Available', key: 'isAvailable', render: (v) => v ? 'Yes' : 'No', className: (v) => v ? 'text-green-600' : 'text-red-500' },
+                      { label: 'Available', key: 'isAvailable', render: (v) => v ? 'Yes' : 'No', className: (v) => v ? 'text-teal font-semibold' : 'text-red-500 font-semibold' },
                       { label: 'Formation', key: 'formation' },
                       { label: 'Description', key: 'description' },
                     ]} onEdit={() => handleEdit('vet')} />
                     {(user.veterinaireProfile.latitude != null && user.veterinaireProfile.longitude != null) && (
-                      <div className="mt-4 rounded-xl overflow-hidden border border-gray-200">
+                      <div className="mt-4 rounded-2xl overflow-hidden border border-[#E8E0D8]">
                         <iframe
                           src={`https://maps.google.com/maps?q=${user.veterinaireProfile.latitude},${user.veterinaireProfile.longitude}&z=15&output=embed`}
                           width="100%" height="200" style={{ border: 0 }} allowFullScreen loading="lazy"
@@ -269,7 +279,7 @@ export default function SuperAdminUserDetails() {
                     )}
                     {user.veterinaireProfile.googleMapsUrl && (
                       <a href={user.veterinaireProfile.googleMapsUrl} target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm text-teal hover:text-teal-dark mt-3 transition-colors">
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-coral hover:underline mt-3 transition-colors">
                         View on Google Maps &rarr;
                       </a>
                     )}
@@ -278,15 +288,15 @@ export default function SuperAdminUserDetails() {
 
               {tab === 'pets' && (
                 pets.length === 0
-                  ? <p className="text-center text-muted py-12">No pets found for this user.</p>
+                  ? <p className="text-center text-[#8c7e74] py-12">No pets found for this user.</p>
                   : <div className="grid gap-3">
                     {pets.map((p) => (
-                      <div key={p.id} className="bg-warm rounded-xl p-4 flex items-center justify-between">
+                      <div key={p.id} className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-4 flex items-center justify-between">
                         <div>
-                          <span className="font-bold text-gray-900">{p.name}</span>
-                          <span className="text-muted text-sm ml-2">{p.type}{p.breed ? ` - ${p.breed}` : ''}</span>
+                          <span className="font-bold text-[#0D0D0D]">{p.name}</span>
+                          <span className="text-[#8c7e74] text-sm ml-2">{p.type}{p.breed ? ` - ${p.breed}` : ''}</span>
                         </div>
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${p.status === 'Available' ? 'bg-green-100 text-green-700' : p.status === 'Adopted' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>{p.status}</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${p.status === 'Available' ? 'bg-teal-light text-teal' : p.status === 'Adopted' ? 'bg-blue-50 text-blue-600' : 'bg-[#FAF7F2] text-[#8c7e74] border border-[#E8E0D8]'}`}>{p.status}</span>
                       </div>
                     ))}
                   </div>
@@ -294,16 +304,16 @@ export default function SuperAdminUserDetails() {
 
               {tab === 'adoptions' && (
                 adoptions.length === 0
-                  ? <p className="text-center text-muted py-12">No adoptions found.</p>
+                  ? <p className="text-center text-[#8c7e74] py-12">No adoptions found.</p>
                   : <div className="space-y-3">
                     {adoptions.map((a) => (
-                      <div key={a.id} className="bg-warm rounded-xl p-4 flex items-center justify-between">
+                      <div key={a.id} className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-4 flex items-center justify-between">
                         <div>
-                          <span className="font-bold text-gray-900">{a.petName}</span>
-                          <span className="text-muted text-sm ml-2">by {a.adopterName}</span>
-                          <p className="text-xs text-muted-light mt-0.5">{new Date(a.createdAt).toLocaleDateString()}</p>
+                          <span className="font-bold text-[#0D0D0D]">{a.petName}</span>
+                          <span className="text-[#8c7e74] text-sm ml-2">by {a.adopterName}</span>
+                          <p className="text-xs text-[#8c7e74] mt-0.5">{new Date(a.createdAt).toLocaleDateString()}</p>
                         </div>
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${a.status === 'Completed' ? 'bg-green-100 text-green-700' : a.status === 'Pending' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'}`}>{a.status}</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${a.status === 'Completed' ? 'bg-teal-light text-teal' : a.status === 'Pending' ? 'bg-amber-50 text-amber-600' : 'bg-[#FAF7F2] text-[#8c7e74] border border-[#E8E0D8]'}`}>{a.status}</span>
                       </div>
                     ))}
                   </div>
@@ -314,12 +324,12 @@ export default function SuperAdminUserDetails() {
 
         {resetPassword && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setResetPassword('')}>
-            <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4 text-center" onClick={(e) => e.stopPropagation()}>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Password Reset</h3>
-              <p className="text-sm text-muted mb-4">New password for {user?.fullName}:</p>
-              <div className="bg-warm rounded-xl p-4 mb-4 font-mono text-lg font-bold text-coral break-all select-all">{resetPassword}</div>
-              <p className="text-xs text-muted-light mb-4">Share this password securely with the user. It will not be shown again.</p>
-              <button onClick={() => setResetPassword('')} className="px-6 py-2 bg-coral text-white rounded-pill text-sm font-medium hover:bg-coral-dark transition-colors">Done</button>
+            <div className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-sm mx-4 text-center" onClick={(e) => e.stopPropagation()}>
+              <h3 className="font-display font-black text-lg text-[#0D0D0D] mb-2">Password Reset</h3>
+              <p className="text-sm text-[#8c7e74] mb-4">New password for {user?.fullName}:</p>
+              <div className="bg-[#FAF7F2] rounded-2xl p-4 mb-4 font-mono text-lg font-bold text-coral break-all select-all">{resetPassword}</div>
+              <p className="text-xs text-[#8c7e74] mb-4">Share this password securely with the user. It will not be shown again.</p>
+              <button onClick={() => setResetPassword('')} className="px-6 py-2.5 bg-[#0D0D0D] text-[#FAF7F2] rounded-xl text-sm font-semibold hover:bg-[#2A2A2A] transition-colors">Done</button>
             </div>
           </div>
         )}
@@ -332,17 +342,8 @@ export default function SuperAdminUserDetails() {
 function Row({ label, value, className }) {
   return (
     <div className="flex justify-between">
-      <dt className="text-muted">{label}</dt>
-      <dd className={`font-medium ${className || ''}`}>{value}</dd>
-    </div>
-  );
-}
-
-function StatCard({ label, value }) {
-  return (
-    <div className="bg-warm rounded-xl p-4 text-center">
-      <p className="text-2xl font-bold text-coral">{value}</p>
-      <p className="text-xs text-muted mt-1">{label}</p>
+      <dt className="text-[#8c7e74]">{label}</dt>
+      <dd className={`font-medium text-[#0D0D0D] ${className || ''}`}>{value}</dd>
     </div>
   );
 }
@@ -351,15 +352,15 @@ function ProfileView({ data, fields, onEdit }) {
   return (
     <div>
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-lg font-bold text-gray-900">Details</h2>
-        <button onClick={onEdit} className="text-sm text-coral hover:underline">Edit</button>
+        <h2 className="font-display font-black text-lg text-[#0D0D0D]">Details</h2>
+        <button onClick={onEdit} className="text-sm font-semibold text-coral hover:underline">Edit</button>
       </div>
-      <div className="bg-warm rounded-xl p-4 text-sm grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-5 text-sm grid grid-cols-1 md:grid-cols-2 gap-3">
         {fields.map((f) => (
           <div key={f.key}>
-            <span className="text-muted">{f.label}: </span>
-            <span className={`font-medium ${f.className ? f.className(data[f.key]) : ''}`}>
-              {f.render ? f.render(data[f.key]) : (data[f.key] || '—')}
+            <span className="text-[#8c7e74]">{f.label}: </span>
+            <span className={`font-medium text-[#0D0D0D] ${f.className ? f.className(data[f.key]) : ''}`}>
+              {f.render ? f.render(data[f.key]) : (data[f.key] || '\u2014')}
             </span>
           </div>
         ))}
@@ -376,24 +377,45 @@ function UserEditForm({ user, onSave, onCancel, saving }) {
   };
   return (
     <div>
-      <h2 className="text-lg font-bold text-gray-900 mb-3">Edit User</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input label="Full Name" name="fullName" value={form.fullName} onChange={handleChange} required />
-        <Input label="Email" name="email" value={form.email} onChange={handleChange} required type="email" />
-        <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
-        <div className="flex items-center gap-3 pt-6">
-          <input type="checkbox" id="isActive" name="isActive" checked={form.isActive} onChange={handleChange} className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral" />
-          <label htmlFor="isActive" className="text-sm font-medium text-gray-700">Active</label>
+      <h2 className="font-display font-black text-lg text-[#0D0D0D] mb-3">Edit User</h2>
+      <div className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Full Name</label>
+            <input name="fullName" value={form.fullName} onChange={handleChange} required
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Email</label>
+            <input name="email" value={form.email} onChange={handleChange} required type="email"
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Phone</label>
+            <input name="phone" value={form.phone} onChange={handleChange}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div className="flex items-center gap-3 pt-6">
+            <input type="checkbox" id="isActive" name="isActive" checked={form.isActive} onChange={handleChange}
+              className="w-4 h-4 rounded border-[#E8E0D8] text-[#0D0D0D] focus:ring-[#0D0D0D]" />
+            <label htmlFor="isActive" className="text-sm font-semibold text-[#0D0D0D]">Active</label>
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">About</label>
+            <textarea name="about" value={form.about} onChange={handleChange} rows={2}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors resize-none" />
+          </div>
         </div>
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">About</label>
-          <textarea name="about" value={form.about} onChange={handleChange} rows={2}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none" />
+        <div className="flex gap-3 mt-4">
+          <button onClick={() => onSave(form)} disabled={saving}
+            className="px-6 py-3 bg-[#0D0D0D] text-[#FAF7F2] rounded-xl text-sm font-semibold hover:bg-[#2A2A2A] transition-colors disabled:opacity-50">
+            {saving ? 'Saving...' : 'Save'}
+          </button>
+          <button onClick={onCancel}
+            className="px-6 py-3 rounded-xl border-2 border-[#E8E0D8] text-[#8c7e74] text-sm font-semibold hover:border-[#0D0D0D] hover:text-[#0D0D0D] transition-colors">
+            Cancel
+          </button>
         </div>
-      </div>
-      <div className="flex gap-3 mt-4">
-        <Button onClick={() => onSave(form)} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
-        <Button variant="outline" onClick={onCancel}>Cancel</Button>
       </div>
     </div>
   );
@@ -408,23 +430,55 @@ function CompanyEditForm({ profile, onSave, onCancel, saving }) {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   return (
     <div>
-      <h2 className="text-lg font-bold text-gray-900 mb-3">Edit Company Profile</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input label="Company Name" name="companyName" value={form.companyName} onChange={handleChange} required />
-        <Input label="Location" name="location" value={form.location} onChange={handleChange} required />
-        <Input label="Google Maps URL" name="googleMapsUrl" value={form.googleMapsUrl} onChange={handleChange} placeholder="https://maps.google.com/maps?q=..." />
-        <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
-        <Input label="Email" name="email" value={form.email} onChange={handleChange} type="email" />
-        <Input label="Website" name="website" value={form.website} onChange={handleChange} />
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-          <textarea name="description" value={form.description} onChange={handleChange} rows={2}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none" />
+      <h2 className="font-display font-black text-lg text-[#0D0D0D] mb-3">Edit Company Profile</h2>
+      <div className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Company Name</label>
+            <input name="companyName" value={form.companyName} onChange={handleChange} required
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Location</label>
+            <input name="location" value={form.location} onChange={handleChange} required
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Google Maps URL</label>
+            <input name="googleMapsUrl" value={form.googleMapsUrl} onChange={handleChange} placeholder="https://maps.google.com/maps?q=..."
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Phone</label>
+            <input name="phone" value={form.phone} onChange={handleChange}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Email</label>
+            <input name="email" value={form.email} onChange={handleChange} type="email"
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Website</label>
+            <input name="website" value={form.website} onChange={handleChange}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Description</label>
+            <textarea name="description" value={form.description} onChange={handleChange} rows={2}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors resize-none" />
+          </div>
         </div>
-      </div>
-      <div className="flex gap-3 mt-4">
-        <Button onClick={() => onSave(form)} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
-        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+        <div className="flex gap-3 mt-4">
+          <button onClick={() => onSave(form)} disabled={saving}
+            className="px-6 py-3 bg-[#0D0D0D] text-[#FAF7F2] rounded-xl text-sm font-semibold hover:bg-[#2A2A2A] transition-colors disabled:opacity-50">
+            {saving ? 'Saving...' : 'Save'}
+          </button>
+          <button onClick={onCancel}
+            className="px-6 py-3 rounded-xl border-2 border-[#E8E0D8] text-[#8c7e74] text-sm font-semibold hover:border-[#0D0D0D] hover:text-[#0D0D0D] transition-colors">
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -443,31 +497,56 @@ function VetEditForm({ profile, onSave, onCancel, saving }) {
   };
   return (
     <div>
-      <h2 className="text-lg font-bold text-gray-900 mb-3">Edit Clinic Profile</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input label="Clinic Name" name="clinicName" value={form.clinicName} onChange={handleChange} required />
-        <Input label="Location" name="location" value={form.location} onChange={handleChange} required />
-        <Input label="Google Maps URL" name="googleMapsUrl" value={form.googleMapsUrl} onChange={handleChange} placeholder="https://maps.google.com/maps?q=..." />
-        <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
-        <div className="flex items-center gap-3 pt-6">
-          <input type="checkbox" id="isAvailable" name="isAvailable" checked={form.isAvailable} onChange={handleChange} className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral" />
-          <label htmlFor="isAvailable" className="text-sm font-medium text-gray-700">Available</label>
+      <h2 className="font-display font-black text-lg text-[#0D0D0D] mb-3">Edit Clinic Profile</h2>
+      <div className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Clinic Name</label>
+            <input name="clinicName" value={form.clinicName} onChange={handleChange} required
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Location</label>
+            <input name="location" value={form.location} onChange={handleChange} required
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Google Maps URL</label>
+            <input name="googleMapsUrl" value={form.googleMapsUrl} onChange={handleChange} placeholder="https://maps.google.com/maps?q=..."
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Phone</label>
+            <input name="phone" value={form.phone} onChange={handleChange}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+          </div>
+          <div className="flex items-center gap-3 pt-6">
+            <input type="checkbox" id="isAvailable" name="isAvailable" checked={form.isAvailable} onChange={handleChange}
+              className="w-4 h-4 rounded border-[#E8E0D8] text-[#0D0D0D] focus:ring-[#0D0D0D]" />
+            <label htmlFor="isAvailable" className="text-sm font-semibold text-[#0D0D0D]">Available</label>
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Formation / Credentials</label>
+            <textarea name="formation" value={form.formation} onChange={handleChange} rows={2}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors resize-none"
+              placeholder="Degrees, certifications, specialties..." />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Description</label>
+            <textarea name="description" value={form.description} onChange={handleChange} rows={2}
+              className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors resize-none" />
+          </div>
         </div>
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Formation / Credentials</label>
-          <textarea name="formation" value={form.formation} onChange={handleChange} rows={2}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none"
-            placeholder="Degrees, certifications, specialties..." />
+        <div className="flex gap-3 mt-4">
+          <button onClick={() => onSave(form)} disabled={saving}
+            className="px-6 py-3 bg-[#0D0D0D] text-[#FAF7F2] rounded-xl text-sm font-semibold hover:bg-[#2A2A2A] transition-colors disabled:opacity-50">
+            {saving ? 'Saving...' : 'Save'}
+          </button>
+          <button onClick={onCancel}
+            className="px-6 py-3 rounded-xl border-2 border-[#E8E0D8] text-[#8c7e74] text-sm font-semibold hover:border-[#0D0D0D] hover:text-[#0D0D0D] transition-colors">
+            Cancel
+          </button>
         </div>
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-          <textarea name="description" value={form.description} onChange={handleChange} rows={2}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none" />
-        </div>
-      </div>
-      <div className="flex gap-3 mt-4">
-        <Button onClick={() => onSave(form)} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
-        <Button variant="outline" onClick={onCancel}>Cancel</Button>
       </div>
     </div>
   );

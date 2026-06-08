@@ -6,7 +6,6 @@ import api from '../../api/client';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import PageTransition from '../../components/animations/PageTransition';
-import Button from '../../components/ui/Button';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const roleBadgeClass = (role) => {
@@ -113,7 +112,7 @@ export default function SuperAdminDashboard() {
             <div className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden">
               <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E0D8]">
                 <span className="text-xs font-bold tracking-widest uppercase text-[#8c7e74]">{t('dashboard.superadmin.usersCount', { count: users.length })}</span>
-                <Link to="/superadmin/create-account" className="btn-dark text-sm px-5 py-2">{t('dashboard.superadmin.createAccount')}</Link>
+                <Link to="/superadmin/create-account" className="bg-[#0D0D0D] text-[#FAF7F2] rounded-xl px-5 py-2.5 text-sm font-semibold hover:bg-[#2A2A2A] transition-colors">{t('dashboard.superadmin.createAccount')}</Link>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -157,7 +156,7 @@ export default function SuperAdminDashboard() {
 
           {tab === 'orgs' && (
             <div className="grid gap-4">
-              {orgs.map((o) => (
+                  {orgs.map((o) => (
                 <motion.div key={o.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   className="bg-white rounded-3xl border border-[#E8E0D8] p-6 flex items-center justify-between">
                   <div>
@@ -168,7 +167,8 @@ export default function SuperAdminDashboard() {
                     </h3>
                     <p className="text-xs text-[#8c7e74] mt-1">{t('dashboard.superadmin.slug')}: {o.slug} &middot; {o.userCount} {t('dashboard.superadmin.users').toLowerCase()} &middot; {o.petCount} {t('dashboard.superadmin.pets').toLowerCase()}</p>
                   </div>
-                  <span className={`text-xs font-semibold px-3 py-1 rounded-full ${o.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                  <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full ${o.isActive ? 'bg-teal-light text-teal' : 'bg-red-50 text-red-500'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${o.isActive ? 'bg-teal' : 'bg-red-500'}`} />
                     {o.isActive ? t('common.active') : t('common.inactive')}
                   </span>
                 </motion.div>
@@ -192,12 +192,12 @@ export default function SuperAdminDashboard() {
                           <p className="text-xs text-[#8c7e74] mt-1">{t('dashboard.superadmin.created')}: {new Date(r.createdAt).toLocaleDateString()}</p>
                           {r.isOverdue && <p className="text-xs text-red-500 font-semibold mt-1">{'\u26A0'} {t('dashboard.superadmin.overdue')}</p>}
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${r.status === 'Pending' ? 'bg-amber-100 text-amber-700' : r.status === 'Approved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{t('common.status.' + r.status)}</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${r.status === 'Pending' ? 'bg-amber-50 text-amber-600 border border-amber-200' : r.status === 'Approved' ? 'bg-teal-light text-teal' : 'bg-red-50 text-red-500 border border-red-200'}`}>{t('common.status.' + r.status)}</span>
                       </div>
                       {r.status === 'Pending' && (
                         <div className="flex gap-2 mt-4">
-                          <Button variant="primary" className="!rounded-pill !px-4 !py-1.5 text-xs" onClick={() => handleRespond(r.id, true)}>{t('dashboard.superadmin.approve')}</Button>
-                          <Button variant="outline" className="!rounded-pill !px-4 !py-1.5 text-xs !border-red-400 !text-red-500" onClick={() => handleRespond(r.id, false)}>{t('dashboard.superadmin.reject')}</Button>
+                          <button onClick={() => handleRespond(r.id, true)} className="px-5 py-2 bg-[#0D0D0D] text-[#FAF7F2] rounded-xl text-sm font-semibold hover:bg-[#2A2A2A] transition-colors">{t('dashboard.superadmin.approve')}</button>
+                          <button onClick={() => handleRespond(r.id, false)} className="px-5 py-2 rounded-xl border-2 border-red-200 text-red-500 text-sm font-semibold hover:bg-red-50 transition-colors">{t('dashboard.superadmin.reject')}</button>
                         </div>
                       )}
                     </motion.div>

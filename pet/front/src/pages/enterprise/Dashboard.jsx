@@ -21,14 +21,14 @@ export default function EnterpriseDashboard() {
 
   /* ---- Add pet state ---- */
   const [showAddPet, setShowAddPet] = useState(false);
-  const [petForm, setPetForm] = useState({ name: '', type: '', breed: '', age: 1, location: '', description: '', isVaccinated: false, isSterilized: false, isDewormed: false, healthNotes: '', goodWithKids: false, goodWithDogs: false, goodWithCats: false, behaviorNotes: '', productIds: [] });
+  const [petForm, setPetForm] = useState({ name: '', type: '', breed: '', age: 1, location: '', description: '', isVaccinated: false, isSterilized: false, isDewormed: false, healthNotes: '', goodWithKids: false, goodWithDogs: false, goodWithCats: false, behaviorNotes: '', productIds: [], size: '', energyLevel: '', needsGarden: false, isSos: false });
   const [petImageFile, setPetImageFile] = useState(null);
   const [savingPet, setSavingPet] = useState(false);
   const [petError, setPetError] = useState('');
 
   /* ---- Edit profile state ---- */
   const [editingProfile, setEditingProfile] = useState(false);
-  const [profileForm, setProfileForm] = useState({ companyName: '', location: '', phone: '', email: '', description: '', website: '', logoUrl: '' });
+  const [profileForm, setProfileForm] = useState({ companyName: '', location: '', phone: '', email: '', description: '', website: '', logoUrl: '', address: '', googleMapsUrl: '', openingHours: '' });
   const [profileLogoFile, setProfileLogoFile] = useState(null);
   const [savingProfile, setSavingProfile] = useState(false);
   const [profileError, setProfileError] = useState('');
@@ -44,7 +44,7 @@ export default function EnterpriseDashboard() {
 
   /* ---- Edit pet state ---- */
   const [editingPet, setEditingPet] = useState(null);
-  const [editPetForm, setEditPetForm] = useState({ name: '', type: '', breed: '', age: 1, location: '', description: '', isVaccinated: false, isSterilized: false, isDewormed: false, healthNotes: '', goodWithKids: false, goodWithDogs: false, goodWithCats: false, behaviorNotes: '', productIds: [] });
+  const [editPetForm, setEditPetForm] = useState({ name: '', type: '', breed: '', age: 1, location: '', description: '', isVaccinated: false, isSterilized: false, isDewormed: false, healthNotes: '', goodWithKids: false, goodWithDogs: false, goodWithCats: false, behaviorNotes: '', productIds: [], size: '', energyLevel: '', needsGarden: false, isSos: false });
   const [editPetImageFile, setEditPetImageFile] = useState(null);
   const [savingEditPet, setSavingEditPet] = useState(false);
   const [editPetError, setEditPetError] = useState('');
@@ -65,6 +65,9 @@ export default function EnterpriseDashboard() {
         description: profileRes.data?.description || '',
         website: profileRes.data?.website || '',
         logoUrl: profileRes.data?.logoUrl || '',
+        address: profileRes.data?.address || '',
+        googleMapsUrl: profileRes.data?.googleMapsUrl || '',
+        openingHours: profileRes.data?.openingHours || '',
       });
 
       const prodMap = {};
@@ -166,9 +169,13 @@ export default function EnterpriseDashboard() {
         goodWithCats: petForm.goodWithCats || null,
         behaviorNotes: petForm.behaviorNotes || null,
         productIds: petForm.productIds || [],
+        size: petForm.size || null,
+        energyLevel: petForm.energyLevel || null,
+        needsGarden: petForm.needsGarden || null,
+        isSos: petForm.isSos || false,
       });
       setShowAddPet(false);
-      setPetForm({ name: '', type: '', breed: '', age: 1, location: '', description: '', isVaccinated: false, isSterilized: false, isDewormed: false, healthNotes: '', goodWithKids: false, goodWithDogs: false, goodWithCats: false, behaviorNotes: '', productIds: [] });
+      setPetForm({ name: '', type: '', breed: '', age: 1, location: '', description: '', isVaccinated: false, isSterilized: false, isDewormed: false, healthNotes: '', goodWithKids: false, goodWithDogs: false, goodWithCats: false, behaviorNotes: '', productIds: [], size: '', energyLevel: '', needsGarden: false, isSos: false });
       setPetImageFile(null);
       setLoading(true);
       await loadData();
@@ -226,6 +233,10 @@ export default function EnterpriseDashboard() {
       goodWithCats: pet.goodWithCats || false,
       behaviorNotes: pet.behaviorNotes || '',
       productIds: [],
+      size: pet.size || '',
+      energyLevel: pet.energyLevel || '',
+      needsGarden: pet.needsGarden || false,
+      isSos: pet.isSos || false,
     });
     setEditPetImageFile(null);
     setEditPetError('');
@@ -267,6 +278,10 @@ export default function EnterpriseDashboard() {
         goodWithCats: editPetForm.goodWithCats || null,
         behaviorNotes: editPetForm.behaviorNotes || null,
         productIds: editPetForm.productIds || [],
+        size: editPetForm.size || null,
+        energyLevel: editPetForm.energyLevel || null,
+        needsGarden: editPetForm.needsGarden || null,
+        isSos: editPetForm.isSos || false,
       });
       setEditingPet(null);
       setSavingEditPet(false);
@@ -300,6 +315,9 @@ export default function EnterpriseDashboard() {
       description: profile?.description || '',
       website: profile?.website || '',
       logoUrl: profile?.logoUrl || '',
+      address: profile?.address || '',
+      googleMapsUrl: profile?.googleMapsUrl || '',
+      openingHours: profile?.openingHours || '',
     });
     setProfileLogoFile(null);
     setEditingProfile(true);
@@ -322,6 +340,9 @@ export default function EnterpriseDashboard() {
         description: profileForm.description || null,
         website: profileForm.website || null,
         logoUrl: logoUrl || null,
+        address: profileForm.address || null,
+        googleMapsUrl: profileForm.googleMapsUrl || null,
+        openingHours: profileForm.openingHours || null,
       });
       setEditingProfile(false);
       setProfileLogoFile(null);
@@ -500,6 +521,42 @@ export default function EnterpriseDashboard() {
                         <textarea className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" rows="2" placeholder={t('dashboard.enterprise.behaviorNotesPlaceholder')} value={petForm.behaviorNotes} onChange={(e) => setPetForm({ ...petForm, behaviorNotes: e.target.value })} />
                       </div>
 
+                      <div>
+                        <h4 className="text-xs font-bold text-[#8c7e74] uppercase tracking-wider mb-3">{t('pets.details.livingConditions')}</h4>
+                        <div className="grid grid-cols-2 gap-3 mb-3">
+                          <div>
+                            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('common.size')}</label>
+                            <select className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={petForm.size} onChange={(e) => setPetForm({ ...petForm, size: e.target.value })}>
+                              <option value="">{t('common.select')}</option>
+                              <option value="Small">{t('common.size.small')}</option>
+                              <option value="Medium">{t('common.size.medium')}</option>
+                              <option value="Large">{t('common.size.large')}</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('dashboard.enterprise.energyLevel')}</label>
+                            <select className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={petForm.energyLevel} onChange={(e) => setPetForm({ ...petForm, energyLevel: e.target.value })}>
+                              <option value="">{t('common.select')}</option>
+                              <option value="Low">{t('common.energy.low')}</option>
+                              <option value="Moderate">{t('common.energy.moderate')}</option>
+                              <option value="High">{t('common.energy.high')}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <label className="flex items-center gap-2 text-sm text-[#0D0D0D]">
+                            <input type="checkbox" className="w-4 h-4 rounded border-[#E8E0D8] text-[#0D0D0D] focus:ring-[#0D0D0D]"
+                              checked={petForm.needsGarden} onChange={(e) => setPetForm({ ...petForm, needsGarden: e.target.checked })} />
+                            {t('dashboard.enterprise.needsGarden')}
+                          </label>
+                          <label className="flex items-center gap-2 text-sm text-[#0D0D0D]">
+                            <input type="checkbox" className="w-4 h-4 rounded border-[#E8E0D8] text-[#0D0D0D] focus:ring-[#0D0D0D]"
+                              checked={petForm.isSos} onChange={(e) => setPetForm({ ...petForm, isSos: e.target.checked })} />
+                            <span className="text-coral font-semibold">{t('dashboard.enterprise.isSos')}</span>
+                          </label>
+                        </div>
+                      </div>
+
                       {catalogProducts.length > 0 && (
                         <div>
                           <h4 className="text-xs font-bold text-[#8c7e74] uppercase tracking-wider mb-3">{t('dashboard.enterprise.associatedProducts')}</h4>
@@ -624,6 +681,42 @@ export default function EnterpriseDashboard() {
                         <textarea className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" rows="2" placeholder={t('dashboard.enterprise.behaviorNotesPlaceholder')} value={editPetForm.behaviorNotes} onChange={(e) => setEditPetForm({ ...editPetForm, behaviorNotes: e.target.value })} />
                       </div>
 
+                      <div>
+                        <h4 className="text-xs font-bold text-[#8c7e74] uppercase tracking-wider mb-3">{t('pets.details.livingConditions')}</h4>
+                        <div className="grid grid-cols-2 gap-3 mb-3">
+                          <div>
+                            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('common.size')}</label>
+                            <select className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={editPetForm.size} onChange={(e) => setEditPetForm({ ...editPetForm, size: e.target.value })}>
+                              <option value="">{t('common.select')}</option>
+                              <option value="Small">{t('common.size.small')}</option>
+                              <option value="Medium">{t('common.size.medium')}</option>
+                              <option value="Large">{t('common.size.large')}</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('dashboard.enterprise.energyLevel')}</label>
+                            <select className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={editPetForm.energyLevel} onChange={(e) => setEditPetForm({ ...editPetForm, energyLevel: e.target.value })}>
+                              <option value="">{t('common.select')}</option>
+                              <option value="Low">{t('common.energy.low')}</option>
+                              <option value="Moderate">{t('common.energy.moderate')}</option>
+                              <option value="High">{t('common.energy.high')}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <label className="flex items-center gap-2 text-sm text-[#0D0D0D]">
+                            <input type="checkbox" className="w-4 h-4 rounded border-[#E8E0D8] text-[#0D0D0D] focus:ring-[#0D0D0D]"
+                              checked={editPetForm.needsGarden} onChange={(e) => setEditPetForm({ ...editPetForm, needsGarden: e.target.checked })} />
+                            {t('dashboard.enterprise.needsGarden')}
+                          </label>
+                          <label className="flex items-center gap-2 text-sm text-[#0D0D0D]">
+                            <input type="checkbox" className="w-4 h-4 rounded border-[#E8E0D8] text-[#0D0D0D] focus:ring-[#0D0D0D]"
+                              checked={editPetForm.isSos} onChange={(e) => setEditPetForm({ ...editPetForm, isSos: e.target.checked })} />
+                            <span className="text-coral font-semibold">{t('dashboard.enterprise.isSos')}</span>
+                          </label>
+                        </div>
+                      </div>
+
                       {catalogProducts.length > 0 && (
                         <div>
                           <h4 className="text-xs font-bold text-[#8c7e74] uppercase tracking-wider mb-3">{t('dashboard.enterprise.associatedProducts')}</h4>
@@ -703,6 +796,18 @@ export default function EnterpriseDashboard() {
                     <div>
                       <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('dashboard.enterprise.website')}</label>
                       <input className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={profileForm.website} onChange={(e) => setProfileForm({ ...profileForm, website: e.target.value })} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('dashboard.enterprise.address')}</label>
+                      <input className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={profileForm.address} onChange={(e) => setProfileForm({ ...profileForm, address: e.target.value })} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('dashboard.enterprise.googleMapsUrl')}</label>
+                      <input className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={profileForm.googleMapsUrl} onChange={(e) => setProfileForm({ ...profileForm, googleMapsUrl: e.target.value })} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('dashboard.enterprise.openingHours')}</label>
+                      <input className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={profileForm.openingHours} onChange={(e) => setProfileForm({ ...profileForm, openingHours: e.target.value })} />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('common.description')}</label>

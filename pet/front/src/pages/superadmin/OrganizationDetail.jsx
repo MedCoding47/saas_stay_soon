@@ -6,8 +6,6 @@ import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import PageTransition from '../../components/animations/PageTransition';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
-import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
 
 export default function SuperAdminOrganizationDetail() {
   const { id } = useParams();
@@ -88,13 +86,12 @@ export default function SuperAdminOrganizationDetail() {
     setDeleting(false);
   };
 
-  if (loading) return <PageTransition><Navbar /><div className="min-h-screen pt-24 flex items-center justify-center"><LoadingSpinner /></div><Footer /></PageTransition>;
+  if (loading) return <PageTransition><Navbar /><div className="min-h-screen bg-[#FAF7F2] pt-24 flex items-center justify-center"><LoadingSpinner /></div><Footer /></PageTransition>;
   if (!org) return null;
 
   const isEnterprise = !!org.companyProfile;
   const isVet = !!org.veterinaireProfile;
   const profile = org.companyProfile || org.veterinaireProfile;
-  const profileType = isEnterprise ? 'Company' : 'Clinic';
 
   const tabs = [
     { key: 'overview', label: 'Overview' },
@@ -107,50 +104,69 @@ export default function SuperAdminOrganizationDetail() {
   return (
     <PageTransition>
       <Navbar />
-      <main className="min-h-screen bg-warm pt-24 pb-20">
+      <main className="min-h-screen bg-[#FAF7F2] pt-24 pb-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <button onClick={() => navigate('/superadmin/dashboard')} className="text-sm text-coral hover:underline mb-4 inline-block">&larr; Back to Dashboard</button>
 
-          <div className="bg-white rounded-2xl shadow-card overflow-hidden">
-            <div className="bg-gradient-to-r from-teal-600 to-teal-500 p-6 text-white flex items-start justify-between">
+          <div className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden">
+            <div className="px-8 py-6 border-b border-[#E8E0D8] flex items-start justify-between">
               <div>
-                <h1 className="text-2xl font-bold">{org.name}</h1>
-                <p className="text-white/80 text-sm">Slug: {org.slug}</p>
-                <span className={`inline-block mt-1 px-3 py-0.5 rounded-full text-xs font-semibold ${org.isActive ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'}`}>{org.isActive ? 'Active' : 'Inactive'}</span>
-                <span className={`inline-block mt-1 ml-2 px-3 py-0.5 rounded-full text-xs font-semibold ${isEnterprise ? 'bg-blue-200 text-blue-800' : 'bg-amber-200 text-amber-800'}`}>{isEnterprise ? 'Enterprise' : isVet ? 'Veterinaire' : 'Other'}</span>
+                <h1 className="font-display font-black text-2xl text-[#0D0D0D]">{org.name}</h1>
+                <p className="text-sm text-[#8c7e74] mt-1">Slug: {org.slug}</p>
+                <div className="flex gap-2 mt-2">
+                  <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full ${org.isActive ? 'bg-teal-light text-teal' : 'bg-red-50 text-red-500'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${org.isActive ? 'bg-teal' : 'bg-red-500'}`} />
+                    {org.isActive ? 'Active' : 'Inactive'}
+                  </span>
+                  <span className={`inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full ${isEnterprise ? 'bg-coral-light text-coral' : 'bg-amber-50 text-amber-600'}`}>
+                    {isEnterprise ? 'Enterprise' : isVet ? 'Veterinaire' : 'Other'}
+                  </span>
+                </div>
               </div>
               <button onClick={handleDeleteOrg} disabled={deleting}
-                className="px-3 py-1.5 bg-red-500/30 hover:bg-red-500/50 rounded-lg text-xs font-medium transition-colors">
+                className="px-5 py-2 rounded-xl border-2 border-red-200 text-red-500 text-sm font-semibold hover:bg-red-50 transition-colors disabled:opacity-50">
                 {deleting ? '...' : 'Deactivate'}
               </button>
             </div>
 
-            <div className="flex gap-1 px-6 pt-4 border-b border-warm-dark/20 overflow-x-auto">
+            <div className="flex gap-2 px-8 pt-4 pb-0 border-b border-[#E8E0D8]">
               {tabs.map((t) => (
                 <button key={t.key} onClick={() => setTab(t.key)}
-                  className={`whitespace-nowrap px-4 py-2 text-sm font-medium rounded-t-lg transition-all ${tab === t.key ? 'bg-warm text-coral border-b-2 border-coral' : 'text-muted hover:text-gray-700'}`}>
+                  className={`rounded-full px-5 py-2 text-sm font-semibold transition-all ${
+                    tab === t.key
+                      ? 'bg-[#0D0D0D] text-[#FAF7F2]'
+                      : 'bg-[#FAF7F2] text-[#8c7e74] border border-[#E8E0D8]'
+                  }`}>
                   {t.label}
                 </button>
               ))}
             </div>
 
-            <div className="p-6">
-              {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-lg">{error}</p>}
+            <div className="p-8">
+              {error && <p className="text-red-500 text-sm mb-4 bg-red-50 p-3 rounded-xl">{error}</p>}
 
               {tab === 'overview' && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <StatCard label="Users" value={org.userCount} />
-                    <StatCard label="Pets" value={org.petCount} />
-                    <StatCard label="Products" value={org.productCount} />
-                    <StatCard label="Adoptions" value={org.adoptionCount} />
+                    {[
+                      { label: 'Users', value: org.userCount },
+                      { label: 'Pets', value: org.petCount },
+                      { label: 'Products', value: org.productCount },
+                      { label: 'Adoptions', value: org.adoptionCount },
+                    ].map((s) => (
+                      <motion.div key={s.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                        className="bg-[#FAF7F2] rounded-3xl border border-[#E8E0D8] p-6 text-center">
+                        <p className="font-display font-black text-[40px] leading-none text-[#0D0D0D]">{s.value}</p>
+                        <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mt-2">{s.label}</p>
+                      </motion.div>
+                    ))}
                   </div>
 
                   {profile && (
                     <div>
                       <div className="flex justify-between items-center mb-3">
-                        <h2 className="text-lg font-bold text-gray-900">{profileType} Profile</h2>
-                        <button onClick={() => setEditing('profile')} className="text-sm text-coral hover:underline">Edit</button>
+                        <h2 className="font-display font-black text-lg text-[#0D0D0D]">{isEnterprise ? 'Company' : 'Clinic'} Profile</h2>
+                        <button onClick={() => setEditing('profile')} className="text-sm font-semibold text-coral hover:underline">{editing === 'profile' ? '' : 'Edit'}</button>
                       </div>
                       {editing === 'profile' && isEnterprise ? (
                         <CompanyEditForm profile={profile} onSave={handleSaveCompany} onCancel={() => setEditing(null)} saving={saving} />
@@ -158,25 +174,25 @@ export default function SuperAdminOrganizationDetail() {
                         <VetEditForm profile={profile} onSave={handleSaveVet} onCancel={() => setEditing(null)} saving={saving} />
                       ) : (
                         <>
-                          <div className="bg-warm rounded-xl p-4 text-sm grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-5 text-sm grid grid-cols-1 md:grid-cols-2 gap-3">
                             {isEnterprise && <>
                               <DetailRow label="Company" value={profile.companyName} />
                               <DetailRow label="Location" value={profile.location} />
                               <DetailRow label="Phone" value={profile.phone} />
                               <DetailRow label="Email" value={profile.email} />
                               <DetailRow label="Website" value={profile.website} />
-                              <DetailRow label="Description" value={profile.description} />
+                              <DetailRow label="Description" value={profile.description} className="md:col-span-2" />
                             </>}
                             {isVet && <>
                               <DetailRow label="Clinic" value={profile.clinicName} />
                               <DetailRow label="Location" value={profile.location} />
                               <DetailRow label="Phone" value={profile.phone} />
-                              <DetailRow label="Available" value={profile.isAvailable ? 'Yes' : 'No'} className={profile.isAvailable ? 'text-green-600 font-semibold' : 'text-red-500 font-semibold'} />
+                              <DetailRow label="Available" value={profile.isAvailable ? 'Yes' : 'No'} className={profile.isAvailable ? 'text-teal font-semibold' : 'text-red-500 font-semibold'} />
                               <DetailRow label="Description" value={profile.description} className="md:col-span-2" />
                             </>}
                           </div>
                           {(profile.latitude != null && profile.longitude != null) && (
-                            <div className="mt-4 rounded-xl overflow-hidden border border-gray-200">
+                            <div className="mt-4 rounded-2xl overflow-hidden border border-[#E8E0D8]">
                               <iframe
                                 src={`https://maps.google.com/maps?q=${profile.latitude},${profile.longitude}&z=15&output=embed`}
                                 width="100%" height="250" style={{ border: 0 }} allowFullScreen loading="lazy"
@@ -186,7 +202,7 @@ export default function SuperAdminOrganizationDetail() {
                           )}
                           {profile.googleMapsUrl && (
                             <a href={profile.googleMapsUrl} target="_blank" rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 text-sm text-teal hover:text-teal-dark mt-3 transition-colors">
+                              className="inline-flex items-center gap-1.5 text-sm font-semibold text-coral hover:underline mt-3 transition-colors">
                               View on Google Maps &rarr;
                             </a>
                           )}
@@ -201,38 +217,41 @@ export default function SuperAdminOrganizationDetail() {
                 <div className="space-y-2">
                   {org.users.map((u) => (
                     <div key={u.id}
-                      className="block bg-warm rounded-xl p-4 hover:bg-warm-dark/30 transition-colors">
+                      className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-4 hover:bg-[#F5F0EB] transition-colors">
                       <div className="flex items-center justify-between">
                         <Link to={`/superadmin/users/${u.id}`} className="flex-1 min-w-0">
-                          <span className="font-bold text-gray-900">{u.fullName}</span>
-                          <span className="text-muted text-sm ml-2">{u.email}</span>
+                          <span className="font-bold text-[#0D0D0D]">{u.fullName}</span>
+                          <span className="text-[#8c7e74] text-sm ml-2">{u.email}</span>
                         </Link>
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className="text-xs px-2 py-0.5 rounded-full font-semibold bg-coral-light text-coral">{u.role}</span>
-                          <span className={`text-xs font-semibold ${u.isActive ? 'text-green-600' : 'text-red-500'}`}>{u.isActive ? 'Active' : 'Inactive'}</span>
+                          <span className="text-xs px-3 py-1 rounded-full font-semibold bg-coral-light text-coral">{u.role}</span>
+                          <span className={`inline-flex items-center gap-1 text-xs font-semibold ${u.isActive ? 'text-teal' : 'text-red-500'}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${u.isActive ? 'bg-teal' : 'bg-red-500'}`} />
+                            {u.isActive ? 'Active' : 'Inactive'}
+                          </span>
                           <button onClick={() => handleResetPassword(u.id)} disabled={resettingUserId === u.id}
-                            className="text-xs px-2 py-1 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors font-medium">
+                            className="text-xs px-3 py-1.5 rounded-xl border border-[#E8E0D8] text-[#8c7e74] hover:bg-white hover:text-[#0D0D0D] transition-colors font-medium">
                             {resettingUserId === u.id ? '...' : 'Reset PW'}
                           </button>
                         </div>
                       </div>
                     </div>
                   ))}
-                  {org.users.length === 0 && <p className="text-center text-muted py-8">No users in this organization.</p>}
+                  {org.users.length === 0 && <p className="text-center text-[#8c7e74] py-8">No users in this organization.</p>}
                 </div>
               )}
 
               {tab === 'pets' && (
                 org.pets.length === 0
-                  ? <p className="text-center text-muted py-8">No pets in this organization.</p>
+                  ? <p className="text-center text-[#8c7e74] py-8">No pets in this organization.</p>
                   : <div className="grid gap-3">
                     {org.pets.map((p) => (
-                      <div key={p.id} className="bg-warm rounded-xl p-4 flex items-center justify-between">
+                      <div key={p.id} className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-4 flex items-center justify-between">
                         <div>
-                          <span className="font-bold text-gray-900">{p.name}</span>
-                          <span className="text-muted text-sm ml-2">{p.type}{p.breed ? ` - ${p.breed}` : ''}</span>
+                          <span className="font-bold text-[#0D0D0D]">{p.name}</span>
+                          <span className="text-[#8c7e74] text-sm ml-2">{p.type}{p.breed ? ` - ${p.breed}` : ''}</span>
                         </div>
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${p.status === 'Available' ? 'bg-green-100 text-green-700' : p.status === 'Adopted' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>{p.status}</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${p.status === 'Available' ? 'bg-teal-light text-teal' : p.status === 'Adopted' ? 'bg-blue-50 text-blue-600' : 'bg-[#FAF7F2] text-[#8c7e74] border border-[#E8E0D8]'}`}>{p.status}</span>
                       </div>
                     ))}
                   </div>
@@ -240,13 +259,13 @@ export default function SuperAdminOrganizationDetail() {
 
               {tab === 'products' && (
                 org.products.length === 0
-                  ? <p className="text-center text-muted py-8">No products in this organization.</p>
+                  ? <p className="text-center text-[#8c7e74] py-8">No products in this organization.</p>
                   : <div className="grid gap-3">
                     {org.products.map((p) => (
-                      <div key={p.id} className="bg-warm rounded-xl p-4 flex items-center justify-between">
+                      <div key={p.id} className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-4 flex items-center justify-between">
                         <div>
-                          <span className="font-bold text-gray-900">{p.name}</span>
-                          <span className="text-muted text-sm ml-2">Pet ID: {p.petId}</span>
+                          <span className="font-bold text-[#0D0D0D]">{p.name}</span>
+                          <span className="text-[#8c7e74] text-sm ml-2">Pet ID: {p.petId}</span>
                         </div>
                         <span className="font-bold text-coral">{p.price.toFixed(2)} MAD</span>
                       </div>
@@ -256,16 +275,16 @@ export default function SuperAdminOrganizationDetail() {
 
               {tab === 'adoptions' && (
                 org.adoptions.length === 0
-                  ? <p className="text-center text-muted py-8">No adoptions from this organization.</p>
+                  ? <p className="text-center text-[#8c7e74] py-8">No adoptions from this organization.</p>
                   : <div className="space-y-3">
                     {org.adoptions.map((a) => (
-                      <div key={a.id} className="bg-warm rounded-xl p-4 flex items-center justify-between">
+                      <div key={a.id} className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-4 flex items-center justify-between">
                         <div>
-                          <span className="font-bold text-gray-900">{a.petName}</span>
-                          <span className="text-muted text-sm ml-2">by {a.adopterName}</span>
-                          <p className="text-xs text-muted-light mt-0.5">{new Date(a.createdAt).toLocaleDateString()}</p>
+                          <span className="font-bold text-[#0D0D0D]">{a.petName}</span>
+                          <span className="text-[#8c7e74] text-sm ml-2">by {a.adopterName}</span>
+                          <p className="text-xs text-[#8c7e74] mt-0.5">{new Date(a.createdAt).toLocaleDateString()}</p>
                         </div>
-                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${a.status === 'Completed' ? 'bg-green-100 text-green-700' : a.status === 'Pending' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'}`}>{a.status}</span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${a.status === 'Completed' ? 'bg-teal-light text-teal' : a.status === 'Pending' ? 'bg-amber-50 text-amber-600' : 'bg-[#FAF7F2] text-[#8c7e74] border border-[#E8E0D8]'}`}>{a.status}</span>
                       </div>
                     ))}
                   </div>
@@ -276,12 +295,12 @@ export default function SuperAdminOrganizationDetail() {
 
         {resetPassword && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setResetPassword('')}>
-            <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4 text-center" onClick={(e) => e.stopPropagation()}>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Password Reset</h3>
-              <p className="text-sm text-muted mb-4">New password for this user:</p>
-              <div className="bg-warm rounded-xl p-4 mb-4 font-mono text-lg font-bold text-coral break-all select-all">{resetPassword}</div>
-              <p className="text-xs text-muted-light mb-4">Share this password securely with the user. It will not be shown again.</p>
-              <button onClick={() => setResetPassword('')} className="px-6 py-2 bg-coral text-white rounded-pill text-sm font-medium hover:bg-coral-dark transition-colors">Done</button>
+            <div className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-sm mx-4 text-center" onClick={(e) => e.stopPropagation()}>
+              <h3 className="font-display font-black text-lg text-[#0D0D0D] mb-2">Password Reset</h3>
+              <p className="text-sm text-[#8c7e74] mb-4">New password for this user:</p>
+              <div className="bg-[#FAF7F2] rounded-2xl p-4 mb-4 font-mono text-lg font-bold text-coral break-all select-all">{resetPassword}</div>
+              <p className="text-xs text-[#8c7e74] mb-4">Share this password securely with the user. It will not be shown again.</p>
+              <button onClick={() => setResetPassword('')} className="px-6 py-2.5 bg-[#0D0D0D] text-[#FAF7F2] rounded-xl text-sm font-semibold hover:bg-[#2A2A2A] transition-colors">Done</button>
             </div>
           </div>
         )}
@@ -291,20 +310,11 @@ export default function SuperAdminOrganizationDetail() {
   );
 }
 
-function StatCard({ label, value }) {
-  return (
-    <div className="bg-warm rounded-xl p-4 text-center">
-      <p className="text-2xl font-bold text-teal-600">{value}</p>
-      <p className="text-xs text-muted mt-1">{label}</p>
-    </div>
-  );
-}
-
 function DetailRow({ label, value, className }) {
   return (
     <div className={className}>
-      <span className="text-muted">{label}: </span>
-      <span className="font-medium">{value || '—'}</span>
+      <span className="text-[#8c7e74]">{label}: </span>
+      <span className="font-medium text-[#0D0D0D]">{value || '\u2014'}</span>
     </div>
   );
 }
@@ -318,23 +328,53 @@ function CompanyEditForm({ profile, onSave, onCancel, saving }) {
   });
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   return (
-    <div className="bg-warm rounded-xl p-4">
+    <div className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input label="Company Name" name="companyName" value={form.companyName} onChange={handleChange} required />
-        <Input label="Location" name="location" value={form.location} onChange={handleChange} required />
-        <Input label="Google Maps URL" name="googleMapsUrl" value={form.googleMapsUrl} onChange={handleChange} placeholder="https://maps.google.com/maps?q=..." />
-        <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
-        <Input label="Email" name="email" value={form.email} onChange={handleChange} type="email" />
-        <Input label="Website" name="website" value={form.website} onChange={handleChange} />
+        <div>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Company Name</label>
+          <input name="companyName" value={form.companyName} onChange={handleChange} required
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Location</label>
+          <input name="location" value={form.location} onChange={handleChange} required
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Google Maps URL</label>
+          <input name="googleMapsUrl" value={form.googleMapsUrl} onChange={handleChange} placeholder="https://maps.google.com/maps?q=..."
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Phone</label>
+          <input name="phone" value={form.phone} onChange={handleChange}
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Email</label>
+          <input name="email" value={form.email} onChange={handleChange} type="email"
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Website</label>
+          <input name="website" value={form.website} onChange={handleChange}
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+        </div>
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Description</label>
           <textarea name="description" value={form.description} onChange={handleChange} rows={2}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none" />
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors resize-none" />
         </div>
       </div>
       <div className="flex gap-3 mt-4">
-        <Button onClick={() => onSave(form)} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
-        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+        <button onClick={() => onSave(form)} disabled={saving}
+          className="px-6 py-3 bg-[#0D0D0D] text-[#FAF7F2] rounded-xl text-sm font-semibold hover:bg-[#2A2A2A] transition-colors disabled:opacity-50">
+          {saving ? 'Saving...' : 'Save'}
+        </button>
+        <button onClick={onCancel}
+          className="px-6 py-3 rounded-xl border-2 border-[#E8E0D8] text-[#8c7e74] text-sm font-semibold hover:border-[#0D0D0D] hover:text-[#0D0D0D] transition-colors">
+          Cancel
+        </button>
       </div>
     </div>
   );
@@ -353,31 +393,54 @@ function VetEditForm({ profile, onSave, onCancel, saving }) {
     setForm({ ...form, [e.target.name]: value });
   };
   return (
-    <div className="bg-warm rounded-xl p-4">
+    <div className="bg-[#FAF7F2] rounded-2xl border border-[#E8E0D8] p-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input label="Clinic Name" name="clinicName" value={form.clinicName} onChange={handleChange} required />
-        <Input label="Location" name="location" value={form.location} onChange={handleChange} required />
-        <Input label="Google Maps URL" name="googleMapsUrl" value={form.googleMapsUrl} onChange={handleChange} placeholder="https://maps.google.com/maps?q=..." />
-        <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
+        <div>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Clinic Name</label>
+          <input name="clinicName" value={form.clinicName} onChange={handleChange} required
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Location</label>
+          <input name="location" value={form.location} onChange={handleChange} required
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Google Maps URL</label>
+          <input name="googleMapsUrl" value={form.googleMapsUrl} onChange={handleChange} placeholder="https://maps.google.com/maps?q=..."
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Phone</label>
+          <input name="phone" value={form.phone} onChange={handleChange}
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+        </div>
         <div className="flex items-center gap-3 pt-6">
-          <input type="checkbox" id="isAvailable" name="isAvailable" checked={form.isAvailable} onChange={handleChange} className="w-4 h-4 rounded border-gray-300 text-coral focus:ring-coral" />
-          <label htmlFor="isAvailable" className="text-sm font-medium text-gray-700">Available</label>
+          <input type="checkbox" id="isAvailable" name="isAvailable" checked={form.isAvailable} onChange={handleChange}
+            className="w-4 h-4 rounded border-[#E8E0D8] text-[#0D0D0D] focus:ring-[#0D0D0D]" />
+          <label htmlFor="isAvailable" className="text-sm font-semibold text-[#0D0D0D]">Available</label>
         </div>
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Formation / Credentials</label>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Formation / Credentials</label>
           <textarea name="formation" value={form.formation} onChange={handleChange} rows={2}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none"
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors resize-none"
             placeholder="Degrees, certifications, specialties..." />
         </div>
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">Description</label>
           <textarea name="description" value={form.description} onChange={handleChange} rows={2}
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral/40 focus:border-coral transition-all resize-none" />
+            className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors resize-none" />
         </div>
       </div>
       <div className="flex gap-3 mt-4">
-        <Button onClick={() => onSave(form)} disabled={saving}>{saving ? 'Saving...' : 'Save'}</Button>
-        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+        <button onClick={() => onSave(form)} disabled={saving}
+          className="px-6 py-3 bg-[#0D0D0D] text-[#FAF7F2] rounded-xl text-sm font-semibold hover:bg-[#2A2A2A] transition-colors disabled:opacity-50">
+          {saving ? 'Saving...' : 'Save'}
+        </button>
+        <button onClick={onCancel}
+          className="px-6 py-3 rounded-xl border-2 border-[#E8E0D8] text-[#8c7e74] text-sm font-semibold hover:border-[#0D0D0D] hover:text-[#0D0D0D] transition-colors">
+          Cancel
+        </button>
       </div>
     </div>
   );

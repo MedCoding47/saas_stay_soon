@@ -273,6 +273,9 @@ export default function PetBrowser() {
                     >
                       <div className="bg-[#FAF7F2] h-48 flex items-center justify-center text-7xl relative">
                         {speciesEmoji[pet.type] || '🐾'}
+                        {pet.isSos && (
+                          <span className="absolute top-3 left-3 bg-coral text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md z-10">{t('pets.details.sos')}</span>
+                        )}
                         <button onClick={(e) => { e.stopPropagation(); toggleFavorite(pet); }} className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white border flex items-center justify-center text-sm transition-all ${
                           isFavorited(pet.id) ? 'border-coral bg-coral text-white' : 'border-[#E8E0D8] hover:border-coral hover:text-coral'
                         }`}>{isFavorited(pet.id) ? '♥' : '♡'}</button>

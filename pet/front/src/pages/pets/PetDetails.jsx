@@ -23,10 +23,20 @@ const petStatusLabel = (s) => {
 };
 
 function formatAge(years, t) {
-  if (years == null) return '—';
-  if (years === 0) return t('pets.details.age.lessThan1', 'Less than 1 year');
-  if (years === 1) return '1 ' + t('pets.details.age.year', 'year');
-  return `${years} ` + t('pets.details.age.years', 'years');
+  if (years == null) return '';
+  if (years < 1) return t('pets.details.age.lessThan1');
+  const y = Math.floor(years);
+  return t(y === 1 ? 'pets.details.age.year' : 'pets.details.age.years', { count: y });
+}
+
+function estimatedBirth(pet, t) {
+  const totalMonths = pet.ageMonths || (pet.age != null ? pet.age * 12 : null);
+  if (totalMonths == null) return '';
+  const now = new Date();
+  const totalDays = totalMonths * 30.44;
+  const birth = new Date(now.getTime() - totalDays * 86400000);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${t('common.born')} ~${months[birth.getMonth()]} ${birth.getFullYear()}`;
 }
 
 function BoolIcon({ value }) {
@@ -120,14 +130,16 @@ export default function PetDetails() {
               {pet.name}
             </h1>
 
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-4 flex-wrap">
               <span className="tag tag-dark">{speciesEmoji[pet.type] || '🐾'} {pet.type}</span>
               {pet.breed && <span className="tag px-4 py-1.5 rounded-full border border-[#E8E0D8] text-[#8c7e74] text-[10px] font-bold tracking-widest uppercase">{pet.breed}</span>}
               <span className="tag px-4 py-1.5 rounded-full border border-[#E8E0D8] text-[#8c7e74] text-[10px] font-bold tracking-widest uppercase">{formatAge(pet.age, t)}</span>
+              {pet.isSos && <span className="tag px-3 py-1.5 rounded-full bg-coral text-white text-[10px] font-bold tracking-widest uppercase">{t('pets.details.sos')}</span>}
             </div>
 
             <div className="flex gap-6 mt-6 text-sm text-[#8c7e74]">
-              <span>📅 {formatAge(pet.age, t)}</span>
+              <span>🎂 {formatAge(pet.age, t)}</span>
+              {estimatedBirth(pet, t) && <span>📅 {estimatedBirth(pet, t)}</span>}
               <span>📍 {pet.location || t('common.unknownLocation')}</span>
             </div>
 
@@ -160,20 +172,46 @@ export default function PetDetails() {
               </div>
             </div>
 
-            {/* Behavior */}
+            {/* Living Conditions & Behavior */}
             <div className="mt-8">
-              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-4">{t('pets.details.behavior')}</p>
+              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-4">{t('pets.details.livingConditions')}</p>
               <div className="space-y-0">
-                {[
-                  { label: t('pets.details.behavior.goodWithKids', 'Good with kids'), value: pet.goodWithKids },
-                  { label: t('pets.details.behavior.goodWithDogs', 'Good with dogs'), value: pet.goodWithDogs },
-                  { label: t('pets.details.behavior.goodWithCats', 'Good with cats'), value: pet.goodWithCats },
-                ].map((item) => (
-                  <div key={item.label} className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
-                    <span className="text-[#2A2A2A]">{item.label}</span>
-                    <BoolIcon value={item.value} />
+                {pet.size && (
+                  <div className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
+                    <span className="text-[#2A2A2A]">{t('common.size')}</span>
+                    <span className="font-medium text-[#0D0D0D]">{t('common.size.' + pet.size.toLowerCase(), pet.size)}</span>
                   </div>
-                ))}
+                )}
+                {pet.energyLevel && (
+                  <div className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
+                    <span className="text-[#2A2A2A]">{t('pets.details.energyLevel')}</span>
+                    <span className="font-medium text-[#0D0D0D]">{t('common.energy.' + pet.energyLevel.replace(/\s+/g, '').replace(/^./, c => c.toLowerCase()), pet.energyLevel)}</span>
+                  </div>
+                )}
+                {pet.needsGarden != null && (
+                  <div className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
+                    <span className="text-[#2A2A2A]">{t('pets.details.needsGarden')}</span>
+                    <BoolIcon value={pet.needsGarden} />
+                  </div>
+                )}
+                {pet.needsGarden != null && (
+                  <div className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
+                    <span className="text-[#2A2A2A]">{t('pets.details.apartmentOk')}</span>
+                    <BoolIcon value={!pet.needsGarden} />
+                  </div>
+                )}
+                <div className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
+                  <span className="text-[#2A2A2A]">{t('pets.details.behavior.goodWithKids', 'Good with kids')}</span>
+                  <BoolIcon value={pet.goodWithKids} />
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
+                  <span className="text-[#2A2A2A]">{t('pets.details.behavior.goodWithDogs', 'Good with dogs')}</span>
+                  <BoolIcon value={pet.goodWithDogs} />
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-[#E8E0D8] text-sm">
+                  <span className="text-[#2A2A2A]">{t('pets.details.behavior.goodWithCats', 'Good with cats')}</span>
+                  <BoolIcon value={pet.goodWithCats} />
+                </div>
                 {pet.behaviorNotes && (
                   <div className="py-3 text-sm"><span className="text-[#8c7e74] text-xs">{pet.behaviorNotes}</span></div>
                 )}
@@ -194,6 +232,17 @@ export default function PetDetails() {
                 {isFavorited(pet.id) ? '♥' : '♡'}
               </button>
             </div>
+
+            {!token && (
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mt-6">
+                <p className="text-sm font-bold text-amber-900 mb-1">{t('pets.details.createAccount')}</p>
+                <p className="text-sm text-amber-800 leading-relaxed">{t('pets.details.createAccountDesc')}</p>
+                <div className="flex gap-3 mt-4">
+                  <button onClick={() => navigate('/register/client')} className="bg-amber-900 text-white px-5 py-2 rounded-xl text-sm font-semibold hover:bg-amber-950 transition-colors">{t('auth.register.createAccount')}</button>
+                  <button onClick={() => navigate('/login/client')} className="border border-amber-300 text-amber-900 px-5 py-2 rounded-xl text-sm font-semibold hover:bg-amber-100 transition-colors">{t('auth.login.signIn', 'Log in')}</button>
+                </div>
+              </div>
+            )}
           </motion.div>
 
           {/* RIGHT */}
@@ -237,14 +286,42 @@ export default function PetDetails() {
             <p className="font-display font-bold text-white text-2xl">{pet.ownerName || t('pets.details.shelter.defaultName', 'Nino Shelter')}</p>
             <div className="mt-4 space-y-2 text-sm">
               <p className="text-white/50 flex items-center gap-2">📍 {pet.location || t('common.morocco')}</p>
-              <p className="text-white/50 flex items-center gap-2">📞 +212 5XX XX XX XX</p>
+              {pet.shelterAddress && <p className="text-white/50 flex items-center gap-2">🏠 {pet.shelterAddress}</p>}
+              {pet.ownerPhone ? (
+                <a href={`tel:${pet.ownerPhone}`} className="text-white/50 flex items-center gap-2 hover:text-white transition-colors">📞 {pet.ownerPhone}</a>
+              ) : (
+                <p className="text-white/50 flex items-center gap-2">📞 +212 5XX XX XX XX</p>
+              )}
+              {pet.ownerEmail && (
+                <a href={`mailto:${pet.ownerEmail}`} className="text-white/50 flex items-center gap-2 hover:text-white transition-colors">✉️ {pet.ownerEmail}</a>
+              )}
             </div>
             <div className="text-white/40 text-xs mt-4 space-y-1">
-              <p>{t('pets.details.shelter.hoursWeekdays', 'Mon-Fri: 9:00 – 17:00')}</p>
-              <p>{t('pets.details.shelter.hoursSaturday', 'Saturday: 10:00 – 16:00')}</p>
-              <p>{t('pets.details.shelter.hoursSunday', 'Sunday: Closed')}</p>
+              {pet.shelterHours ? (
+                pet.shelterHours.split('\n').map((line, i) => <p key={i}>{line}</p>)
+              ) : (
+                <>
+                  <p>{t('pets.details.shelter.hoursWeekdays', 'Mon-Fri: 9:00 – 17:00')}</p>
+                  <p>{t('pets.details.shelter.hoursSaturday', 'Saturday: 10:00 – 16:00')}</p>
+                  <p>{t('pets.details.shelter.hoursSunday', 'Sunday: Closed')}</p>
+                </>
+              )}
             </div>
-            <button className="btn-outline-white w-full mt-6 text-sm">{t('pets.details.shelter.visit', 'Visit Shelter')}</button>
+            <div className="flex gap-3 mt-6">
+              {pet.shelterMapsUrl && (
+                <a href={pet.shelterMapsUrl} target="_blank" rel="noopener noreferrer" className="btn-outline-white flex-1 text-sm text-center">
+                  {t('pets.details.shelter.directions')}
+                </a>
+              )}
+              {pet.ownerWebsite && (
+                <a href={pet.ownerWebsite} target="_blank" rel="noopener noreferrer" className="btn-outline-white flex-1 text-sm text-center">
+                  {t('pets.details.shelter.visitWebsite')}
+                </a>
+              )}
+              {!pet.shelterMapsUrl && !pet.ownerWebsite && (
+                <button className="btn-outline-white w-full text-sm">{t('pets.details.shelter.visit', 'Visit Shelter')}</button>
+              )}
+            </div>
           </div>
         </section>
 
@@ -320,6 +397,24 @@ export default function PetDetails() {
                   </motion.div>
                 ))}
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* DONATION */}
+        <section className="bg-[#0D0D0D] py-16 px-8">
+          <div className="max-w-6xl mx-auto text-center">
+            <span className="tag tag-coral mb-4">{t('common.donate')}</span>
+            <h2 className="font-display font-black text-display-sm text-white mt-4">{t('pets.browser.donationTitle')}</h2>
+            <p className="text-white/40 text-lg mt-4 mb-12 max-w-lg mx-auto">{t('pets.browser.donationSubtitle')}</p>
+            <div className="grid md:grid-cols-3 gap-5 max-w-3xl mx-auto">
+              {[{ amt: '60 MAD' }, { amt: '120 MAD' }, { amt: '200 MAD' }].map((d, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center">
+                  <p className="font-display font-black text-5xl text-white">{d.amt}</p>
+                  <p className="text-white/30 text-xs mt-1">{t('common.taxDeductible')}</p>
+                  <a href={`https://paypal.me/Medmoney642/${d.amt.replace(' MAD', '')}`} target="_blank" rel="noopener noreferrer" className="btn-outline-white w-full mt-6 text-sm inline-block">{t('pets.browser.donate')}</a>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
