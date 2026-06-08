@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../../api/client';
 
@@ -14,6 +15,7 @@ const STEPS = [
 
 export default function ReadinessQuiz({ petId, petName, onClose }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -107,7 +109,7 @@ export default function ReadinessQuiz({ petId, petName, onClose }) {
           <p className="text-5xl mb-6">🎉</p>
           <h3 className="font-display font-black text-2xl text-[#0D0D0D] mb-3">{t('adoptQuiz.doneTitle')}</h3>
           <p className="text-[#8c7e74] leading-relaxed mb-8">{t('adoptQuiz.doneMessage', { name: petName })}</p>
-          <button onClick={onClose} className="btn-dark rounded-xl px-8 py-3">{t('adoptQuiz.doneCta')}</button>
+          <button onClick={() => navigate('/client/dashboard')} className="btn-dark rounded-xl px-8 py-3">{t('adoptQuiz.doneCta')}</button>
         </motion.div>
       </div>
     );

@@ -806,11 +806,15 @@ export default function EnterpriseDashboard() {
                       <input className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={profileForm.googleMapsUrl} onChange={(e) => setProfileForm({ ...profileForm, googleMapsUrl: e.target.value })} />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('dashboard.enterprise.openingHours')}</label>
-                      <input className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={profileForm.openingHours} onChange={(e) => setProfileForm({ ...profileForm, openingHours: e.target.value })} />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('common.description')}</label>
+                       <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('dashboard.enterprise.openingHours')}</label>
+                       <input className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" value={profileForm.openingHours} onChange={(e) => setProfileForm({ ...profileForm, openingHours: e.target.value })} />
+                     </div>
+                     <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+                       <p className="text-xs font-bold text-amber-700 uppercase tracking-wider mb-1">{t('dashboard.enterprise.shelterInfoNoteTitle', 'Shelter Contact Info')}</p>
+                       <p className="text-xs text-amber-600">{t('dashboard.enterprise.shelterInfoNote', 'Phone, email, address, and Google Maps link entered here will be shown to adopters when you approve their request.')}</p>
+                     </div>
+                     <div>
+                       <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('common.description')}</label>
                       <textarea className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" rows="3" value={profileForm.description} onChange={(e) => setProfileForm({ ...profileForm, description: e.target.value })} />
                     </div>
                     <div className="flex gap-3 pt-2">

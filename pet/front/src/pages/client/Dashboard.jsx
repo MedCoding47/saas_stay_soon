@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import api from '../../api/client';
 import { useAuth } from '../../hooks/useAuth';
 import { useFavorites } from '../../hooks/useFavorites';
@@ -19,6 +20,7 @@ const speciesEmoji = {
 
 export default function ClientDashboard() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { uploadImage, updateProfile } = useAuth();
   const [tab, setTab] = useState('overview');
   const { favorites, isFavorited, toggleFavorite, removeFavorite } = useFavorites();
@@ -350,6 +352,23 @@ export default function ClientDashboard() {
                       </div>
                       <p className="font-bold text-[#0D0D0D]">{r.petName || `Pet #${r.petId}`}</p>
                       {r.createdAt && <p className="text-xs text-[#8c7e74] mt-1">{new Date(r.createdAt).toLocaleDateString()}</p>}
+                      {(r.status === 'Approved' || r.status === 'Completed') && (r.ownerName || r.ownerPhone || r.ownerEmail) && (
+                        <div className="mt-4 pt-4 border-t border-[#E8E0D8]">
+                          <p className="text-xs font-bold tracking-widest uppercase text-coral mb-2">{t('pets.details.livingConditions', 'Shelter Contact')}</p>
+                          {r.ownerName && <p className="text-sm font-semibold text-[#0D0D0D]">{r.ownerName}</p>}
+                          {r.ownerPhone && <a href={`tel:${r.ownerPhone}`} className="text-sm text-coral hover:underline block mt-1">{r.ownerPhone}</a>}
+                          {r.ownerEmail && <a href={`mailto:${r.ownerEmail}`} className="text-sm text-coral hover:underline block">{r.ownerEmail}</a>}
+                          {r.shelterAddress && <p className="text-sm text-[#8c7e74] mt-1">{r.shelterAddress}</p>}
+                          {r.shelterMapsUrl && (
+                            <a href={r.shelterMapsUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-coral hover:underline mt-2 inline-block">{t('pets.details.shelter.directions')}</a>
+                          )}
+                        </div>
+                      )}
+                      {(r.status === 'Approved' || r.status === 'Completed') && !r.ownerName && !r.ownerPhone && (
+                        <div className="mt-4 pt-4 border-t border-[#E8E0D8] bg-amber-50 rounded-xl p-3">
+                          <p className="text-xs text-amber-700">Your request has been approved! Check back soon for shelter contact details, or visit the pet page for more info.</p>
+                        </div>
+                      )}
                     </motion.div>
                   ))}
                 </div>
