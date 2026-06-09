@@ -250,7 +250,7 @@ export default function PetBrowser() {
               {/* Top bar */}
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                 <p className="text-sm text-[#8c7e74]">
-                  <strong className="text-[#0D0D0D]">{filtered.length}</strong> {t('pets.browser.found')}
+                  <strong className="text-[#0D0D0D]">{filtered.length}</strong> {t('pets.browser.found', { count: filtered.length })}
                 </p>
                 <select value={sort} onChange={(e) => { setSort(e.target.value); setPage(1); }} className="px-4 py-2.5 rounded-xl border-2 border-[#E8E0D8] bg-white text-sm text-[#0D0D0D] outline-none focus:border-[#0D0D0D] transition-colors cursor-pointer">
                   {sortOptions.map((opt) => (<option key={opt.value} value={opt.value}>{t('sort.' + opt.value, opt.label)}</option>))}
