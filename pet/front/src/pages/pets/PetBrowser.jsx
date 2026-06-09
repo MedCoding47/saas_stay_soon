@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation, Trans } from 'react-i18next';
+import { Search, MapPin } from 'lucide-react';
 import api from '../../api/client';
 import samplePets from '../../data/samplePets';
 import Navbar from '../../components/layout/Navbar';
@@ -18,8 +19,9 @@ const defaultFilters = { species: '', age: '', size: '', gender: '', status: '',
 
 const sortOptions = [
   { value: 'recent', label: 'Recent' },
+  { value: 'oldest', label: 'Oldest' },
   { value: 'name', label: 'Name A-Z' },
-  { value: 'age', label: 'Age' },
+  { value: 'name_z', label: 'Name Z-A' },
 ];
 
 const speciesOptions = ['Dog', 'Cat', 'Rabbit', 'Bird', 'Hamster', 'Fish', 'Turtle', 'Horse'];
@@ -98,6 +100,15 @@ export default function PetBrowser() {
     return [...set];
   }, [allPets]);
 
+  const shelterPetCounts = useMemo(() => {
+    const counts = {};
+    allPets.forEach(p => {
+      const name = p.shelterName || p.ownerName || p.location;
+      if (name) counts[name] = (counts[name] || 0) + 1;
+    });
+    return counts;
+  }, [allPets]);
+
   const filtered = useMemo(() => {
     let list = allPets.filter((pet) => {
       if (searchQuery) {
@@ -119,7 +130,8 @@ export default function PetBrowser() {
     });
     switch (sort) {
       case 'name': list = [...list].sort((a, b) => a.name?.localeCompare(b.name)); break;
-      case 'age': list = [...list].sort((a, b) => (a.ageMonths || 0) - (b.ageMonths || 0)); break;
+      case 'name_z': list = [...list].sort((a, b) => b.name?.localeCompare(a.name)); break;
+      case 'oldest': list = [...list].sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || '')); break;
       default: break;
     }
     return list;
@@ -144,6 +156,8 @@ export default function PetBrowser() {
     return `${y}yr`;
   };
 
+  const [donationFrequency, setDonationFrequency] = useState('once');
+
   if (loading) {
     return (
       <PageTransition>
@@ -160,8 +174,8 @@ export default function PetBrowser() {
     <PageTransition>
       <Navbar />
       <main className="min-h-screen bg-[#FAF7F2]">
-        {/* HERO */}
-        <section className="bg-[#0D0D0D] pt-16 pb-20 px-8">
+        {/* SECTION 1 — HERO */}
+        <section className="bg-[#0D0D0D] pt-20 pb-24 px-8">
           <div className="max-w-6xl mx-auto">
             <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-display font-black text-[56px] text-white leading-[0.9] tracking-tight">
               <Trans i18nKey="pets.browser.title">Find Your<br />Companion</Trans>
@@ -175,285 +189,324 @@ export default function PetBrowser() {
           </div>
         </section>
 
-        {/* SEARCH BAR */}
-        <section className="bg-white border-b border-[#E8E0D8] px-8">
-          <div className="max-w-6xl mx-auto -mt-6">
-            <div className="bg-white rounded-2xl shadow-lg border border-[#E8E0D8] p-2 flex items-center gap-2 max-w-2xl">
-              <span className="text-[#8c7e74] text-lg pl-3">🔍</span>
+        {/* SECTION 2 — STICKY SEARCH BAR */}
+        <div className="sticky top-0 z-40 bg-white border-b border-[#E8E0D8] py-4 px-8 shadow-sm">
+          <div className="max-w-6xl mx-auto flex items-center gap-4">
+            <div className="relative flex-1 max-w-xl">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8c7e74]" size={18} />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
-                placeholder={t('pets.browser.searchPlaceholder', 'Search by name or breed…')}
-                className="flex-1 py-3 text-sm text-[#0D0D0D] outline-none placeholder:text-[#b8aaa0] bg-transparent"
+                placeholder={t('pets.browser.searchPlaceholder', 'Search by name or breed\u2026')}
+                className="w-full bg-[#FAF7F2] border-2 border-[#E8E0D8] rounded-full pl-10 pr-4 py-3 text-sm text-[#0D0D0D] outline-none focus:border-[#0D0D0D] transition-colors placeholder-[#8c7e74]"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="text-[#b8aaa0] hover:text-[#0D0D0D] text-sm font-bold px-3">✕</button>
+                <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#b8aaa0] hover:text-[#0D0D0D] text-sm font-bold">\u2715</button>
               )}
             </div>
+            <span className="tag tag-coral hidden sm:inline-flex">{filtered.length} {t('pets.browser.found')}</span>
+          </div>
+        </div>
+
+        {/* SECTION 3 — MAIN CONTENT (SIDEBAR + GRID) */}
+        <section className="max-w-6xl mx-auto px-8 py-10 flex gap-8">
+          {/* LEFT SIDEBAR — FILTERS */}
+          <aside className="hidden lg:block w-64 flex-shrink-0 self-start sticky top-28">
+            {/* Species */}
+            <div>
+              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3 mt-0">{t('pets.browser.filter.species')}</p>
+              <div className="border-b border-[#E8E0D8] pb-2 mb-3" />
+              <div className="space-y-2">
+                <label className="flex items-center cursor-pointer group">
+                  <input type="radio" name="species" checked={!filters.species} onChange={() => setFilters(f => ({ ...f, species: '' }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                  <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('common.all')}</span>
+                </label>
+                {speciesOptions.map(s => (
+                  <label key={s} className="flex items-center cursor-pointer group">
+                    <input type="radio" name="species" checked={filters.species === s} onChange={() => setFilters(f => ({ ...f, species: s }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                    <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('species.' + s, s)}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Age */}
+            <div className="mt-6">
+              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.age')}</p>
+              <div className="border-b border-[#E8E0D8] pb-2 mb-3" />
+              <div className="space-y-2">
+                <label className="flex items-center cursor-pointer group">
+                  <input type="radio" name="age" checked={!filters.age} onChange={() => setFilters(f => ({ ...f, age: '' }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                  <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('common.any')}</span>
+                </label>
+                {ageOptions.map(a => (
+                  <label key={a.value} className="flex items-center cursor-pointer group">
+                    <input type="radio" name="age" checked={filters.age === a.value} onChange={() => setFilters(f => ({ ...f, age: a.value }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                    <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('age.' + a.value, a.label)}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Size */}
+            <div className="mt-6">
+              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('common.size')}</p>
+              <div className="border-b border-[#E8E0D8] pb-2 mb-3" />
+              <div className="space-y-2">
+                <label className="flex items-center cursor-pointer group">
+                  <input type="radio" name="size" checked={!filters.size} onChange={() => setFilters(f => ({ ...f, size: '' }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                  <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('common.any')}</span>
+                </label>
+                {sizeOptions.map(s => (
+                  <label key={s} className="flex items-center cursor-pointer group">
+                    <input type="radio" name="size" checked={filters.size === s} onChange={() => setFilters(f => ({ ...f, size: s }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                    <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('size.' + s, s)}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Gender */}
+            <div className="mt-6">
+              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('common.gender')}</p>
+              <div className="border-b border-[#E8E0D8] pb-2 mb-3" />
+              <div className="space-y-2">
+                <label className="flex items-center cursor-pointer group">
+                  <input type="radio" name="gender" checked={!filters.gender} onChange={() => setFilters(f => ({ ...f, gender: '' }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                  <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('common.any')}</span>
+                </label>
+                {genderOptions.map(g => (
+                  <label key={g} className="flex items-center cursor-pointer group">
+                    <input type="radio" name="gender" checked={filters.gender === g} onChange={() => setFilters(f => ({ ...f, gender: g }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                    <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('gender.' + g, g)}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Breed */}
+            {uniqueBreeds.length > 0 && (
+              <div className="mt-6">
+                <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('common.breed')}</p>
+                <div className="border-b border-[#E8E0D8] pb-2 mb-3" />
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  <label className="flex items-center cursor-pointer group">
+                    <input type="radio" name="breed" checked={!filters.breed} onChange={() => setFilters(f => ({ ...f, breed: '' }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                    <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('common.any')}</span>
+                  </label>
+                  {uniqueBreeds.map(b => (
+                    <label key={b} className="flex items-center cursor-pointer group">
+                      <input type="radio" name="breed" checked={filters.breed === b} onChange={() => setFilters(f => ({ ...f, breed: b }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                      <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors truncate">{b}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Location */}
+            {uniqueShelters.length > 0 && (
+              <div className="mt-6">
+                <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.location')}</p>
+                <div className="border-b border-[#E8E0D8] pb-2 mb-3" />
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  <label className="flex items-center cursor-pointer group">
+                    <input type="radio" name="shelter" checked={!filters.shelter} onChange={() => setFilters(f => ({ ...f, shelter: '' }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                    <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('common.any')}</span>
+                  </label>
+                  {uniqueShelters.map(s => (
+                    <label key={s} className="flex items-center cursor-pointer group">
+                      <input type="radio" name="shelter" checked={filters.shelter === s} onChange={() => setFilters(f => ({ ...f, shelter: s }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                      <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors truncate">{s}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Status */}
+            <div className="mt-6">
+              <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.status')}</p>
+              <div className="border-b border-[#E8E0D8] pb-2 mb-3" />
+              <div className="space-y-2">
+                <label className="flex items-center cursor-pointer group">
+                  <input type="radio" name="status" checked={!filters.status} onChange={() => setFilters(f => ({ ...f, status: '' }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                  <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('common.any')}</span>
+                </label>
+                {statusOptions.map(s => (
+                  <label key={s} className="flex items-center cursor-pointer group">
+                    <input type="radio" name="status" checked={filters.status === s} onChange={() => setFilters(f => ({ ...f, status: s }))} className="w-4 h-4 rounded-full border-2 border-[#E8E0D8] mr-2 cursor-pointer appearance-none checked:border-coral checked:bg-coral transition-colors" />
+                    <span className="text-sm text-[#0D0D0D] cursor-pointer group-hover:text-coral transition-colors">{t('status.' + s, s)}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <button onClick={handleReset} className="btn-dark w-full mt-6 rounded-2xl">{t('pets.browser.filter.apply')}</button>
+            <span onClick={handleReset} className="text-coral text-sm text-center block w-full mt-3 hover:underline cursor-pointer">{t('pets.browser.filter.clear')}</span>
+          </aside>
+
+          {/* RIGHT CONTENT — GRID */}
+          <div className="flex-1 min-w-0">
+            {/* Top bar */}
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-sm font-semibold text-[#0D0D0D]">{filtered.length} {t('pets.browser.found')}</p>
+              <select value={sort} onChange={(e) => { setSort(e.target.value); setPage(1); }} className="bg-white border border-[#E8E0D8] rounded-full px-4 py-2 text-sm text-[#8c7e74] outline-none cursor-pointer">
+                {sortOptions.map((opt) => (<option key={opt.value} value={opt.value}>{t('sort.' + opt.value, opt.label)}</option>))}
+              </select>
+            </div>
+
+            {/* No results */}
+            {paged.length === 0 ? (
+              <div className="text-center py-20">
+                <span className="text-6xl">\uD83D\uDD0D</span>
+                <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mt-4">{t('pets.browser.noResults')}</h2>
+                <p className="text-[#8c7e74] mt-2">{t('pets.browser.noResultsHint', 'Try adjusting your filters')}</p>
+                <button onClick={handleReset} className="btn-outline mt-6 rounded-2xl px-8 py-3">{t('pets.browser.filter.clear')}</button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {paged.map((pet, i) => (
+                  <motion.div
+                    key={pet.id || i}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden cursor-pointer group hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300"
+                    onClick={() => navigate('/pets/' + pet.id)}
+                  >
+                    {/* Image area */}
+                    <div className="relative bg-[#FAF7F2] h-52 flex items-center justify-center overflow-hidden">
+                      <span className="text-8xl group-hover:scale-110 transition-transform duration-500">{speciesEmoji[pet.type] || '\uD83D\uDC3E'}</span>
+                      {/* Status badge */}
+                      <div className="absolute top-3 left-3">
+                        {pet.isSos ? (
+                          <span className="bg-coral text-white text-xs font-bold px-3 py-1 rounded-full">{t('pets.details.sos')}</span>
+                        ) : pet.status === 'Available' ? (
+                          <span className="bg-teal-500 text-white text-xs font-bold px-3 py-1 rounded-full">{t('common.available', 'Available')}</span>
+                        ) : pet.status === 'Adopted' ? (
+                          <span className="bg-[#8c7e74] text-white text-xs font-bold px-3 py-1 rounded-full">{t('status.Adopted', 'Adopted')}</span>
+                        ) : pet.status === 'Pending' ? (
+                          <span className="bg-amber-400 text-white text-xs font-bold px-3 py-1 rounded-full">{t('status.Pending', 'Pending')}</span>
+                        ) : null}
+                      </div>
+                      {/* Favorite */}
+                      <button onClick={(e) => { e.stopPropagation(); toggleFavorite(pet); }} className={'absolute top-3 right-3 w-8 h-8 rounded-full bg-white border border-[#E8E0D8] flex items-center justify-center text-sm hover:border-coral hover:text-coral transition-colors' + (isFavorited(pet.id) ? ' border-coral bg-coral text-white' : '')}>
+                        {isFavorited(pet.id) ? '\u2665' : '\u2661'}
+                      </button>
+                    </div>
+                    {/* Card body */}
+                    <div className="p-5">
+                      <div className="flex items-start justify-between">
+                        <h3 className="font-bold text-lg text-[#0D0D0D]">{pet.name}</h3>
+                        <span className="tag tag-outline text-xs">{pet.type || t('common.pet')}</span>
+                      </div>
+                      <p className="text-sm text-[#8c7e74] mt-0.5">{pet.breed || t('common.mixedBreed')}</p>
+                      <div className="flex items-center gap-1 mt-2 text-xs text-[#8c7e74]">
+                        <MapPin size={12} />
+                        <span>{pet.location || t('common.morocco')}</span>
+                      </div>
+                      <div className="border-t border-[#E8E0D8] mt-4 pt-4">
+                        <button onClick={(e) => { e.stopPropagation(); navigate('/pets/' + pet.id); }} className="btn-dark w-full rounded-xl py-3 text-sm">{t('pets.browser.adopt')}</button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+
+            <Pagination current={page} total={totalPages} onChange={setPage} />
           </div>
         </section>
 
-        {/* MAIN CONTENT */}
-        <section className="max-w-6xl mx-auto px-8 py-12">
-          <div className="flex gap-10">
-            {/* FILTER SIDEBAR */}
-            <div className="hidden lg:block w-72 flex-shrink-0">
-              <div className="bg-white border border-[#E8E0D8] rounded-3xl overflow-hidden">
-                {/* Species */}
-                <div className="border-b border-[#E8E0D8] py-6 px-6">
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.species')}</p>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="species" checked={!filters.species} onChange={() => setFilters(f => ({ ...f, species: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                      <span className="text-sm text-[#0D0D0D] font-medium">{t('common.all')}</span>
-                    </label>
-                    {speciesOptions.map(s => (
-                      <label key={s} className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="species" checked={filters.species === s} onChange={() => setFilters(f => ({ ...f, species: s }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{t('species.' + s, s)}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Age */}
-                <div className="border-b border-[#E8E0D8] py-6 px-6">
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.age')}</p>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="age" checked={!filters.age} onChange={() => setFilters(f => ({ ...f, age: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                      <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
-                    </label>
-                    {ageOptions.map(a => (
-                      <label key={a.value} className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="age" checked={filters.age === a.value} onChange={() => setFilters(f => ({ ...f, age: a.value }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{t('age.' + a.value, a.label)}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Size */}
-                <div className="border-b border-[#E8E0D8] py-6 px-6">
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('common.size')}</p>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="size" checked={!filters.size} onChange={() => setFilters(f => ({ ...f, size: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                      <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
-                    </label>
-                    {sizeOptions.map(s => (
-                      <label key={s} className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="size" checked={filters.size === s} onChange={() => setFilters(f => ({ ...f, size: s }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{t('size.' + s, s)}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Gender */}
-                <div className="border-b border-[#E8E0D8] py-6 px-6">
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('common.gender')}</p>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="gender" checked={!filters.gender} onChange={() => setFilters(f => ({ ...f, gender: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                      <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
-                    </label>
-                    {genderOptions.map(g => (
-                      <label key={g} className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="gender" checked={filters.gender === g} onChange={() => setFilters(f => ({ ...f, gender: g }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{t('gender.' + g, g)}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Breed */}
-                {uniqueBreeds.length > 0 && (
-                  <div className="border-b border-[#E8E0D8] py-6 px-6">
-                    <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('common.breed')}</p>
-                    <div className="space-y-2 max-h-40 overflow-y-auto">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="breed" checked={!filters.breed} onChange={() => setFilters(f => ({ ...f, breed: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
-                      </label>
-                      {uniqueBreeds.map(b => (
-                        <label key={b} className="flex items-center gap-2 cursor-pointer">
-                          <input type="radio" name="breed" checked={filters.breed === b} onChange={() => setFilters(f => ({ ...f, breed: b }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                          <span className="text-sm text-[#0D0D0D] font-medium truncate">{b}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Shelter */}
-                {uniqueShelters.length > 0 && (
-                  <div className="border-b border-[#E8E0D8] py-6 px-6">
-                    <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.location')}</p>
-                    <div className="space-y-2 max-h-40 overflow-y-auto">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="shelter" checked={!filters.shelter} onChange={() => setFilters(f => ({ ...f, shelter: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
-                      </label>
-                      {uniqueShelters.map(s => (
-                        <label key={s} className="flex items-center gap-2 cursor-pointer">
-                          <input type="radio" name="shelter" checked={filters.shelter === s} onChange={() => setFilters(f => ({ ...f, shelter: s }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                          <span className="text-sm text-[#0D0D0D] font-medium truncate">{s}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Status */}
-                <div className="border-b border-[#E8E0D8] py-6 px-6">
-                  <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.status')}</p>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="status" checked={!filters.status} onChange={() => setFilters(f => ({ ...f, status: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                      <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
-                    </label>
-                    {statusOptions.map(s => (
-                      <label key={s} className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="status" checked={filters.status === s} onChange={() => setFilters(f => ({ ...f, status: s }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
-                        <span className="text-sm text-[#0D0D0D] font-medium">{t('status.' + s, s)}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <button onClick={handleReset} className="btn-dark w-full rounded-2xl">{t('pets.browser.filter.apply')}</button>
-                  <button onClick={handleReset} className="text-sm text-coral hover:underline mt-3 block w-full text-center">{t('pets.browser.filter.clear')}</button>
-                </div>
+        {/* SECTION 4 — SHELTER MAP + FILTER */}
+        <section className="bg-white border-y border-[#E8E0D8] py-16 px-8">
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-start">
+            {/* Left — Map */}
+            <div>
+              <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mb-6">{t('pets.browser.shelterMap', 'Find a shelter near you')}</h2>
+              <div className="rounded-3xl overflow-hidden border border-[#E8E0D8] h-72 bg-[#FAF7F2] flex items-center justify-center">
+                <p className="text-[#8c7e74] text-sm">{t('pets.browser.mapPlaceholder', 'Map loading\u2026')}</p>
               </div>
+              <button className="btn-outline mt-4 rounded-2xl px-6 py-3 text-sm">{t('pets.browser.getDirections', 'Get directions')}</button>
             </div>
-
-            {/* PET CARDS GRID */}
-            <div className="flex-1 min-w-0">
-              {/* Top bar */}
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-                <p className="text-sm text-[#8c7e74]">
-                  <strong className="text-[#0D0D0D]">{filtered.length}</strong> {t('pets.browser.found')}
-                </p>
-                <select value={sort} onChange={(e) => { setSort(e.target.value); setPage(1); }} className="px-4 py-2.5 rounded-xl border-2 border-[#E8E0D8] bg-white text-sm text-[#0D0D0D] outline-none focus:border-[#0D0D0D] transition-colors cursor-pointer">
-                  {sortOptions.map((opt) => (<option key={opt.value} value={opt.value}>{t('sort.' + opt.value, opt.label)}</option>))}
-                </select>
-              </div>
-
-              {/* Grid */}
-              {paged.length === 0 ? (
-                <p className="text-center text-[#8c7e74] py-20">{t('pets.browser.noResults')}</p>
+            {/* Right — Shelter checklist */}
+            <div>
+              <h3 className="font-bold text-lg text-[#0D0D0D] mb-4">{t('pets.browser.filterByShelter', 'Filter by shelter')}</h3>
+              {uniqueShelters.length > 0 ? (
+                <>
+                  {uniqueShelters.map(s => (
+                    <label key={s} className="flex items-center gap-3 py-3 border-b border-[#E8E0D8] last:border-0 cursor-pointer">
+                      <input type="checkbox" checked={selectedShelters.includes(s)} onChange={() => setSelectedShelters(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])} className="w-5 h-5 rounded border-2 border-[#E8E0D8] appearance-none checked:bg-coral checked:border-coral cursor-pointer transition-colors" />
+                      <span className="text-sm font-medium text-[#0D0D0D]">{s}</span>
+                      <span className="ml-auto tag tag-outline text-xs">{shelterPetCounts[s] || 0} {t('common.pets')}</span>
+                    </label>
+                  ))}
+                  <button onClick={() => { handleReset(); }} className="btn-dark w-full mt-6 rounded-2xl">{t('pets.browser.applyShelterFilter', 'Apply shelter filter')}</button>
+                </>
               ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {paged.map((pet, i) => {
-                    const imgSrc = pet.imageUrl || pet.mainImageUrl;
-                    const shelterName = pet.shelterName || pet.ownerName || '';
-                    return (
-                    <motion.div
-                      key={pet.id || i}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.05 }}
-                      onClick={() => navigate(`/pets/${pet.id}`)}
-                      className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 group"
-                    >
-                      <div className="relative aspect-[4/3] overflow-hidden bg-[#FAF7F2]">
-                        {imgSrc ? (
-                          <img src={imgSrc} alt={pet.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-6xl">{speciesEmoji[pet.type] || '🐾'}</div>
-                        )}
-                        <div className="absolute top-3 left-3 flex gap-1.5">
-                          {pet.isSos && (
-                            <span className="bg-coral text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md">{t('pets.details.sos')}</span>
-                          )}
-                          {isNewPet(pet) && (
-                            <span className="bg-amber-400 text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md">{t('common.new', 'New')}</span>
-                          )}
-                          {pet.status === 'Available' && !pet.isSos && !isNewPet(pet) && (
-                            <span className="bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md">{t('common.available', 'Available')}</span>
-                          )}
-                        </div>
-                        <button onClick={(e) => { e.stopPropagation(); toggleFavorite(pet); }} className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border flex items-center justify-center text-sm transition-all shadow-sm hover:scale-110 ${
-                          isFavorited(pet.id) ? 'border-coral bg-coral text-white' : 'border-[#E8E0D8] hover:border-coral hover:text-coral'
-                        }`}>{isFavorited(pet.id) ? '♥' : '♡'}</button>
-                        <div className="absolute bottom-3 right-3 flex gap-1.5">
-                          {pet.gender && <span className="bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-[11px] font-bold text-[#0D0D0D]">{pet.gender === 'Male' ? '♂' : '♀'}</span>}
-                          {pet.ageMonths != null && <span className="bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-[11px] font-bold text-[#0D0D0D]">{petAgeLabel(pet)}</span>}
-                        </div>
-                      </div>
-                      <div className="p-5">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0 flex-1">
-                            <h3 className="font-bold text-lg text-[#0D0D0D] truncate">{pet.name}</h3>
-                            <p className="text-sm text-[#8c7e74] mt-0.5 truncate">{pet.breed || t('common.mixedBreed')}</p>
-                          </div>
-                          <span className="tag px-3 py-1 rounded-full bg-[#FAF7F2] text-[#8c7e74] border border-[#E8E0D8] text-[10px] font-bold tracking-widest uppercase shrink-0">{pet.type || t('common.pet')}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 mt-2 text-xs text-[#b8aaa0]">
-                          <span>📍</span>
-                          <span className="truncate">{pet.location || t('common.morocco')}</span>
-                          {pet.size && <><span className="text-[#E8E0D8]">·</span><span className="capitalize">{t('size.' + pet.size, pet.size)}</span></>}
-                        </div>
-                        {shelterName && (
-                          <p className="text-[11px] text-[#b8aaa0] mt-1.5 truncate">🏠 {shelterName}</p>
-                        )}
-                        <button onClick={(e) => { e.stopPropagation(); navigate(`/pets/${pet.id}`); }} className="btn-dark w-full mt-4 rounded-xl py-3 text-sm">{t('pets.browser.adopt')}</button>
-                      </div>
-                    </motion.div>
-                    );
-                  })}
-                </div>
+                <p className="text-[#8c7e74] text-sm">{t('pets.browser.noShelters', 'No shelters available')}</p>
               )}
-
-              <Pagination current={page} total={totalPages} onChange={setPage} />
             </div>
           </div>
         </section>
 
-        {/* ADOPTION PREPARATION */}
-        <section className="bg-white border-t border-[#E8E0D8] py-16 px-8">
+        {/* SECTION 5 — PREPARE YOUR ADOPTION */}
+        <section className="bg-[#FAF7F2] py-20 px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="font-display font-black text-display-sm text-[#0D0D0D] leading-[0.92] mb-4">
+            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="font-display font-black text-display-sm text-[#0D0D0D]">
               {t('pets.browser.prepareTitle', 'Prepare Your Adoption')}
             </motion.h2>
-            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="text-[#8c7e74] text-lg max-w-xl mx-auto mb-12">
+            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="text-[#8c7e74] text-lg mt-3 mb-12">
               {t('pets.browser.prepareSubtitle', 'Adopting a pet is a lifetime commitment. Make sure you are ready.')}
             </motion.p>
-            <div className="grid md:grid-cols-3 gap-6 text-left">
+            <div className="grid grid-cols-3 gap-6">
               {[
-                { icon: '📋', key: 'prepare.step1', title: 'Create your profile', desc: 'Sign up and tell us about your lifestyle so we can find the perfect match.' },
-                { icon: '✅', key: 'prepare.step2', title: 'Meet your companion', desc: 'Visit the shelter, interact with the pet, and make sure it is the right fit.' },
-                { icon: '📝', key: 'prepare.step3', title: 'Complete the adoption', desc: 'Sign the CEC, provide the required documents, and welcome your new family member.' },
+                { num: '01', icon: '\uD83D\uDCCB', titleKey: 'pets.browser.prepare.step1_title', title: 'Create your profile', descKey: 'pets.browser.prepare.step1_desc', desc: 'Sign up and tell us about your lifestyle so we can find the perfect match.' },
+                { num: '02', icon: '\u2705', titleKey: 'pets.browser.prepare.step2_title', title: 'Meet your companion', descKey: 'pets.browser.prepare.step2_desc', desc: 'Visit the shelter, interact with the pet, and make sure it is the right fit.' },
+                { num: '03', icon: '\uD83D\uDCDD', titleKey: 'pets.browser.prepare.step3_title', title: 'Complete the adoption', descKey: 'pets.browser.prepare.step3_desc', desc: 'Sign the CEC, provide the required documents, and welcome your new family member.' },
               ].map((step, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 * i }} className="bg-[#FAF7F2] rounded-3xl p-8 border border-[#E8E0D8]">
-                  <span className="text-4xl block mb-4">{step.icon}</span>
-                  <h3 className="font-bold text-[#0D0D0D] mb-2">{t('pets.browser.' + step.key + '_title', step.title)}</h3>
-                  <p className="text-sm text-[#8c7e74] leading-relaxed">{t('pets.browser.' + step.key + '_desc', step.desc)}</p>
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 * i }} className="bg-white rounded-3xl border border-[#E8E0D8] p-8 text-center">
+                  <p className="font-display font-black text-[64px] text-[#E8E0D8] leading-none">{step.num}</p>
+                  <span className="text-4xl block mt-2">{step.icon}</span>
+                  <h3 className="font-bold text-[#0D0D0D] mt-3 text-lg">{t(step.titleKey, step.title)}</h3>
+                  <p className="text-[#8c7e74] text-sm mt-2 leading-relaxed">{t(step.descKey, step.desc)}</p>
                 </motion.div>
               ))}
             </div>
-            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mt-10">
-              <a href={localStorage.getItem('sh-token') ? '/client/dashboard' : '/login/client'} className="btn-dark rounded-2xl px-10 py-4 inline-flex items-center gap-2">
-                {t('pets.browser.createAccount', 'Create my adopter account')} →
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
+              <a href={localStorage.getItem('sh-token') ? '/client/dashboard' : '/login/client'} className="btn-dark mt-10 px-10 py-4 inline-flex items-center gap-2 rounded-2xl">
+                {t('pets.browser.createAccount', 'Create my adopter account')} \u2192
               </a>
             </motion.div>
           </div>
         </section>
 
-        {/* DONATION SECTION */}
-        <section className="bg-[#0D0D0D] py-16 px-8">
-          <div className="max-w-6xl mx-auto text-center">
-            <h2 className="font-display font-black text-display-sm text-white">{t('pets.browser.donationTitle')}</h2>
-            <p className="text-white/40 text-lg mt-4 mb-12 max-w-lg mx-auto">{t('pets.browser.donationSubtitle')}</p>
-            <div className="grid md:grid-cols-3 gap-5 max-w-3xl mx-auto">
+        {/* SECTION 6 — DONATION STRIP */}
+        <section className="bg-[#0D0D0D] py-20 px-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="font-display font-black text-display-sm text-white">
+              {t('pets.browser.donationTitle')}
+            </motion.h2>
+            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="text-white/50 text-lg mt-3 mb-12">
+              {t('pets.browser.donationSubtitle')}
+            </motion.p>
+            {/* Frequency toggle */}
+            <div className="inline-flex bg-white/10 rounded-full p-1">
+              <button onClick={() => setDonationFrequency('once')} className={'px-6 py-2 rounded-full text-sm font-medium transition-colors' + (donationFrequency === 'once' ? ' bg-coral text-white' : ' text-white/50')}>
+                {t('pets.browser.donationOnce', 'One-time')}
+              </button>
+              <button onClick={() => setDonationFrequency('monthly')} className={'px-6 py-2 rounded-full text-sm font-medium transition-colors' + (donationFrequency === 'monthly' ? ' bg-coral text-white' : ' text-white/50')}>
+                {t('pets.browser.donationMonthly', 'Monthly')}
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-5 mt-8">
               {[{ amt: '$5' }, { amt: '$20' }, { amt: '$50' }].map((d, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center">
-                  <p className="font-display font-black text-5xl text-white">{d.amt}</p>
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center hover:border-coral/50 transition-colors cursor-pointer">
+                  <p className="font-display font-black text-[56px] text-white leading-none">{d.amt}</p>
                   <p className="text-white/30 text-xs mt-1">{t('common.taxDeductible')}</p>
-                  <a href={`https://paypal.me/Medmoney642/${d.amt.replace('$', '')}`} target="_blank" rel="noopener noreferrer" className="btn-outline-white w-full mt-6 text-sm inline-block">{t('pets.browser.donate')}</a>
+                  <a href={'https://paypal.me/Medmoney642/' + d.amt.replace('$', '')} target="_blank" rel="noopener noreferrer" className="btn-coral w-full mt-6 rounded-2xl text-sm inline-block">{t('pets.browser.donate')}</a>
                 </motion.div>
               ))}
             </div>
