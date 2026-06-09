@@ -8,12 +8,12 @@ import InteractiveBentoGallery from '../../components/ui/interactive-bento-galle
 
 const galleryMediaItems = [
   { id: 1, type: 'image', title: 'Happy Dog', desc: 'Playful pup enjoying the outdoors', url: 'https://images.unsplash.com/photo-1544568100-847a948585b9?w=600&q=80', span: 'md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2' },
-  { id: 2, type: 'video', title: 'Puppy Play', desc: 'Adorable puppies at play', url: 'https://cdn.pixabay.com/video/2024/07/24/222837_large.mp4', span: 'md:col-span-2 md:row-span-2 sm:col-span-2 sm:row-span-2' },
+  { id: 2, type: 'image', title: 'Puppy Play', desc: 'Adorable puppies at play', url: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&q=80', span: 'md:col-span-2 md:row-span-2 sm:col-span-2 sm:row-span-2' },
   { id: 3, type: 'image', title: 'Curious Cat', desc: 'Elegant feline exploring nature', url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&q=80', span: 'md:col-span-1 md:row-span-3 sm:col-span-2 sm:row-span-2' },
   { id: 4, type: 'image', title: 'Fluffy Bunny', desc: 'Soft rabbit in the meadow', url: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=600&q=80', span: 'md:col-span-2 md:row-span-2 sm:col-span-1 sm:row-span-2' },
-  { id: 5, type: 'video', title: 'Colorful Parrot', desc: 'Vibrant bird showing off', url: 'https://cdn.pixabay.com/video/2020/07/30/46026-447087782_large.mp4', span: 'md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2' },
+  { id: 5, type: 'image', title: 'Colorful Parrot', desc: 'Vibrant bird showing off', url: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=600&q=80', span: 'md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2' },
   { id: 6, type: 'image', title: 'Peaceful Puppy', desc: 'Dog relaxing by the water', url: 'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=600&q=80', span: 'md:col-span-2 md:row-span-2 sm:col-span-1 sm:row-span-2' },
-  { id: 7, type: 'video', title: 'Gentle Horse', desc: 'Majestic horse in the field', url: 'https://cdn.pixabay.com/video/2020/05/25/40130-424930032_large.mp4', span: 'md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2' },
+  { id: 7, type: 'image', title: 'Gentle Horse', desc: 'Majestic horse in the field', url: 'https://images.unsplash.com/photo-1554774853-aae0a22c8aa4?w=600&q=80', span: 'md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2' },
 ];
 
 const SPECIES = ['dog', 'cat', 'rabbit', 'bird', 'other'];
