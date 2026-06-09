@@ -100,6 +100,15 @@ export default function PetBrowser() {
     return [...set];
   }, [allPets]);
 
+  const realShelters = useMemo(() => {
+    const map = {};
+    allPets.forEach(p => {
+      const name = p.shelterName || p.ownerName;
+      if (name) map[name] = (map[name] || 0) + 1;
+    });
+    return Object.entries(map).map(([name, count]) => ({ name, count }));
+  }, [allPets]);
+
   const shelterPetCounts = useMemo(() => {
     const counts = {};
     allPets.forEach(p => {
@@ -434,13 +443,13 @@ export default function PetBrowser() {
             {/* Right — Shelter checklist */}
             <div>
               <h3 className="font-bold text-lg text-[#0D0D0D] mb-4">{t('pets.browser.filterByShelter', 'Filter by shelter')}</h3>
-              {uniqueShelters.length > 0 ? (
+              {realShelters.length > 0 ? (
                 <>
-                  {uniqueShelters.map(s => (
-                    <label key={s} className="flex items-center gap-3 py-3 border-b border-[#E8E0D8] last:border-0 cursor-pointer">
-                      <input type="checkbox" checked={selectedShelters.includes(s)} onChange={() => setSelectedShelters(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])} className="w-5 h-5 rounded border-2 border-[#E8E0D8] appearance-none checked:bg-coral checked:border-coral cursor-pointer transition-colors" />
-                      <span className="text-sm font-medium text-[#0D0D0D]">{s}</span>
-                      <span className="ml-auto tag tag-outline text-xs">{shelterPetCounts[s] || 0} {t('common.pets')}</span>
+                  {realShelters.map(({ name, count }) => (
+                    <label key={name} className="flex items-center gap-3 py-3 border-b border-[#E8E0D8] last:border-0 cursor-pointer">
+                      <input type="checkbox" checked={selectedShelters.includes(name)} onChange={() => setSelectedShelters(prev => prev.includes(name) ? prev.filter(x => x !== name) : [...prev, name])} className="w-5 h-5 rounded border-2 border-[#E8E0D8] appearance-none checked:bg-coral checked:border-coral cursor-pointer transition-colors" />
+                      <span className="text-sm font-medium text-[#0D0D0D]">{name}</span>
+                      <span className="ml-auto tag tag-outline text-xs">{count} {t('common.petsCount', 'pets')}</span>
                     </label>
                   ))}
                   <button onClick={() => { handleReset(); }} className="btn-dark w-full mt-6 rounded-2xl">{t('pets.browser.applyShelterFilter', 'Apply shelter filter')}</button>
