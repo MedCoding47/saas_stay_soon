@@ -13,7 +13,7 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
 };
 
-export default function PetCardGrid({ pets, emptyMessage = 'No animals found' }) {
+export default function PetCardGrid({ pets, emptyMessage = 'No animals found', isFavorited, onToggleFavorite, t }) {
   if (!pets || pets.length === 0) {
     return (
       <div className="text-center py-20">
@@ -29,11 +29,16 @@ export default function PetCardGrid({ pets, emptyMessage = 'No animals found' })
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+      className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
     >
       {pets.map((pet) => (
         <motion.div key={pet.id} variants={cardVariants}>
-          <PetCard pet={pet} />
+          <PetCard
+            pet={pet}
+            isFavorited={isFavorited ? isFavorited(pet.id) : false}
+            onToggleFavorite={onToggleFavorite}
+            t={t}
+          />
         </motion.div>
       ))}
     </motion.div>

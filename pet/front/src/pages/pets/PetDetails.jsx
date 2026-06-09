@@ -9,6 +9,7 @@ import Footer from '../../components/layout/Footer';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import PageTransition from '../../components/animations/PageTransition';
 import ReadinessQuiz from '../../components/adoption/ReadinessQuiz';
+import PetCard from '../../components/pets/PetCard';
 import { useFavorites } from '../../hooks/useFavorites';
 
 const speciesEmoji = {
@@ -347,17 +348,15 @@ export default function PetDetails() {
         <section className="bg-[#FAF7F2] py-16 px-8">
           <div className="max-w-6xl mx-auto">
             <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mb-10">{t('pets.details.similar')}</h2>
-            <div className="grid md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {similarPets.map((p, i) => (
-                <motion.div key={p.id || i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} onClick={() => navigate(`/pets/${p.id}`)} className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300">
-                  <div className="bg-[#FAF7F2] h-40 flex items-center justify-center text-5xl">
-                    {speciesEmoji[p.type] || '🐾'}
-                  </div>
-                  <div className="p-5">
-                    <p className="font-bold text-[#0D0D0D]">{p.name}</p>
-                    <p className="text-sm text-[#8c7e74] mt-0.5">{p.breed || t('common.mixedBreed')}</p>
-                    <button onClick={(e) => { e.stopPropagation(); navigate(`/pets/${p.id}`); }} className="btn-dark w-full mt-3 rounded-xl py-2.5 text-sm">{t('pets.details.viewPet')}</button>
-                  </div>
+                <motion.div key={p.id || i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+                  <PetCard
+                    pet={p}
+                    isFavorited={isFavorited(p.id)}
+                    onToggleFavorite={toggleFavorite}
+                    t={t}
+                  />
                 </motion.div>
               ))}
             </div>

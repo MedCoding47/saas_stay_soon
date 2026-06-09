@@ -2,12 +2,13 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation, Trans } from 'react-i18next';
-import { Search, MapPin } from 'lucide-react';
+import { Search, MapPin, Heart, Venus, Mars } from 'lucide-react';
 import api from '../../api/client';
 import samplePets from '../../data/samplePets';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import PageTransition from '../../components/animations/PageTransition';
+import PetCard from '../../components/pets/PetCard';
 import Pagination from '../../components/ui/Pagination';
 import { useFavorites } from '../../hooks/useFavorites';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
@@ -360,7 +361,10 @@ export default function PetBrowser() {
           <div className="flex-1 min-w-0">
             {/* Top bar */}
             <div className="flex items-center justify-between mb-6">
-              <p className="text-sm font-semibold text-[#0D0D0D]">{filtered.length} {t('pets.browser.found')}</p>
+              <p className="text-lg">
+                <span className="font-bold text-[#0D0D0D]">{filtered.length}</span>
+                <span className="text-[#8c7e74] ml-2">{t('pets.browser.found')}</span>
+              </p>
               <select value={sort} onChange={(e) => { setSort(e.target.value); setPage(1); }} className="bg-white border border-[#E8E0D8] rounded-full px-4 py-2 text-sm text-[#8c7e74] outline-none cursor-pointer">
                 {sortOptions.map((opt) => (<option key={opt.value} value={opt.value}>{t('sort.' + opt.value, opt.label)}</option>))}
               </select>
@@ -374,51 +378,20 @@ export default function PetBrowser() {
                 <button onClick={handleReset} className="btn-outline mt-6 rounded-2xl px-8 py-3">{t('pets.browser.filter.clear')}</button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {paged.map((pet, i) => (
                   <motion.div
                     key={pet.id || i}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden cursor-pointer group hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300"
-                    onClick={() => navigate('/pets/' + pet.id)}
                   >
-                    {/* Image area */}
-                    <div className="relative bg-[#FAF7F2] h-52 flex items-center justify-center overflow-hidden">
-                      <span className="text-8xl group-hover:scale-110 transition-transform duration-500">{speciesEmoji[pet.type] || '\uD83D\uDC3E'}</span>
-                      {/* Status badge */}
-                      <div className="absolute top-3 left-3">
-                        {pet.isSos ? (
-                          <span className="bg-coral text-white text-xs font-bold px-3 py-1 rounded-full">{t('pets.details.sos')}</span>
-                        ) : pet.status === 'Available' ? (
-                          <span className="bg-teal-500 text-white text-xs font-bold px-3 py-1 rounded-full">{t('common.available', 'Available')}</span>
-                        ) : pet.status === 'Adopted' ? (
-                          <span className="bg-[#8c7e74] text-white text-xs font-bold px-3 py-1 rounded-full">{t('status.Adopted', 'Adopted')}</span>
-                        ) : pet.status === 'Pending' ? (
-                          <span className="bg-amber-400 text-white text-xs font-bold px-3 py-1 rounded-full">{t('status.Pending', 'Pending')}</span>
-                        ) : null}
-                      </div>
-                      {/* Favorite */}
-                      <button onClick={(e) => { e.stopPropagation(); toggleFavorite(pet); }} className={'absolute top-3 right-3 w-8 h-8 rounded-full bg-white border border-[#E8E0D8] flex items-center justify-center text-sm hover:border-coral hover:text-coral transition-colors' + (isFavorited(pet.id) ? ' border-coral bg-coral text-white' : '')}>
-                        {isFavorited(pet.id) ? '\u2665' : '\u2661'}
-                      </button>
-                    </div>
-                    {/* Card body */}
-                    <div className="p-5">
-                      <div className="flex items-start justify-between">
-                        <h3 className="font-bold text-lg text-[#0D0D0D]">{pet.name}</h3>
-                        <span className="tag tag-outline text-xs">{pet.type || t('common.pet')}</span>
-                      </div>
-                      <p className="text-sm text-[#8c7e74] mt-0.5">{pet.breed || t('common.mixedBreed')}</p>
-                      <div className="flex items-center gap-1 mt-2 text-xs text-[#8c7e74]">
-                        <MapPin size={12} />
-                        <span>{pet.location || t('common.morocco')}</span>
-                      </div>
-                      <div className="border-t border-[#E8E0D8] mt-4 pt-4">
-                        <button onClick={(e) => { e.stopPropagation(); navigate('/pets/' + pet.id); }} className="btn-dark w-full rounded-xl py-3 text-sm">{t('pets.browser.adopt')}</button>
-                      </div>
-                    </div>
+                    <PetCard
+                      pet={pet}
+                      isFavorited={isFavorited(pet.id)}
+                      onToggleFavorite={toggleFavorite}
+                      t={t}
+                    />
                   </motion.div>
                 ))}
               </div>

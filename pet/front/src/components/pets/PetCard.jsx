@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { Heart, Venus, Mars } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 const speciesEmoji = {
@@ -6,73 +7,72 @@ const speciesEmoji = {
   Hamster: '\u{1F439}', Fish: '\u{1F41F}', Turtle: '\u{1F422}', Horse: '\u{1F434}',
 };
 
-export default function PetCard({ pet, className }) {
+export default function PetCard({ pet, isFavorited, onToggleFavorite, t, className }) {
   const navigate = useNavigate();
   const imgSrc = pet.imageUrl || pet.mainImageUrl;
-  const isAvailable = pet.status === 'Available' || pet.status === 1;
+
+  const orgName = pet.shelterName || pet.ownerName || '';
+  const subtitle = orgName ? 'Nino - ' + orgName : (pet.breed || '');
 
   return (
     <div
-      onClick={() => navigate(`/pets/${pet.id}`)}
+      onClick={() => navigate('/pets/' + pet.id)}
       className={cn(
-        'bg-white dark:bg-zinc-900 rounded-3xl shadow-lg dark:shadow-2xl dark:shadow-black/80 overflow-hidden cursor-pointer mx-auto',
-        'transition-transform duration-700 ease-out hover:scale-[1.02]',
+        'bg-white rounded-2xl overflow-hidden cursor-pointer group',
+        'border border-[#E8E0D8]',
+        'hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300',
         className
       )}
     >
-      {/* Image */}
-      <div className="relative overflow-hidden group">
+      {/* IMAGE AREA */}
+      <div className="relative w-full aspect-[4/3] overflow-hidden bg-[#F5F0E8]">
         {imgSrc ? (
           <img
             src={imgSrc}
             alt={pet.name}
-            className="w-full aspect-square object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="w-full aspect-square bg-gradient-to-br from-coral/10 to-teal/10 flex items-center justify-center">
-            <span className="text-6xl select-none">{speciesEmoji[pet.type] || '\u{1F43E}'}</span>
+          <div className="w-full h-full flex items-center justify-center text-[80px] group-hover:scale-110 transition-transform duration-500">
+            {speciesEmoji[pet.type] || '\u{1F43E}'}
           </div>
         )}
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/30 dark:from-black/60 to-transparent pointer-events-none"></div>
-        <div className="absolute top-6 left-6">
-          <h2 className="text-2xl font-medium text-white drop-shadow-lg">{pet.name}</h2>
-        </div>
+
+        {/* FAVORITE BUTTON */}
         <button
-          onClick={(e) => { e.stopPropagation(); }}
-          className="absolute top-6 right-6 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-sm shadow-sm hover:bg-white transition-all duration-500 ease-out hover:scale-110"
+          onClick={(e) => { e.stopPropagation(); onToggleFavorite && onToggleFavorite(pet); }}
+          className={'absolute top-3 right-3 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center cursor-pointer border border-[#E8E0D8] hover:border-coral transition-colors ' + (isFavorited ? 'text-coral fill-coral' : 'text-[#8c7e74]')}
         >
-          {'\u2665'}
+          <Heart size={16} className={isFavorited ? 'fill-coral text-coral' : ''} />
         </button>
+
+        {/* STATUS BADGE — only if NOT "Available" */}
+        {pet.status && pet.status !== 'Available' && (
+          <div className="absolute top-3 left-3">
+            {pet.status === 'Adopted' ? (
+              <span className="bg-[#8c7e74] text-white text-xs font-bold px-3 py-1 rounded-full">{(t && t('status.Adopted', 'Adopted')) || 'Adopted'}</span>
+            ) : pet.status === 'Pending' ? (
+              <span className="bg-amber text-white text-xs font-bold px-3 py-1 rounded-full">{(t && t('status.Pending', 'Pending')) || 'Pending'}</span>
+            ) : null}
+          </div>
+        )}
       </div>
 
-      {/* Footer */}
-      <div className="p-4 flex items-center justify-between group">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-gray-200 dark:ring-zinc-700 flex-shrink-0 bg-warm-dark transition-transform duration-500 ease-out group-hover:scale-110">
-            {imgSrc ? (
-              <img src={imgSrc} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-xs font-bold text-muted">
-                {pet.name?.charAt(0) || '?'}
-              </div>
-            )}
-          </div>
-          <div className="transition-transform duration-500 ease-out group-hover:translate-x-1">
-            <div className="text-sm text-gray-700 dark:text-zinc-200">
-              {pet.type}{pet.breed ? ` \u00B7 ${pet.breed}` : ''}
-            </div>
-            <div className="text-xs text-gray-500 dark:text-zinc-500">{pet.location || pet.shelterName || pet.city || ''}</div>
-          </div>
+      {/* CARD BODY */}
+      <div className="px-4 pt-4 pb-5">
+        {/* Row 1 — Name + Gender */}
+        <div className="flex items-center justify-between">
+          <span className="font-display font-black text-xl tracking-tight text-[#0D0D0D] uppercase truncate flex-1">
+            {pet.name}
+          </span>
+          <div className="w-px h-4 bg-[#E8E0D8] mx-2 flex-shrink-0" />
+          <span className="flex-shrink-0 text-[#8c7e74]">
+            {pet.gender === 'Female' ? <Venus size={16} /> : <Mars size={16} />}
+          </span>
         </div>
-        <button
-          onClick={(e) => { e.stopPropagation(); navigate(`/pets/${pet.id}`); }}
-          className="bg-gray-900 dark:bg-zinc-800 text-white dark:text-zinc-100 rounded-lg px-4 py-2 text-sm font-medium
-                   transition-all duration-500 ease-out hover:scale-105
-                   hover:bg-gray-800 dark:hover:bg-zinc-700
-                   active:scale-95 hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/50"
-        >
-          {isAvailable ? 'Adopt' : 'Details'}
-        </button>
+
+        {/* Row 2 — Organization / Breed */}
+        <p className="text-sm text-[#8c7e74] mt-1 truncate">{subtitle}</p>
       </div>
     </div>
   );
