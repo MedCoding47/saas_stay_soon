@@ -45,12 +45,14 @@ function BoolIcon({ value }) {
   return <span className="text-[#b8aaa0]">—</span>;
 }
 
-const accessories = [
-  { emoji: '🎾', nameKey: 'pets.details.accessories.toys', defaultName: 'Toys', price: 'From 25 MAD' },
-  { emoji: '🛏️', nameKey: 'pets.details.accessories.bed', defaultName: 'Bed', price: 'From 150 MAD' },
-  { emoji: '🥣', nameKey: 'pets.details.accessories.bowl', defaultName: 'Bowl', price: 'From 30 MAD' },
-  { emoji: '📿', nameKey: 'pets.details.accessories.collar', defaultName: 'Collar', price: 'From 45 MAD' },
-];
+function productEmoji(name) {
+  const n = (name || '').toLowerCase();
+  if (n.includes('toy') || n.includes('jouet') || n.includes('لعبة')) return '🎾';
+  if (n.includes('bed') || n.includes('panier') || n.includes('lit') || n.includes('سرير')) return '🛏️';
+  if (n.includes('bowl') || n.includes('gamelle') || n.includes('plat') || n.includes('طبق') || n.includes('food') || n.includes('nourriture') || n.includes('طعام') || n.includes('eau') || n.includes('ماء')) return '🥣';
+  if (n.includes('collar') || n.includes('laisse') || n.includes('collier') || n.includes('طوق') || n.includes('مقود') || n.includes('leash')) return '📿';
+  return '📦';
+}
 
 export default function PetDetails() {
   const { t } = useTranslation();
@@ -59,6 +61,7 @@ export default function PetDetails() {
   const [pet, setPet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [petProducts, setPetProducts] = useState([]);
   const { isFavorited, toggleFavorite } = useFavorites();
 
   const token = localStorage.getItem('sh-token');
@@ -78,6 +81,13 @@ export default function PetDetails() {
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [id, navigate]);
+
+  useEffect(() => {
+    if (!pet) return;
+    api.get(`/pets/${id}/products`)
+      .then(({ data }) => setPetProducts(data?.$values || data || []))
+      .catch(() => setPetProducts([]));
+  }, [pet, id]);
 
   const handleAdoptClick = () => {
     if (!token) { navigate('/login/client'); return; }
@@ -260,22 +270,30 @@ export default function PetDetails() {
           </motion.div>
         </div>
 
-        {/* ACCESSORIES STRIP */}
-        <section className="bg-white border-y border-[#E8E0D8] py-12 px-8 mt-8">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mb-8">{t('pets.details.accessories')}</h2>
-            <div className="flex gap-4 overflow-x-auto no-scrollbar">
-              {accessories.map((item, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-[#FAF7F2] rounded-2xl p-6 border border-[#E8E0D8] text-center w-48 flex-shrink-0">
-                  <div className="text-4xl mb-3">{item.emoji}</div>
-                  <p className="font-bold text-sm text-[#0D0D0D]">{t(item.nameKey, item.defaultName)}</p>
-                  <p className="text-coral font-bold text-sm mt-1">{item.price}</p>
-                  <button className="btn-dark w-full mt-3 text-xs py-2 rounded-xl">{t('common.shopNow')}</button>
-                </motion.div>
-              ))}
+        {/* ACCESSORIES STRIP — only shows when enterprise has associated products */}
+        {petProducts.length > 0 && (
+          <section className="bg-white border-y border-[#E8E0D8] py-12 px-8 mt-8">
+            <div className="max-w-6xl mx-auto">
+              <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mb-8">{t('pets.details.accessories')}</h2>
+              <div className="flex gap-4 overflow-x-auto no-scrollbar">
+                {petProducts.map((item, i) => (
+                  <motion.div key={item.id || i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-[#FAF7F2] rounded-2xl p-6 border border-[#E8E0D8] text-center w-48 flex-shrink-0">
+                    {item.imageUrl ? (
+                      <div className="w-16 h-16 mx-auto mb-3 rounded-xl overflow-hidden bg-white border border-[#E8E0D8] flex items-center justify-center">
+                        <img src={item.imageUrl} alt={item.name} className="max-w-full max-h-full object-contain" />
+                      </div>
+                    ) : (
+                      <div className="text-4xl mb-3">{productEmoji(item.name)}</div>
+                    )}
+                    <p className="font-bold text-sm text-[#0D0D0D]">{item.name}</p>
+                    {item.price && <p className="text-coral font-bold text-sm mt-1">{parseFloat(item.price) > 0 ? `${parseFloat(item.price).toFixed(2)} MAD` : item.price}</p>}
+                    <button className="btn-dark w-full mt-3 text-xs py-2 rounded-xl">{t('common.shopNow')}</button>
+                  </motion.div>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* SHELTER INFO */}
         <section className="max-w-6xl mx-auto px-8 py-16 grid md:grid-cols-2 gap-8">
