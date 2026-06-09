@@ -262,35 +262,55 @@ export default function PetBrowser() {
                 <p className="text-center text-[#8c7e74] py-20">{t('pets.browser.noResults')}</p>
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {paged.map((pet, i) => (
+                  {paged.map((pet, i) => {
+                    const imgSrc = pet.imageUrl || pet.mainImageUrl;
+                    return (
                     <motion.div
                       key={pet.id || i}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05 }}
                       onClick={() => navigate(`/pets/${pet.id}`)}
-                      className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300"
+                      className="bg-white rounded-3xl border border-[#E8E0D8] overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 group"
                     >
-                      <div className="bg-[#FAF7F2] h-48 flex items-center justify-center text-7xl relative">
-                        {speciesEmoji[pet.type] || '🐾'}
+                      <div className="relative aspect-[4/3] overflow-hidden bg-[#FAF7F2]">
+                        {imgSrc ? (
+                          <img src={imgSrc} alt={pet.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-6xl">{speciesEmoji[pet.type] || '🐾'}</div>
+                        )}
                         {pet.isSos && (
                           <span className="absolute top-3 left-3 bg-coral text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md z-10">{t('pets.details.sos')}</span>
                         )}
-                        <button onClick={(e) => { e.stopPropagation(); toggleFavorite(pet); }} className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white border flex items-center justify-center text-sm transition-all ${
+                        {pet.status === 'Available' && !pet.isSos && (
+                          <span className="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md z-10">{t('common.available')}</span>
+                        )}
+                        <button onClick={(e) => { e.stopPropagation(); toggleFavorite(pet); }} className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border flex items-center justify-center text-sm transition-all shadow-sm hover:scale-110 ${
                           isFavorited(pet.id) ? 'border-coral bg-coral text-white' : 'border-[#E8E0D8] hover:border-coral hover:text-coral'
                         }`}>{isFavorited(pet.id) ? '♥' : '♡'}</button>
+                        <div className="absolute bottom-3 right-3 flex gap-1.5">
+                          {pet.gender && <span className="bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-[11px] font-bold text-[#0D0D0D]">{pet.gender === 'Male' ? '♂' : '♀'}</span>}
+                          {pet.ageMonths != null && <span className="bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-[11px] font-bold text-[#0D0D0D]">{petAgeLabel(pet)}</span>}
+                        </div>
                       </div>
                       <div className="p-5">
-                        <h3 className="font-bold text-lg text-[#0D0D0D]">{pet.name}</h3>
-                        <p className="text-sm text-[#8c7e74] mt-0.5">{pet.breed || t('common.mixedBreed')} · {pet.location || t('common.morocco')}</p>
-                        <div className="flex gap-2 mt-3">
-                          <span className="tag px-3 py-1 rounded-full bg-coral-light text-coral border border-coral/20 text-[10px] font-bold tracking-widest uppercase">{pet.type || t('common.pet')}</span>
-                          <span className="tag px-3 py-1 rounded-full bg-teal-light text-teal border border-teal/20 text-[10px] font-bold tracking-widest uppercase">{petAgeLabel(pet) || t('common.adult')}</span>
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <h3 className="font-bold text-lg text-[#0D0D0D] truncate">{pet.name}</h3>
+                            <p className="text-sm text-[#8c7e74] mt-0.5 truncate">{pet.breed || t('common.mixedBreed')}</p>
+                          </div>
+                          <span className="tag px-3 py-1 rounded-full bg-[#FAF7F2] text-[#8c7e74] border border-[#E8E0D8] text-[10px] font-bold tracking-widest uppercase shrink-0">{pet.type || t('common.pet')}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-2 text-xs text-[#b8aaa0]">
+                          <span>📍</span>
+                          <span className="truncate">{pet.location || t('common.morocco')}</span>
+                          {pet.size && <><span className="text-[#E8E0D8]">·</span><span className="capitalize">{t('size.' + pet.size, pet.size)}</span></>}
                         </div>
                         <button onClick={(e) => { e.stopPropagation(); navigate(`/pets/${pet.id}`); }} className="btn-dark w-full mt-4 rounded-xl py-3 text-sm">{t('pets.browser.adopt')}</button>
                       </div>
                     </motion.div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
 
