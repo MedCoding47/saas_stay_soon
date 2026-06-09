@@ -12,8 +12,9 @@ import { useFavorites } from '../../hooks/useFavorites';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const PAGE_SIZE = 9;
+const NEW_THRESHOLD_DAYS = 14;
 
-const defaultFilters = { species: '', age: '', size: '', gender: '', status: '' };
+const defaultFilters = { species: '', age: '', size: '', gender: '', status: '', breed: '', shelter: '' };
 
 const sortOptions = [
   { value: 'recent', label: 'Recent' },
@@ -65,6 +66,7 @@ export default function PetBrowser() {
   const [allPets, setAllPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState(defaultFilters);
+  const [searchQuery, setSearchQuery] = useState('');
   const [sort, setSort] = useState('recent');
   const [page, setPage] = useState(1);
   const [selectedShelters, setSelectedShelters] = useState([]);
@@ -86,13 +88,33 @@ export default function PetBrowser() {
     return () => { cancelled = true; };
   }, []);
 
+  const uniqueBreeds = useMemo(() => {
+    const set = new Set(allPets.map(p => p.breed).filter(Boolean));
+    return [...set].sort();
+  }, [allPets]);
+
+  const uniqueShelters = useMemo(() => {
+    const set = new Set(allPets.map(p => p.shelterName || p.ownerName || p.location).filter(Boolean));
+    return [...set];
+  }, [allPets]);
+
   const filtered = useMemo(() => {
     let list = allPets.filter((pet) => {
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const match = (pet.name || '').toLowerCase().includes(q) || (pet.breed || '').toLowerCase().includes(q);
+        if (!match) return false;
+      }
       if (filters.species && pet.type !== filters.species) return false;
       if (!matchesAge(pet, filters.age)) return false;
       if (!matchesSize(pet, filters.size)) return false;
       if (!matchesGender(pet, filters.gender)) return false;
       if (!matchesStatus(pet, filters.status)) return false;
+      if (filters.breed && (pet.breed || '') !== filters.breed) return false;
+      if (filters.shelter) {
+        const s = pet.shelterName || pet.ownerName || pet.location || '';
+        if (s !== filters.shelter) return false;
+      }
       return true;
     });
     switch (sort) {
@@ -101,12 +123,18 @@ export default function PetBrowser() {
       default: break;
     }
     return list;
-  }, [allPets, filters, sort]);
+  }, [allPets, filters, sort, searchQuery]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const handleReset = () => { setFilters(defaultFilters); setPage(1); };
+  const handleReset = () => { setFilters(defaultFilters); setSearchQuery(''); setPage(1); };
+
+  const isNewPet = (pet) => {
+    if (!pet.createdAt) return false;
+    const diff = Date.now() - new Date(pet.createdAt).getTime();
+    return diff < NEW_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
+  };
 
   const petAgeLabel = (pet) => {
     const m = pet.ageMonths;
@@ -133,7 +161,7 @@ export default function PetBrowser() {
       <Navbar />
       <main className="min-h-screen bg-[#FAF7F2]">
         {/* HERO */}
-        <section className="bg-[#0D0D0D] py-16 px-8">
+        <section className="bg-[#0D0D0D] pt-16 pb-20 px-8">
           <div className="max-w-6xl mx-auto">
             <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="font-display font-black text-[56px] text-white leading-[0.9] tracking-tight">
               <Trans i18nKey="pets.browser.title">Find Your<br />Companion</Trans>
@@ -141,9 +169,28 @@ export default function PetBrowser() {
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-white/50 text-lg mt-4 max-w-md">
               {t('pets.browser.subtitle')}
             </motion.p>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mt-6">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="mt-6 flex gap-3 items-center">
               <span className="tag tag-coral">{t('pets.browser.count', { count: allPets.length })}</span>
             </motion.div>
+          </div>
+        </section>
+
+        {/* SEARCH BAR */}
+        <section className="bg-white border-b border-[#E8E0D8] px-8">
+          <div className="max-w-6xl mx-auto -mt-6">
+            <div className="bg-white rounded-2xl shadow-lg border border-[#E8E0D8] p-2 flex items-center gap-2 max-w-2xl">
+              <span className="text-[#8c7e74] text-lg pl-3">🔍</span>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => { setSearchQuery(e.target.value); setPage(1); }}
+                placeholder={t('pets.browser.searchPlaceholder', 'Search by name or breed…')}
+                className="flex-1 py-3 text-sm text-[#0D0D0D] outline-none placeholder:text-[#b8aaa0] bg-transparent"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery('')} className="text-[#b8aaa0] hover:text-[#0D0D0D] text-sm font-bold px-3">✕</button>
+              )}
+            </div>
           </div>
         </section>
 
@@ -221,6 +268,44 @@ export default function PetBrowser() {
                   </div>
                 </div>
 
+                {/* Breed */}
+                {uniqueBreeds.length > 0 && (
+                  <div className="border-b border-[#E8E0D8] py-6 px-6">
+                    <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('common.breed')}</p>
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="breed" checked={!filters.breed} onChange={() => setFilters(f => ({ ...f, breed: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
+                        <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
+                      </label>
+                      {uniqueBreeds.map(b => (
+                        <label key={b} className="flex items-center gap-2 cursor-pointer">
+                          <input type="radio" name="breed" checked={filters.breed === b} onChange={() => setFilters(f => ({ ...f, breed: b }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
+                          <span className="text-sm text-[#0D0D0D] font-medium truncate">{b}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Shelter */}
+                {uniqueShelters.length > 0 && (
+                  <div className="border-b border-[#E8E0D8] py-6 px-6">
+                    <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.location')}</p>
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="shelter" checked={!filters.shelter} onChange={() => setFilters(f => ({ ...f, shelter: '' }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
+                        <span className="text-sm text-[#0D0D0D] font-medium">{t('common.any')}</span>
+                      </label>
+                      {uniqueShelters.map(s => (
+                        <label key={s} className="flex items-center gap-2 cursor-pointer">
+                          <input type="radio" name="shelter" checked={filters.shelter === s} onChange={() => setFilters(f => ({ ...f, shelter: s }))} className="w-4 h-4 border-2 border-[#E8E0D8] rounded-full appearance-none checked:border-coral checked:bg-coral transition-colors cursor-pointer" />
+                          <span className="text-sm text-[#0D0D0D] font-medium truncate">{s}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Status */}
                 <div className="border-b border-[#E8E0D8] py-6 px-6">
                   <p className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-3">{t('pets.browser.filter.status')}</p>
@@ -264,6 +349,7 @@ export default function PetBrowser() {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
                   {paged.map((pet, i) => {
                     const imgSrc = pet.imageUrl || pet.mainImageUrl;
+                    const shelterName = pet.shelterName || pet.ownerName || '';
                     return (
                     <motion.div
                       key={pet.id || i}
@@ -279,12 +365,17 @@ export default function PetBrowser() {
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-6xl">{speciesEmoji[pet.type] || '🐾'}</div>
                         )}
-                        {pet.isSos && (
-                          <span className="absolute top-3 left-3 bg-coral text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md z-10">{t('pets.details.sos')}</span>
-                        )}
-                        {pet.status === 'Available' && !pet.isSos && (
-                          <span className="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md z-10">{t('common.available')}</span>
-                        )}
+                        <div className="absolute top-3 left-3 flex gap-1.5">
+                          {pet.isSos && (
+                            <span className="bg-coral text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md">{t('pets.details.sos')}</span>
+                          )}
+                          {isNewPet(pet) && (
+                            <span className="bg-amber-400 text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md">{t('common.new', 'New')}</span>
+                          )}
+                          {pet.status === 'Available' && !pet.isSos && !isNewPet(pet) && (
+                            <span className="bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest shadow-md">{t('common.available', 'Available')}</span>
+                          )}
+                        </div>
                         <button onClick={(e) => { e.stopPropagation(); toggleFavorite(pet); }} className={`absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border flex items-center justify-center text-sm transition-all shadow-sm hover:scale-110 ${
                           isFavorited(pet.id) ? 'border-coral bg-coral text-white' : 'border-[#E8E0D8] hover:border-coral hover:text-coral'
                         }`}>{isFavorited(pet.id) ? '♥' : '♡'}</button>
@@ -295,7 +386,7 @@ export default function PetBrowser() {
                       </div>
                       <div className="p-5">
                         <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
+                          <div className="min-w-0 flex-1">
                             <h3 className="font-bold text-lg text-[#0D0D0D] truncate">{pet.name}</h3>
                             <p className="text-sm text-[#8c7e74] mt-0.5 truncate">{pet.breed || t('common.mixedBreed')}</p>
                           </div>
@@ -306,6 +397,9 @@ export default function PetBrowser() {
                           <span className="truncate">{pet.location || t('common.morocco')}</span>
                           {pet.size && <><span className="text-[#E8E0D8]">·</span><span className="capitalize">{t('size.' + pet.size, pet.size)}</span></>}
                         </div>
+                        {shelterName && (
+                          <p className="text-[11px] text-[#b8aaa0] mt-1.5 truncate">🏠 {shelterName}</p>
+                        )}
                         <button onClick={(e) => { e.stopPropagation(); navigate(`/pets/${pet.id}`); }} className="btn-dark w-full mt-4 rounded-xl py-3 text-sm">{t('pets.browser.adopt')}</button>
                       </div>
                     </motion.div>
@@ -319,26 +413,33 @@ export default function PetBrowser() {
           </div>
         </section>
 
-        {/* SHELTER FILTER SECTION */}
-        <section className="bg-white border-t border-[#E8E0D8] py-12 px-8">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mb-6">{t('pets.browser.filter.location')}</h2>
-            <div className="flex flex-wrap gap-3">
-              {shelterNames.map((name) => {
-                const active = selectedShelters.includes(name);
-                return (
-                  <button
-                    key={name}
-                    onClick={() => setSelectedShelters(prev => prev.includes(name) ? prev.filter(s => s !== name) : [...prev, name])}
-                    className={`px-5 py-2.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
-                      active ? 'bg-[#0D0D0D] text-[#FAF7F2] border-[#0D0D0D]' : 'bg-transparent text-[#8c7e74] border-[#E8E0D8] hover:border-[#0D0D0D] hover:text-[#0D0D0D]'
-                    }`}
-                  >
-                    {name}
-                  </button>
-                );
-              })}
+        {/* ADOPTION PREPARATION */}
+        <section className="bg-white border-t border-[#E8E0D8] py-16 px-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="font-display font-black text-display-sm text-[#0D0D0D] leading-[0.92] mb-4">
+              {t('pets.browser.prepareTitle', 'Prepare Your Adoption')}
+            </motion.h2>
+            <motion.p initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="text-[#8c7e74] text-lg max-w-xl mx-auto mb-12">
+              {t('pets.browser.prepareSubtitle', 'Adopting a pet is a lifetime commitment. Make sure you are ready.')}
+            </motion.p>
+            <div className="grid md:grid-cols-3 gap-6 text-left">
+              {[
+                { icon: '📋', key: 'prepare.step1', title: 'Create your profile', desc: 'Sign up and tell us about your lifestyle so we can find the perfect match.' },
+                { icon: '✅', key: 'prepare.step2', title: 'Meet your companion', desc: 'Visit the shelter, interact with the pet, and make sure it is the right fit.' },
+                { icon: '📝', key: 'prepare.step3', title: 'Complete the adoption', desc: 'Sign the CEC, provide the required documents, and welcome your new family member.' },
+              ].map((step, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 * i }} className="bg-[#FAF7F2] rounded-3xl p-8 border border-[#E8E0D8]">
+                  <span className="text-4xl block mb-4">{step.icon}</span>
+                  <h3 className="font-bold text-[#0D0D0D] mb-2">{t('pets.browser.' + step.key + '_title', step.title)}</h3>
+                  <p className="text-sm text-[#8c7e74] leading-relaxed">{t('pets.browser.' + step.key + '_desc', step.desc)}</p>
+                </motion.div>
+              ))}
             </div>
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mt-10">
+              <a href={localStorage.getItem('sh-token') ? '/client/dashboard' : '/login/client'} className="btn-dark rounded-2xl px-10 py-4 inline-flex items-center gap-2">
+                {t('pets.browser.createAccount', 'Create my adopter account')} →
+              </a>
+            </motion.div>
           </div>
         </section>
 
