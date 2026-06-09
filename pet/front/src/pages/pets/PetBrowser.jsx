@@ -360,11 +360,11 @@ export default function PetBrowser() {
           {/* RIGHT CONTENT — GRID */}
           <div className="flex-1 min-w-0">
             {/* Top bar */}
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-lg">
-                <span className="font-bold text-[#0D0D0D]">{filtered.length}</span>
-                <span className="text-[#8c7e74] ml-2">{t('pets.browser.found')}</span>
-              </p>
+            <div className="flex items-baseline justify-between mb-8">
+              <div className="flex items-baseline gap-2">
+                <span className="font-bold text-2xl text-[#0D0D0D]">{filtered.length}</span>
+                <span className="text-[#8c7e74] text-lg">{t('pets.browser.found')}</span>
+              </div>
               <select value={sort} onChange={(e) => { setSort(e.target.value); setPage(1); }} className="bg-white border border-[#E8E0D8] rounded-full px-4 py-2 text-sm text-[#8c7e74] outline-none cursor-pointer">
                 {sortOptions.map((opt) => (<option key={opt.value} value={opt.value}>{t('sort.' + opt.value, opt.label)}</option>))}
               </select>
@@ -378,7 +378,7 @@ export default function PetBrowser() {
                 <button onClick={handleReset} className="btn-outline mt-6 rounded-2xl px-8 py-3">{t('pets.browser.filter.clear')}</button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {paged.map((pet, i) => (
                   <motion.div
                     key={pet.id || i}

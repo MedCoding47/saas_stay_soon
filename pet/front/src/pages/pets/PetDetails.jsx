@@ -348,7 +348,7 @@ export default function PetDetails() {
         <section className="bg-[#FAF7F2] py-16 px-8">
           <div className="max-w-6xl mx-auto">
             <h2 className="font-display font-bold text-display-sm text-[#0D0D0D] mb-10">{t('pets.details.similar')}</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {similarPets.map((p, i) => (
                 <motion.div key={p.id || i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                   <PetCard
