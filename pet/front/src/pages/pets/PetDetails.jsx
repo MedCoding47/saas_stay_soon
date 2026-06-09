@@ -426,11 +426,11 @@ export default function PetDetails() {
             <h2 className="font-display font-black text-display-sm text-white mt-4">{t('pets.browser.donationTitle')}</h2>
             <p className="text-white/40 text-lg mt-4 mb-12 max-w-lg mx-auto">{t('pets.browser.donationSubtitle')}</p>
             <div className="grid md:grid-cols-3 gap-5 max-w-3xl mx-auto">
-              {[{ amt: '60 MAD' }, { amt: '120 MAD' }, { amt: '200 MAD' }].map((d, i) => (
+              {[{ amt: '$5' }, { amt: '$20' }, { amt: '$50' }].map((d, i) => (
                 <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="bg-white/5 border border-white/10 rounded-3xl p-8 text-center">
                   <p className="font-display font-black text-5xl text-white">{d.amt}</p>
                   <p className="text-white/30 text-xs mt-1">{t('common.taxDeductible')}</p>
-                  <a href={`https://paypal.me/Medmoney642/${d.amt.replace(' MAD', '')}`} target="_blank" rel="noopener noreferrer" className="btn-outline-white w-full mt-6 text-sm inline-block">{t('pets.browser.donate')}</a>
+                  <a href={`https://paypal.me/Medmoney642/${d.amt.replace('$', '')}`} target="_blank" rel="noopener noreferrer" className="btn-outline-white w-full mt-6 text-sm inline-block">{t('pets.browser.donate')}</a>
                 </motion.div>
               ))}
             </div>
