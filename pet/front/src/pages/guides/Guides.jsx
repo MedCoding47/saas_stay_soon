@@ -4,6 +4,17 @@ import { useTranslation } from 'react-i18next';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import PageTransition from '../../components/animations/PageTransition';
+import InteractiveBentoGallery from '../../components/ui/interactive-bento-gallery';
+
+const galleryMediaItems = [
+  { id: 1, type: 'image', title: 'Happy Dog', desc: 'Playful pup enjoying the outdoors', url: 'https://images.unsplash.com/photo-1544568100-847a948585b9?w=600&q=80', span: 'md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2' },
+  { id: 2, type: 'video', title: 'Puppy Play', desc: 'Adorable puppies at play', url: 'https://cdn.pixabay.com/video/2024/07/24/222837_large.mp4', span: 'md:col-span-2 md:row-span-2 sm:col-span-2 sm:row-span-2' },
+  { id: 3, type: 'image', title: 'Curious Cat', desc: 'Elegant feline exploring nature', url: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&q=80', span: 'md:col-span-1 md:row-span-3 sm:col-span-2 sm:row-span-2' },
+  { id: 4, type: 'image', title: 'Fluffy Bunny', desc: 'Soft rabbit in the meadow', url: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=600&q=80', span: 'md:col-span-2 md:row-span-2 sm:col-span-1 sm:row-span-2' },
+  { id: 5, type: 'video', title: 'Colorful Parrot', desc: 'Vibrant bird showing off', url: 'https://cdn.pixabay.com/video/2020/07/30/46026-447087782_large.mp4', span: 'md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2' },
+  { id: 6, type: 'image', title: 'Peaceful Puppy', desc: 'Dog relaxing by the water', url: 'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=600&q=80', span: 'md:col-span-2 md:row-span-2 sm:col-span-1 sm:row-span-2' },
+  { id: 7, type: 'video', title: 'Gentle Horse', desc: 'Majestic horse in the field', url: 'https://cdn.pixabay.com/video/2020/05/25/40130-424930032_large.mp4', span: 'md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2' },
+];
 
 const SPECIES = ['dog', 'cat', 'rabbit', 'bird', 'other'];
 
@@ -193,6 +204,17 @@ export default function Guides() {
               )}
             </motion.div>
           </AnimatePresence>
+        </div>
+      </section>
+
+      {/* GALLERY SECTION */}
+      <section className="bg-white border-t border-[#E8E0D8] py-16 px-8">
+        <div className="max-w-6xl mx-auto">
+          <InteractiveBentoGallery
+            mediaItems={galleryMediaItems}
+            title={t('guides.gallery.title', 'Pet Gallery')}
+            description={t('guides.gallery.description', 'Drag and explore our collection of pet moments')}
+          />
         </div>
       </section>
 
