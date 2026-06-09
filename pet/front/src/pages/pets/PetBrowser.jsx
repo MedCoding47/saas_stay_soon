@@ -371,7 +371,6 @@ export default function PetBrowser() {
               <div className="text-center py-20">
                 <span className="text-6xl">\uD83D\uDD0D</span>
                 <h2 className="font-display font-bold text-2xl text-[#0D0D0D] mt-4">{t('pets.browser.noResults')}</h2>
-                <p className="text-[#8c7e74] mt-2">{t('pets.browser.noResultsHint', 'Try adjusting your filters')}</p>
                 <button onClick={handleReset} className="btn-outline mt-6 rounded-2xl px-8 py-3">{t('pets.browser.filter.clear')}</button>
               </div>
             ) : (
