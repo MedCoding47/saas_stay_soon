@@ -203,7 +203,7 @@
   "pets.browser.filter.status": "Status",
   "pets.browser.filter.apply": "Apply Filters",
   "pets.browser.filter.clear": "Reset all",
-  "pets.browser.found": "{{count}} pets found",
+  "pets.browser.found": "pets found",
   "pets.browser.noResults": "No pets match your criteria. Try adjusting the filters.",
   "pets.browser.subtitle": "Browse pets available for adoption across Morocco",
 

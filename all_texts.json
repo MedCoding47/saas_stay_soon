@@ -1,0 +1,2652 @@
+[
+  {
+    "key": "navbar.home",
+    "original_text": "Home",
+    "current_arabic": "الرئيسية"
+  },
+  {
+    "key": "navbar.browse",
+    "original_text": "Browse",
+    "current_arabic": "تصفح"
+  },
+  {
+    "key": "navbar.doctors",
+    "original_text": "Doctors",
+    "current_arabic": "الأطباء"
+  },
+  {
+    "key": "navbar.dashboard",
+    "original_text": "Dashboard",
+    "current_arabic": "لوحة التحكم"
+  },
+  {
+    "key": "navbar.createAccount",
+    "original_text": "Create Account",
+    "current_arabic": "إنشاء حساب"
+  },
+  {
+    "key": "navbar.logout",
+    "original_text": "Logout",
+    "current_arabic": "تسجيل الخروج"
+  },
+  {
+    "key": "navbar.signIn",
+    "original_text": "Sign In",
+    "current_arabic": "تسجيل الدخول"
+  },
+  {
+    "key": "navbar.getStarted",
+    "original_text": "Get Started",
+    "current_arabic": "ابدأ الآن"
+  },
+  {
+    "key": "navbar.donate",
+    "original_text": "Donate",
+    "current_arabic": "تبرع"
+  },
+  {
+    "key": "footer.tagline",
+    "original_text": "Connecting pets with loving families across Morocco.",
+    "current_arabic": "نوصل الحيوانات بالعائلات المحبة في جميع أنحاء المغرب."
+  },
+  {
+    "key": "footer.copyright",
+    "original_text": "© 2024 Nino. All rights reserved.",
+    "current_arabic": "© 2024 نينو. جميع الحقوق محفوظة."
+  },
+  {
+    "key": "footer.links.adopt",
+    "original_text": "Adopt",
+    "current_arabic": "تبنَّ"
+  },
+  {
+    "key": "footer.links.shelters",
+    "original_text": "Shelters",
+    "current_arabic": "الملاجئ"
+  },
+  {
+    "key": "footer.links.about",
+    "original_text": "About",
+    "current_arabic": "حول"
+  },
+  {
+    "key": "footer.links.contact",
+    "original_text": "Contact",
+    "current_arabic": "اتصل بنا"
+  },
+  {
+    "key": "footer.made_with",
+    "original_text": "Made with 🐾 in Morocco",
+    "current_arabic": "صُنع بـ 🐾 في المغرب"
+  },
+  {
+    "key": "landing.hero.badge",
+    "original_text": "🐾 Morocco's #1 Adoption Platform",
+    "current_arabic": "🐾 منصة التبني رقم 1 في المغرب"
+  },
+  {
+    "key": "landing.hero.available",
+    "original_text": "250+ pets available now",
+    "current_arabic": "أكثر من 250 حيواناً متاحاً الآن"
+  },
+  {
+    "key": "landing.hero.title_line1",
+    "original_text": "Every Pet Deserves",
+    "current_arabic": "كل حيوان يستحق"
+  },
+  {
+    "key": "landing.hero.title_line2",
+    "original_text": "A Home",
+    "current_arabic": "بيتاً"
+  },
+  {
+    "key": "landing.hero.title_line3",
+    "original_text": "Find them on Nino.",
+    "current_arabic": "جده على نينو."
+  },
+  {
+    "key": "landing.hero.description",
+    "original_text": "Connect with shelters across Morocco. Find your perfect companion and give them the life they deserve.",
+    "current_arabic": "تواصل مع الملاجئ في جميع أنحاء المغرب. اعثر على الرفيق المثالي وامنحه الحياة التي يستحقها."
+  },
+  {
+    "key": "landing.hero.find_pet",
+    "original_text": "Find a Pet",
+    "current_arabic": "ابحث عن حيوان"
+  },
+  {
+    "key": "landing.hero.partner_shelters",
+    "original_text": "Partner Shelters",
+    "current_arabic": "الملاجئ الشريكة"
+  },
+  {
+    "key": "landing.stats.adopted",
+    "original_text": "Pets Adopted",
+    "current_arabic": "الحيوانات المتبناة"
+  },
+  {
+    "key": "landing.stats.shelters",
+    "original_text": "Partner Shelters",
+    "current_arabic": "الملاجئ الشريكة"
+  },
+  {
+    "key": "landing.stats.families",
+    "original_text": "Happy Families",
+    "current_arabic": "عائلات سعيدة"
+  },
+  {
+    "key": "landing.stats.success_rate",
+    "original_text": "Success Rate",
+    "current_arabic": "نسبة النجاح"
+  },
+  {
+    "key": "landing.how_it_works.badge",
+    "original_text": "Process",
+    "current_arabic": "الطريقة"
+  },
+  {
+    "key": "landing.how_it_works.title_prefix",
+    "original_text": "How it",
+    "current_arabic": "كيف"
+  },
+  {
+    "key": "landing.how_it_works.title_highlight",
+    "original_text": "works",
+    "current_arabic": "تعمل"
+  },
+  {
+    "key": "landing.how_it_works.description",
+    "original_text": "Three simple steps between you and your new best friend.",
+    "current_arabic": "ثلاث خطوات بسيطة بينك وبين أعز صديق."
+  },
+  {
+    "key": "landing.how_it_works.cta",
+    "original_text": "Start Browsing",
+    "current_arabic": "ابدأ التصفح"
+  },
+  {
+    "key": "landing.steps.browse.title",
+    "original_text": "Browse Pets",
+    "current_arabic": "تصفح الحيوانات"
+  },
+  {
+    "key": "landing.steps.browse.description",
+    "original_text": "Explore hundreds of adorable pets across Morocco waiting for a loving home.",
+    "current_arabic": "تصفح مئات الحيوانات الجميلة في جميع أنحاء المغرب التي تنتظر بيتاً محباً."
+  },
+  {
+    "key": "landing.steps.request.title",
+    "original_text": "Submit Request",
+    "current_arabic": "قدّم طلباً"
+  },
+  {
+    "key": "landing.steps.request.description",
+    "original_text": "Send an adoption request directly to the shelter caring for your chosen pet.",
+    "current_arabic": "أرسل طلب التبني مباشرة إلى المأوى الذي يعتني بالحيوان الذي اخترته."
+  },
+  {
+    "key": "landing.steps.home.title",
+    "original_text": "Welcome Home",
+    "current_arabic": "مرحباً بك في البيت"
+  },
+  {
+    "key": "landing.steps.home.description",
+    "original_text": "Complete the process and bring your new family member home for good.",
+    "current_arabic": "أكمل العملية واصطحب فرد العائلة الجديد إلى البيت."
+  },
+  {
+    "key": "landing.featured.badge",
+    "original_text": "Available Now",
+    "current_arabic": "متاح الآن"
+  },
+  {
+    "key": "landing.featured.title_prefix",
+    "original_text": "Meet your",
+    "current_arabic": "تعرف على"
+  },
+  {
+    "key": "landing.featured.title_highlight",
+    "original_text": "new family",
+    "current_arabic": "العائلة الجديدة"
+  },
+  {
+    "key": "landing.featured.view_all",
+    "original_text": "View All Pets",
+    "current_arabic": "شاهد جميع الحيوانات"
+  },
+  {
+    "key": "landing.featured.available",
+    "original_text": "Available",
+    "current_arabic": "متاح"
+  },
+  {
+    "key": "landing.testimonials.badge",
+    "original_text": "Stories",
+    "current_arabic": "قصص"
+  },
+  {
+    "key": "landing.testimonials.title_prefix",
+    "original_text": "Happy families,",
+    "current_arabic": "عائلات سعيدة،"
+  },
+  {
+    "key": "landing.testimonials.title_highlight",
+    "original_text": "real stories",
+    "current_arabic": "قصص حقيقية"
+  },
+  {
+    "key": "landing.testimonials.quote_1",
+    "original_text": "Nino made it so easy to find our new best friend. The process was smooth and completely transparent.",
+    "current_arabic": "نينو سهّل علينا كثيراً العثور على أعز صديق. العملية كانت سهلة وشفافة بالكامل."
+  },
+  {
+    "key": "landing.testimonials.quote_2",
+    "original_text": "As a shelter partner, Nino helps us find loving homes faster than ever before. Incredible platform.",
+    "current_arabic": "كشريك للمأوى، نينو تساعدنا في العثور على بيوت محبة أسرع من أي وقت مضى. منصة رائعة."
+  },
+  {
+    "key": "landing.testimonials.quote_3",
+    "original_text": "I adopted my cat through Nino and couldn't be happier. The team was incredibly supportive throughout.",
+    "current_arabic": "تبنيت قطتي عبر نينو ولا يمكنني أن أكون أكثر سعادة. الفريق كان داعماً جداً طوال الرحلة."
+  },
+  {
+    "key": "landing.testimonials.role_pet_parent",
+    "original_text": "Pet Parent",
+    "current_arabic": "ولي الحيوان"
+  },
+  {
+    "key": "landing.testimonials.role_veterinarian",
+    "original_text": "Veterinarian",
+    "current_arabic": "طبيب بيطري"
+  },
+  {
+    "key": "landing.shelter.badge",
+    "original_text": "For Shelters",
+    "current_arabic": "للملاجئ"
+  },
+  {
+    "key": "landing.shelter.title_line1",
+    "original_text": "Are you a shelter",
+    "current_arabic": "هل تملك مأوى"
+  },
+  {
+    "key": "landing.shelter.title_line2",
+    "original_text": "or rescue org?",
+    "current_arabic": "أو منظمة إنقاذ؟"
+  },
+  {
+    "key": "landing.shelter.description",
+    "original_text": "List your animals on Nino and reach thousands of families looking to adopt across Morocco.",
+    "current_arabic": "اعرض حيواناتك على نينو ووصل إلى آلاف العائلات التي تبحث عن التبني في المغرب."
+  },
+  {
+    "key": "landing.shelter.partner_cta",
+    "original_text": "Partner With Us",
+    "current_arabic": "كن شريكاً لنا"
+  },
+  {
+    "key": "landing.shelter.view_all",
+    "original_text": "View All Shelters",
+    "current_arabic": "شاهد جميع الملاجئ"
+  },
+  {
+    "key": "landing.cta.title_line1",
+    "original_text": "Ready to find",
+    "current_arabic": "هل أنت مستعد"
+  },
+  {
+    "key": "landing.cta.title_line2",
+    "original_text": "your companion?",
+    "current_arabic": "للعثور على رفيقك؟"
+  },
+  {
+    "key": "landing.cta.description",
+    "original_text": "Thousands of pets across Morocco are waiting for someone exactly like you.",
+    "current_arabic": "آلاف الحيوانات في جميع أنحاء المغرب تنتظر شخصاً مثلك تماماً."
+  },
+  {
+    "key": "landing.cta.browse_pets",
+    "original_text": "Browse Pets",
+    "current_arabic": "تصفح الحيوانات"
+  },
+  {
+    "key": "landing.cta.create_account",
+    "original_text": "Create Account",
+    "current_arabic": "إنشاء حساب"
+  },
+  {
+    "key": "auth.roleSelector.title",
+    "original_text": "Who are you?",
+    "current_arabic": "من أنت؟"
+  },
+  {
+    "key": "auth.roleSelector.subtitle",
+    "original_text": "Choose your account type to continue",
+    "current_arabic": "اختر نوع حسابك للمتابعة"
+  },
+  {
+    "key": "auth.roleSelector.client",
+    "original_text": "Adopter",
+    "current_arabic": "متبنٍ"
+  },
+  {
+    "key": "auth.roleSelector.clientDesc",
+    "original_text": "For individuals looking to adopt. Sign in or create your personal account.",
+    "current_arabic": "للأفراد الذين يبحثون عن التبني. سجل الدخول أو أنشئ حسابك الشخصي."
+  },
+  {
+    "key": "auth.roleSelector.enterprise",
+    "original_text": "Shelter",
+    "current_arabic": "مأوى"
+  },
+  {
+    "key": "auth.roleSelector.enterpriseDesc",
+    "original_text": "For pet adoption agencies and shelters seeking a centralized platform.",
+    "current_arabic": "لوكالات التبني والملاجئ التي تبحث عن منصة مركزية."
+  },
+  {
+    "key": "auth.roleSelector.vet",
+    "original_text": "Veterinarian",
+    "current_arabic": "طبيب بيطري"
+  },
+  {
+    "key": "auth.roleSelector.vetDesc",
+    "original_text": "For veterinary professionals. Sign in with your clinic account.",
+    "current_arabic": "للمهنيين البيطريين. سجل الدخول بحساب العيادة الخاص بك."
+  },
+  {
+    "key": "auth.roleSelector.signInRegister",
+    "original_text": "Sign In / Register",
+    "current_arabic": "تسجيل الدخول / التسجيل"
+  },
+  {
+    "key": "auth.roleSelector.adminLogin",
+    "original_text": "Admin Login",
+    "current_arabic": "دخول المشرف"
+  },
+  {
+    "key": "auth.login.title",
+    "original_text": "Welcome back.",
+    "current_arabic": "مرحباً بعودتك."
+  },
+  {
+    "key": "auth.login.signIn",
+    "original_text": "Log in",
+    "current_arabic": "تسجيل الدخول"
+  },
+  {
+    "key": "auth.login.subtitle",
+    "original_text": "Sign in to your personal account",
+    "current_arabic": "سجل الدخول إلى حسابك الشخصي"
+  },
+  {
+    "key": "auth.login.noAccount",
+    "original_text": "New here?",
+    "current_arabic": "جديد هنا؟"
+  },
+  {
+    "key": "auth.login.signUp",
+    "original_text": "Create account",
+    "current_arabic": "إنشاء حساب"
+  },
+  {
+    "key": "auth.login.roleLabel",
+    "original_text": "All roles",
+    "current_arabic": "جميع الأدوار"
+  },
+  {
+    "key": "auth.vetLogin.title",
+    "original_text": "Vet Login.",
+    "current_arabic": "دخول الطبيب البيطري."
+  },
+  {
+    "key": "auth.vetLogin.subtitle",
+    "original_text": "Sign in with your clinic account",
+    "current_arabic": "سجل الدخول بحساب العيادة الخاص بك"
+  },
+  {
+    "key": "auth.vetLogin.adminNote",
+    "original_text": "Veterinaire accounts are created by the platform administrator. Contact your admin if you don't have an account.",
+    "current_arabic": "حسابات الأطباء البيطريين تنشأ من طرف مشرف المنصة. اتصل بمشرفك إذا لم يكن لديك حساب."
+  },
+  {
+    "key": "auth.orgLogin.title",
+    "original_text": "Organization.",
+    "current_arabic": "المؤسسة."
+  },
+  {
+    "key": "auth.orgLogin.subtitle",
+    "original_text": "Sign in with your organization account",
+    "current_arabic": "سجل الدخول بحساب المؤسسة الخاص بك"
+  },
+  {
+    "key": "auth.orgLogin.adminNote",
+    "original_text": "Organization accounts are created by the platform administrator. Contact your admin if you don't have an account.",
+    "current_arabic": "حسابات المؤسسات تنشأ من طرف مشرف المنصة. اتصل بمشرفك إذا لم يكن لديك حساب."
+  },
+  {
+    "key": "auth.admin.title",
+    "original_text": "Admin Login.",
+    "current_arabic": "دخول المشرف."
+  },
+  {
+    "key": "auth.admin.subtitle",
+    "original_text": "Enter your credentials to continue",
+    "current_arabic": "أدخل بيانات اعتمادك للمتابعة"
+  },
+  {
+    "key": "auth.admin.tabAdmin",
+    "original_text": "Admin",
+    "current_arabic": "مشرف"
+  },
+  {
+    "key": "auth.admin.tabClient",
+    "original_text": "Client",
+    "current_arabic": "عميل"
+  },
+  {
+    "key": "auth.admin.rightTitle",
+    "original_text": "Platform Admin",
+    "current_arabic": "مشرف المنصة"
+  },
+  {
+    "key": "auth.admin.rightDesc",
+    "original_text": "Manage users, organizations, and platform settings from your dashboard.",
+    "current_arabic": "إدارة المستخدمين والمؤسسات وإعدادات المنصة من لوحة التحكم الخاصة بك."
+  },
+  {
+    "key": "auth.register.title",
+    "original_text": "Create account.",
+    "current_arabic": "إنشاء حساب."
+  },
+  {
+    "key": "auth.register.subtitle",
+    "original_text": "Join Nino and start your adoption journey.",
+    "current_arabic": "انضم إلى نينو وابدأ رحلة التبني."
+  },
+  {
+    "key": "auth.register.createAccount",
+    "original_text": "Create account",
+    "current_arabic": "إنشاء حساب"
+  },
+  {
+    "key": "auth.register.name",
+    "original_text": "Full Name",
+    "current_arabic": "الاسم الكامل"
+  },
+  {
+    "key": "auth.register.confirmPassword",
+    "original_text": "Confirm Password",
+    "current_arabic": "تأكيد كلمة المرور"
+  },
+  {
+    "key": "auth.register.passwordMismatch",
+    "original_text": "Passwords do not match",
+    "current_arabic": "كلمات المرور غير متطابقة"
+  },
+  {
+    "key": "auth.register.alreadyAccount",
+    "original_text": "Already have an account?",
+    "current_arabic": "هل لديك حساب بالفعل؟"
+  },
+  {
+    "key": "auth.register.rightTitle",
+    "original_text": "Start your journey",
+    "current_arabic": "ابدأ رحلتك"
+  },
+  {
+    "key": "auth.register.rightDesc",
+    "original_text": "Create your account and find your perfect companion today.",
+    "current_arabic": "أنشئ حسابك واعثر على الرفيق المثالي اليوم."
+  },
+  {
+    "key": "auth.login.rightTitle",
+    "original_text": "Adopt a friend",
+    "current_arabic": "تبنَّ صديقاً"
+  },
+  {
+    "key": "auth.login.rightDesc",
+    "original_text": "Thousands of pets across Morocco are waiting for someone exactly like you.",
+    "current_arabic": "آلاف الحيوانات في جميع أنحاء المغرب تنتظر شخصاً مثلك تماماً."
+  },
+  {
+    "key": "auth.vetLogin.rightTitle",
+    "original_text": "For veterinarians",
+    "current_arabic": "للأطباء البيطريين"
+  },
+  {
+    "key": "auth.vetLogin.rightDesc",
+    "original_text": "Manage your clinic, appointments, and adopted pet records all in one place.",
+    "current_arabic": "إدارة العيادة والمواعيد وسجلات الحيوانات المتبناة كلها في مكان واحد."
+  },
+  {
+    "key": "auth.orgLogin.rightTitle",
+    "original_text": "For shelters",
+    "current_arabic": "للملاجئ"
+  },
+  {
+    "key": "auth.orgLogin.rightDesc",
+    "original_text": "Manage your organization, pets, and adoption requests in one dashboard.",
+    "current_arabic": "إدارة المؤسسة والحيوانات وطلبات التبني من لوحة تحكم واحدة."
+  },
+  {
+    "key": "common.email",
+    "original_text": "Email",
+    "current_arabic": "البريد الإلكتروني"
+  },
+  {
+    "key": "common.emailPlaceholder",
+    "original_text": "john@example.com",
+    "current_arabic": "john@example.com"
+  },
+  {
+    "key": "common.password",
+    "original_text": "Password",
+    "current_arabic": "كلمة المرور"
+  },
+  {
+    "key": "common.passwordPlaceholder",
+    "original_text": "••••••••",
+    "current_arabic": "••••••••"
+  },
+  {
+    "key": "common.signIn",
+    "original_text": "Sign In",
+    "current_arabic": "تسجيل الدخول"
+  },
+  {
+    "key": "common.name",
+    "original_text": "Name",
+    "current_arabic": "الاسم"
+  },
+  {
+    "key": "common.namePlaceholder",
+    "original_text": "John Doe",
+    "current_arabic": "محمد الفلاني"
+  },
+  {
+    "key": "common.fullName",
+    "original_text": "Full Name",
+    "current_arabic": "الاسم الكامل"
+  },
+  {
+    "key": "common.phone",
+    "original_text": "Phone",
+    "current_arabic": "الهاتف"
+  },
+  {
+    "key": "common.location",
+    "original_text": "Location",
+    "current_arabic": "الموقع"
+  },
+  {
+    "key": "common.description",
+    "original_text": "Description",
+    "current_arabic": "الوصف"
+  },
+  {
+    "key": "common.breed",
+    "original_text": "Breed",
+    "current_arabic": "السلالة"
+  },
+  {
+    "key": "common.ageYears",
+    "original_text": "Age (years)",
+    "current_arabic": "العمر (سنوات)"
+  },
+  {
+    "key": "common.gender",
+    "original_text": "Gender",
+    "current_arabic": "الجنس"
+  },
+  {
+    "key": "common.size",
+    "original_text": "Size",
+    "current_arabic": "الحجم"
+  },
+  {
+    "key": "common.species",
+    "original_text": "Species",
+    "current_arabic": "فصيلة الحيوان"
+  },
+  {
+    "key": "common.type",
+    "original_text": "Type",
+    "current_arabic": "الفئة"
+  },
+  {
+    "key": "common.status",
+    "original_text": "Status",
+    "current_arabic": "الحالة"
+  },
+  {
+    "key": "common.role",
+    "original_text": "Role",
+    "current_arabic": "الدور"
+  },
+  {
+    "key": "common.price",
+    "original_text": "Price",
+    "current_arabic": "السعر"
+  },
+  {
+    "key": "common.photo",
+    "original_text": "Photo",
+    "current_arabic": "الصورة"
+  },
+  {
+    "key": "common.notes",
+    "original_text": "Notes",
+    "current_arabic": "ملاحظات"
+  },
+  {
+    "key": "common.home",
+    "original_text": "Home",
+    "current_arabic": "الرئيسية"
+  },
+  {
+    "key": "common.browse",
+    "original_text": "Browse",
+    "current_arabic": "تصفح"
+  },
+  {
+    "key": "common.loading",
+    "original_text": "Loading...",
+    "current_arabic": "جار التحميل..."
+  },
+  {
+    "key": "common.loadingPet",
+    "original_text": "Loading pet...",
+    "current_arabic": "جار تحميل الحيوان..."
+  },
+  {
+    "key": "common.saving",
+    "original_text": "Saving...",
+    "current_arabic": "جار الحفظ..."
+  },
+  {
+    "key": "common.submitting",
+    "original_text": "Submitting...",
+    "current_arabic": "جار الإرسال..."
+  },
+  {
+    "key": "common.save",
+    "original_text": "Save",
+    "current_arabic": "حفظ"
+  },
+  {
+    "key": "common.cancel",
+    "original_text": "Cancel",
+    "current_arabic": "إلغاء"
+  },
+  {
+    "key": "common.edit",
+    "original_text": "Edit",
+    "current_arabic": "تعديل"
+  },
+  {
+    "key": "common.delete",
+    "original_text": "Delete",
+    "current_arabic": "حذف"
+  },
+  {
+    "key": "common.search",
+    "original_text": "Search",
+    "current_arabic": "بحث"
+  },
+  {
+    "key": "common.select",
+    "original_text": "Select...",
+    "current_arabic": "اختيار..."
+  },
+  {
+    "key": "common.submit",
+    "original_text": "Submit",
+    "current_arabic": "إرسال"
+  },
+  {
+    "key": "common.confirm",
+    "original_text": "Confirm",
+    "current_arabic": "تأكيد"
+  },
+  {
+    "key": "common.complete",
+    "original_text": "Complete",
+    "current_arabic": "إكمال"
+  },
+  {
+    "key": "common.approve",
+    "original_text": "Approve",
+    "current_arabic": "موافقة"
+  },
+  {
+    "key": "common.reject",
+    "original_text": "Reject",
+    "current_arabic": "رفض"
+  },
+  {
+    "key": "common.all",
+    "original_text": "All",
+    "current_arabic": "الكل"
+  },
+  {
+    "key": "common.any",
+    "original_text": "Any",
+    "current_arabic": "أي"
+  },
+  {
+    "key": "common.active",
+    "original_text": "Active",
+    "current_arabic": "نشط"
+  },
+  {
+    "key": "common.inactive",
+    "original_text": "Inactive",
+    "current_arabic": "غير نشط"
+  },
+  {
+    "key": "common.adult",
+    "original_text": "Adult",
+    "current_arabic": "بالغ"
+  },
+  {
+    "key": "common.pet",
+    "original_text": "Pet",
+    "current_arabic": "حيوان"
+  },
+  {
+    "key": "common.user",
+    "original_text": "User",
+    "current_arabic": "مستخدم"
+  },
+  {
+    "key": "common.conditions",
+    "original_text": "Conditions",
+    "current_arabic": "الشروط"
+  },
+  {
+    "key": "common.successRate",
+    "original_text": "Success Rate",
+    "current_arabic": "نسبة النجاح"
+  },
+  {
+    "key": "common.yes",
+    "original_text": "Yes",
+    "current_arabic": "نعم"
+  },
+  {
+    "key": "common.no",
+    "original_text": "No",
+    "current_arabic": "لا"
+  },
+  {
+    "key": "common.minimum",
+    "original_text": "Minimum",
+    "current_arabic": "الحد الأدنى"
+  },
+  {
+    "key": "common.donate",
+    "original_text": "Support Us",
+    "current_arabic": "ادعمنا"
+  },
+  {
+    "key": "common.born",
+    "original_text": "Born",
+    "current_arabic": "تاريخ الولادة"
+  },
+  {
+    "key": "common.taxDeductible",
+    "original_text": "Tax deductible",
+    "current_arabic": "معفى من الضرائب"
+  },
+  {
+    "key": "common.shopNow",
+    "original_text": "Shop now",
+    "current_arabic": "تسوق الآن"
+  },
+  {
+    "key": "common.unknownLocation",
+    "original_text": "Unknown location",
+    "current_arabic": "موقع غير معروف"
+  },
+  {
+    "key": "common.morocco",
+    "original_text": "Morocco",
+    "current_arabic": "المغرب"
+  },
+  {
+    "key": "common.mixedBreed",
+    "original_text": "Mixed breed",
+    "current_arabic": "هجين"
+  },
+  {
+    "key": "common.petsCount",
+    "original_text": "{{count}} pets",
+    "current_arabic": "{{count}} حيوانات"
+  },
+  {
+    "key": "common.sheltersCount",
+    "original_text": "{{count}} shelters",
+    "current_arabic": "{{count}} مأوى"
+  },
+  {
+    "key": "common.species.dog",
+    "original_text": "Dog",
+    "current_arabic": "كلب"
+  },
+  {
+    "key": "common.species.cat",
+    "original_text": "Cat",
+    "current_arabic": "قط"
+  },
+  {
+    "key": "common.species.rabbit",
+    "original_text": "Rabbit",
+    "current_arabic": "أرنب"
+  },
+  {
+    "key": "common.species.bird",
+    "original_text": "Bird",
+    "current_arabic": "طائر"
+  },
+  {
+    "key": "common.species.other",
+    "original_text": "Other",
+    "current_arabic": "آخر"
+  },
+  {
+    "key": "pets.browser.adopt",
+    "original_text": "Adopt Me",
+    "current_arabic": "تبنَّني"
+  },
+  {
+    "key": "pets.browser.count",
+    "original_text": "{{count}} pets available",
+    "current_arabic": "{{count}} حيوانات متاحة"
+  },
+  {
+    "key": "pets.browser.donate",
+    "original_text": "Donate Now",
+    "current_arabic": "تبرع الآن"
+  },
+  {
+    "key": "pets.browser.donationTitle",
+    "original_text": "Support our mission",
+    "current_arabic": "ادعم مهمتنا"
+  },
+  {
+    "key": "pets.browser.donationSubtitle",
+    "original_text": "Your donation helps us rescue and care for more animals",
+    "current_arabic": "تبرعك يساعدنا في إنقاذ ورعاية المزيد من الحيوانات"
+  },
+  {
+    "key": "pets.browser.filter.species",
+    "original_text": "Species",
+    "current_arabic": "فصيلة الحيوان"
+  },
+  {
+    "key": "pets.browser.filter.age",
+    "original_text": "Age",
+    "current_arabic": "العمر"
+  },
+  {
+    "key": "pets.browser.filter.location",
+    "original_text": "Location",
+    "current_arabic": "الموقع"
+  },
+  {
+    "key": "pets.browser.filter.status",
+    "original_text": "Status",
+    "current_arabic": "الحالة"
+  },
+  {
+    "key": "pets.browser.filter.apply",
+    "original_text": "Apply Filters",
+    "current_arabic": "تطبيق الفلتر"
+  },
+  {
+    "key": "pets.browser.filter.clear",
+    "original_text": "Reset all",
+    "current_arabic": "إعادة تعيين الكل"
+  },
+  {
+    "key": "pets.browser.found",
+    "original_text": "{{count}} pets found",
+    "current_arabic": "تم العثور على {{count}} حيوانات"
+  },
+  {
+    "key": "pets.browser.noResults",
+    "original_text": "No pets match your criteria. Try adjusting the filters.",
+    "current_arabic": "لا توجد حيوانات تطابق معاييرك. جرب تعديل الفلتر."
+  },
+  {
+    "key": "pets.browser.subtitle",
+    "original_text": "Browse pets available for adoption across Morocco",
+    "current_arabic": "تصفح الحيوانات المتاحة للتبني في جميع أنحاء المغرب"
+  },
+  {
+    "key": "pets.details.health",
+    "original_text": "Health Status",
+    "current_arabic": "الحالة الصحية"
+  },
+  {
+    "key": "pets.details.behavior",
+    "original_text": "Behavior",
+    "current_arabic": "السلوك"
+  },
+  {
+    "key": "pets.details.accessories",
+    "original_text": "Welcome your companion",
+    "current_arabic": "رحب برفيقك"
+  },
+  {
+    "key": "pets.details.adopt",
+    "original_text": "I want to adopt",
+    "current_arabic": "أرغب في التبني"
+  },
+  {
+    "key": "pets.details.contact",
+    "original_text": "Get more info",
+    "current_arabic": "مزيد من المعلومات"
+  },
+  {
+    "key": "pets.details.adoptionFee",
+    "original_text": "Adoption Conditions",
+    "current_arabic": "شروط التبني"
+  },
+  {
+    "key": "pets.details.similar",
+    "original_text": "Similar Pets",
+    "current_arabic": "حيوانات مشابهة"
+  },
+  {
+    "key": "pets.details.viewPet",
+    "original_text": "View Pet",
+    "current_arabic": "عرض الحيوان"
+  },
+  {
+    "key": "pets.details.health.vaccinated",
+    "original_text": "Vaccinated",
+    "current_arabic": "مُلقَّح"
+  },
+  {
+    "key": "pets.details.health.sterilized",
+    "original_text": "Sterilized / Neutered",
+    "current_arabic": "مُعَقَّم / مخصي"
+  },
+  {
+    "key": "pets.details.health.dewormed",
+    "original_text": "Dewormed",
+    "current_arabic": "مُطَهَّر من الديدان"
+  },
+  {
+    "key": "pets.details.behavior.goodWithKids",
+    "original_text": "Good with kids",
+    "current_arabic": "جيد مع الأطفال"
+  },
+  {
+    "key": "pets.details.behavior.goodWithDogs",
+    "original_text": "Good with dogs",
+    "current_arabic": "جيد مع الكلاب"
+  },
+  {
+    "key": "pets.details.behavior.goodWithCats",
+    "original_text": "Good with cats",
+    "current_arabic": "جيد مع القطط"
+  },
+  {
+    "key": "pets.details.conditions.p1",
+    "original_text": "Adopting an animal is a long-term commitment. We ensure each adoption is well-prepared by verifying the living conditions, availability, and motivation of the adopter.",
+    "current_arabic": "تبني حيوان هو التزام طويل الأمد. نحرص على أن يكون كل تبني مستعداً جيداً من خلال التحقق من ظروف المعيشة والتوفر والرغبة لدى المتبني."
+  },
+  {
+    "key": "pets.details.conditions.p2",
+    "original_text": "All our animals are vaccinated, sterilized, and identified before adoption. Post-adoption follow-up is provided to ensure the well-being of the animal.",
+    "current_arabic": "جميع حيواناتنا مُلقحة ومعقمة ومحددة قبل التبني. نوفر متابعة بعد التبني لضمان سلامة الحيوان."
+  },
+  {
+    "key": "pets.details.conditions.requiredDocs",
+    "original_text": "Required Documents",
+    "current_arabic": "الوثائق المطلوبة"
+  },
+  {
+    "key": "pets.details.conditions.docCIN",
+    "original_text": "Valid ID (CIN or Passport)",
+    "current_arabic": "بطاقة تعريف سارية (CIN أو جواز السفر)"
+  },
+  {
+    "key": "pets.details.conditions.docAddress",
+    "original_text": "Proof of residence (less than 3 months)",
+    "current_arabic": "إثبات السكن (أقل من 3 أشهر)"
+  },
+  {
+    "key": "pets.details.conditions.docCommitment",
+    "original_text": "Signed CEC (7 days before adoption)",
+    "current_arabic": "شهادة الالتزام (CEC) موقعة (قبل 7 أيام من التبني)"
+  },
+  {
+    "key": "pets.details.conditions.financial",
+    "original_text": "Financial Participation",
+    "current_arabic": "المساهمة المالية"
+  },
+  {
+    "key": "pets.details.conditions.financialDesc",
+    "original_text": "Adoption fees cover veterinary costs (vaccination, sterilization, identification). A deposit of 300 DH may be required if the animal is not yet sterilized.",
+    "current_arabic": "رسوم التبني تغطي التكاليف البيطرية (التلقيح، التعقيم، التحديد). قد يُطلب وديعة تأمين بقيمة 300 درهم إذا لم يتم تعقيم الحيوان بعد."
+  },
+  {
+    "key": "pets.details.conditions.cecTitle",
+    "original_text": "Commitment Certificate (CEC)",
+    "current_arabic": "شهادة الالتزام (CEC)"
+  },
+  {
+    "key": "pets.details.conditions.cecDesc",
+    "original_text": "The Certificate of Engagement and Knowledge (CEC) is mandatory. It must be signed at least 7 days before adoption. It confirms you understand the animal's needs: diet, living conditions, health, costs, and care. Download it, read it, sign it, and present it at the shelter.",
+    "current_arabic": "شهادة الالتزام والمعرفة (CEC) إلزامية. يجب توقيعها قبل 7 أيام على الأقل من التبني. تؤكد أنك تفهم احتياجات الحيوان: الغذاء، ظروف المعيشة، الصحة، التكاليف والرعاية. حمّلها، اقرأها، وقعها وقدّمها في المأوى."
+  },
+  {
+    "key": "pets.details.createAccount",
+    "original_text": "Create your adopter account",
+    "current_arabic": "أنشئ حسابك كمتبني"
+  },
+  {
+    "key": "pets.details.createAccountDesc",
+    "original_text": "Sign up or log in to start the adoption process, save your favorites, and track your requests.",
+    "current_arabic": "سجل أو سجّل الدخول لبدء عملية التبني، حفظ المفضلة، وتتبع طلباتك."
+  },
+  {
+    "key": "pets.details.fee.dog",
+    "original_text": "Dog",
+    "current_arabic": "كلب"
+  },
+  {
+    "key": "pets.details.fee.puppy",
+    "original_text": "Puppy (< 6 months)",
+    "current_arabic": "جرو (أقل من 6 أشهر)"
+  },
+  {
+    "key": "pets.details.fee.cat",
+    "original_text": "Cat",
+    "current_arabic": "قط"
+  },
+  {
+    "key": "pets.details.fee.kitten",
+    "original_text": "Kitten (< 6 months)",
+    "current_arabic": "قطة صغيرة (أقل من 6 أشهر)"
+  },
+  {
+    "key": "pets.details.fee.sos",
+    "original_text": "SOS Adoption",
+    "current_arabic": "تبني SOS"
+  },
+  {
+    "key": "pets.details.fee.nac",
+    "original_text": "Rabbit / NAC",
+    "current_arabic": "أرنب / حيوانات أليفة أخرى"
+  },
+  {
+    "key": "pets.details.age.year",
+    "original_text": "{{count}} year",
+    "current_arabic": "{{count}} سنة"
+  },
+  {
+    "key": "pets.details.age.years",
+    "original_text": "{{count}} years",
+    "current_arabic": "{{count}} سنوات"
+  },
+  {
+    "key": "pets.details.age.lessThan1",
+    "original_text": "Less than 1 year",
+    "current_arabic": "أقل من سنة"
+  },
+  {
+    "key": "pets.details.shelter.defaultName",
+    "original_text": "Animal Shelter",
+    "current_arabic": "مأوى الحيوانات"
+  },
+  {
+    "key": "pets.details.shelter.hoursWeekdays",
+    "original_text": "Mon-Fri: 9:00 – 17:00",
+    "current_arabic": "الإثنين-الجمعة: 9:00 – 17:00"
+  },
+  {
+    "key": "pets.details.shelter.hoursSaturday",
+    "original_text": "Saturday: 10:00 – 16:00",
+    "current_arabic": "السبت: 10:00 – 16:00"
+  },
+  {
+    "key": "pets.details.shelter.hoursSunday",
+    "original_text": "Sunday: Closed",
+    "current_arabic": "الأحد: مغلق"
+  },
+  {
+    "key": "pets.details.shelter.visit",
+    "original_text": "Visit Shelter",
+    "current_arabic": "زيارة المأوى"
+  },
+  {
+    "key": "dashboard.client.title",
+    "original_text": "My Dashboard",
+    "current_arabic": "لوحة التحكم الخاصة بي"
+  },
+  {
+    "key": "dashboard.client.tabs.overview",
+    "original_text": "Overview",
+    "current_arabic": "نظرة عامة"
+  },
+  {
+    "key": "dashboard.client.tabs.profile",
+    "original_text": "Profile",
+    "current_arabic": "الملف الشخصي"
+  },
+  {
+    "key": "dashboard.client.tabs.favorites",
+    "original_text": "Favorites",
+    "current_arabic": "المفضلة"
+  },
+  {
+    "key": "dashboard.client.tabs.adoptions",
+    "original_text": "My Adoptions",
+    "current_arabic": "تبنياتي"
+  },
+  {
+    "key": "dashboard.client.tabs.giveup",
+    "original_text": "Give Up a Pet",
+    "current_arabic": "التخلي عن حيوان"
+  },
+  {
+    "key": "dashboard.client.adoptions",
+    "original_text": "Adoptions",
+    "current_arabic": "التبنيات"
+  },
+  {
+    "key": "dashboard.client.favorites",
+    "original_text": "Favorites",
+    "current_arabic": "المفضلة"
+  },
+  {
+    "key": "dashboard.client.requests",
+    "original_text": "Requests",
+    "current_arabic": "الطلبات"
+  },
+  {
+    "key": "dashboard.client.noAdoptions",
+    "original_text": "No adoption requests yet.",
+    "current_arabic": "لا توجد طلبات تبنٍ بعد."
+  },
+  {
+    "key": "dashboard.client.noFavorites",
+    "original_text": "No favorite pets yet.",
+    "current_arabic": "لا توجد حيوانات مفضلة بعد."
+  },
+  {
+    "key": "dashboard.client.browsePets",
+    "original_text": "Browse Pets",
+    "current_arabic": "تصفح الحيوانات"
+  },
+  {
+    "key": "dashboard.client.startRequest",
+    "original_text": "Start a Request",
+    "current_arabic": "ابدأ طلباً"
+  },
+  {
+    "key": "dashboard.client.petName",
+    "original_text": "Pet Name",
+    "current_arabic": "اسم الحيوان"
+  },
+  {
+    "key": "dashboard.client.reason",
+    "original_text": "Why are you giving up your pet?",
+    "current_arabic": "لماذا تتخلى عن حيوانك؟"
+  },
+  {
+    "key": "dashboard.client.additionalDetails",
+    "original_text": "Additional details (optional)",
+    "current_arabic": "تفاصيل إضافية (اختياري)"
+  },
+  {
+    "key": "dashboard.client.contactPhone",
+    "original_text": "Contact Phone",
+    "current_arabic": "هاتف التواصل"
+  },
+  {
+    "key": "dashboard.client.breedOptional",
+    "original_text": "Breed (optional)",
+    "current_arabic": "السلالة (اختياري)"
+  },
+  {
+    "key": "dashboard.client.ageYears",
+    "original_text": "Age (years)",
+    "current_arabic": "العمر (سنوات)"
+  },
+  {
+    "key": "dashboard.client.photos",
+    "original_text": "Photos (minimum 3)",
+    "current_arabic": "الصور (3 على الأقل)"
+  },
+  {
+    "key": "dashboard.client.filesSelected",
+    "original_text": "{{count}} file(s) selected",
+    "current_arabic": "{{count}} ملف(ات) مختارة"
+  },
+  {
+    "key": "dashboard.client.imageUploadError",
+    "original_text": "Failed to upload one or more images.",
+    "current_arabic": "فشل رفع صورة واحدة أو أكثر."
+  },
+  {
+    "key": "dashboard.client.imageMinError",
+    "original_text": "Please select at least 3 images.",
+    "current_arabic": "الرجاء اختيار 3 صور على الأقل."
+  },
+  {
+    "key": "dashboard.client.uploadingImages",
+    "original_text": "Uploading images...",
+    "current_arabic": "جار رفع الصور..."
+  },
+  {
+    "key": "dashboard.client.giveupDescription",
+    "original_text": "If you can no longer care for your pet, fill this form and the Super Admin will review your request within 24 hours.",
+    "current_arabic": "إذا لم تعد قادراً على رعاية حيوانك، املأ هذا النموذج وسيقوم المشرف العام بمراجعة طلبك في غضون 24 ساعة."
+  },
+  {
+    "key": "dashboard.client.changePhoto",
+    "original_text": "Change photo",
+    "current_arabic": "تغيير الصورة"
+  },
+  {
+    "key": "dashboard.client.about",
+    "original_text": "About",
+    "current_arabic": "عني"
+  },
+  {
+    "key": "dashboard.client.profileUpdated",
+    "original_text": "Profile updated successfully.",
+    "current_arabic": "تم تحديث الملف الشخصي بنجاح."
+  },
+  {
+    "key": "dashboard.client.profileFailed",
+    "original_text": "Failed to update profile.",
+    "current_arabic": "فشل تحديث الملف الشخصي."
+  },
+  {
+    "key": "dashboard.client.joined",
+    "original_text": "Joined {{date}}",
+    "current_arabic": "انضم في {{date}}"
+  },
+  {
+    "key": "dashboard.client.maxAdoptions",
+    "original_text": "You have reached the maximum of 2 adoptions.",
+    "current_arabic": "لقد وصلت إلى الحد الأقصى وهو تبنيين اثنين."
+  },
+  {
+    "key": "dashboard.client.adoptionRequest",
+    "original_text": "Adoption Request",
+    "current_arabic": "طلب التبني"
+  },
+  {
+    "key": "dashboard.client.messageOptional",
+    "original_text": "Message (optional)",
+    "current_arabic": "رسالة (اختياري)"
+  },
+  {
+    "key": "dashboard.client.adoptionPlaceholder",
+    "original_text": "Tell the shelter why you'd be a great home for this pet...",
+    "current_arabic": "أخبر المأوى لماذا ستكون بيتاً مناسباً لهذا الحيوان..."
+  },
+  {
+    "key": "dashboard.client.adoptionModalText",
+    "original_text": "Submit Request",
+    "current_arabic": "إرسال الطلب"
+  },
+  {
+    "key": "dashboard.client.adoptionError",
+    "original_text": "Failed to submit adoption request.",
+    "current_arabic": "فشل إرسال طلب التبني."
+  },
+  {
+    "key": "dashboard.vet.title",
+    "original_text": "Veterinaire Dashboard",
+    "current_arabic": "لوحة تحكم الطبيب البيطري"
+  },
+  {
+    "key": "dashboard.vet.tabs.profile",
+    "original_text": "Profile",
+    "current_arabic": "الملف الشخصي"
+  },
+  {
+    "key": "dashboard.vet.tabs.advice",
+    "original_text": "Advice",
+    "current_arabic": "نصائح"
+  },
+  {
+    "key": "dashboard.vet.tabs.tips",
+    "original_text": "Tips",
+    "current_arabic": "إرشادات"
+  },
+  {
+    "key": "dashboard.vet.tabs.bookings",
+    "original_text": "Bookings",
+    "current_arabic": "الحجوزات"
+  },
+  {
+    "key": "dashboard.vet.availableForConsultations",
+    "original_text": "Available for consultations",
+    "current_arabic": "متاح للاستشارات"
+  },
+  {
+    "key": "dashboard.vet.contactLocation",
+    "original_text": "Contact & Location",
+    "current_arabic": "الاتصال والموقع"
+  },
+  {
+    "key": "dashboard.vet.credentials",
+    "original_text": "Credentials",
+    "current_arabic": "الشهادات"
+  },
+  {
+    "key": "dashboard.vet.noCredentials",
+    "original_text": "No credentials added yet.",
+    "current_arabic": "لم تضف شهادات بعد."
+  },
+  {
+    "key": "dashboard.vet.about",
+    "original_text": "About",
+    "current_arabic": "عني"
+  },
+  {
+    "key": "dashboard.vet.noDescription",
+    "original_text": "No description yet. Edit your profile to add one.",
+    "current_arabic": "لا يوجد وصف بعد. عدّل ملفك الشخصي لإضافة وصف."
+  },
+  {
+    "key": "dashboard.vet.adviceArticlesShared",
+    "original_text": "Advice articles shared",
+    "current_arabic": "المقالات النصحية المشتركة"
+  },
+  {
+    "key": "dashboard.vet.recentActivity",
+    "original_text": "Recent Activity",
+    "current_arabic": "آخر النشاطات"
+  },
+  {
+    "key": "dashboard.vet.noRecentActivity",
+    "original_text": "No recent activity.",
+    "current_arabic": "لا يوجد نشاط حديث."
+  },
+  {
+    "key": "dashboard.vet.editProfile",
+    "original_text": "Edit Profile",
+    "current_arabic": "تعديل الملف الشخصي"
+  },
+  {
+    "key": "dashboard.vet.editClinicProfile",
+    "original_text": "Edit Clinic Profile",
+    "current_arabic": "تعديل ملف العيادة"
+  },
+  {
+    "key": "dashboard.vet.clinicName",
+    "original_text": "Clinic Name",
+    "current_arabic": "اسم العيادة"
+  },
+  {
+    "key": "dashboard.vet.clinicLocation",
+    "original_text": "Location",
+    "current_arabic": "الموقع"
+  },
+  {
+    "key": "dashboard.vet.formationCredentials",
+    "original_text": "Formation / Credentials",
+    "current_arabic": "التكوين / الشهادات"
+  },
+  {
+    "key": "dashboard.vet.formationPlaceholder",
+    "original_text": "Degrees, certifications, specialties (comma-separated)",
+    "current_arabic": "الشهادات والدبلومات والتخصصات (مفصولة بفاصلة)"
+  },
+  {
+    "key": "dashboard.vet.failedToSave",
+    "original_text": "Failed to save.",
+    "current_arabic": "فشل الحفظ."
+  },
+  {
+    "key": "dashboard.vet.addAdvice",
+    "original_text": "Add Advice",
+    "current_arabic": "إضافة نصيحة"
+  },
+  {
+    "key": "dashboard.vet.noAdvice",
+    "original_text": "No advice yet.",
+    "current_arabic": "لا توجد نصائح بعد."
+  },
+  {
+    "key": "dashboard.vet.adviceTitle",
+    "original_text": "Title",
+    "current_arabic": "العنوان"
+  },
+  {
+    "key": "dashboard.vet.adviceContent",
+    "original_text": "Content",
+    "current_arabic": "المحتوى"
+  },
+  {
+    "key": "dashboard.vet.saveAdvice",
+    "original_text": "Save Advice",
+    "current_arabic": "حفظ النصيحة"
+  },
+  {
+    "key": "dashboard.vet.addRecommendation",
+    "original_text": "Add Recommendation",
+    "current_arabic": "إضافة توصية"
+  },
+  {
+    "key": "dashboard.vet.noRecommendations",
+    "original_text": "No recommendations yet.",
+    "current_arabic": "لا توجد توصيات بعد."
+  },
+  {
+    "key": "dashboard.vet.recoTitle",
+    "original_text": "Title",
+    "current_arabic": "العنوان"
+  },
+  {
+    "key": "dashboard.vet.shareTips",
+    "original_text": "Share tips and advice for pet owners",
+    "current_arabic": "شارك النصائح والإرشادات مع مالكي الحيوانات"
+  },
+  {
+    "key": "dashboard.vet.tips",
+    "original_text": "Product care tips for pet owners",
+    "current_arabic": "نصائح العناية بالمنتجات لمالكي الحيوانات"
+  },
+  {
+    "key": "dashboard.vet.addTip",
+    "original_text": "Add Tip",
+    "current_arabic": "إضافة نصيحة"
+  },
+  {
+    "key": "dashboard.vet.petLabel",
+    "original_text": "Pet: {{name}}",
+    "current_arabic": "الحيوان: {{name}}"
+  },
+  {
+    "key": "dashboard.vet.speciesPlaceholder",
+    "original_text": "e.g. Dog, Cat, Rabbit",
+    "current_arabic": "مثلاً: كلب، قط، أرنب"
+  },
+  {
+    "key": "dashboard.vet.agePlaceholder",
+    "original_text": "e.g. 1-3 months, Adult, Senior",
+    "current_arabic": "مثلاً: 1-3 أشهر، بالغ، كبير"
+  },
+  {
+    "key": "dashboard.vet.targetSpeciesOptional",
+    "original_text": "Target Species (optional)",
+    "current_arabic": "فصيلة الحيوان المستهدفة (اختياري)"
+  },
+  {
+    "key": "dashboard.vet.targetAgeRangeOptional",
+    "original_text": "Target Age Range (optional)",
+    "current_arabic": "الفئة العمرية المستهدفة (اختياري)"
+  },
+  {
+    "key": "dashboard.vet.saveRecommendation",
+    "original_text": "Save Recommendation",
+    "current_arabic": "حفظ التوصية"
+  },
+  {
+    "key": "dashboard.vet.noBookingRequests",
+    "original_text": "No booking requests yet.",
+    "current_arabic": "لا توجد طلبات حجز بعد."
+  },
+  {
+    "key": "dashboard.vet.noNotes",
+    "original_text": "No notes",
+    "current_arabic": "لا توجد ملاحظات"
+  },
+  {
+    "key": "dashboard.vet.bookings",
+    "original_text": "Bookings",
+    "current_arabic": "الحجوزات"
+  },
+  {
+    "key": "dashboard.vet.fallbackName",
+    "original_text": "Vet",
+    "current_arabic": "طبيب بيطري"
+  },
+  {
+    "key": "dashboard.vet.productCareTips",
+    "original_text": "Product care tips",
+    "current_arabic": "نصائح العناية بالمنتجات"
+  },
+  {
+    "key": "dashboard.enterprise.title",
+    "original_text": "Enterprise Dashboard",
+    "current_arabic": "لوحة تحكم المؤسسة"
+  },
+  {
+    "key": "dashboard.enterprise.tabs.myPets",
+    "original_text": "My Pets",
+    "current_arabic": "الحيوانات الخاصة بي"
+  },
+  {
+    "key": "dashboard.enterprise.tabs.companyProfile",
+    "original_text": "Company Profile",
+    "current_arabic": "ملف المؤسسة"
+  },
+  {
+    "key": "dashboard.enterprise.tabs.catalog",
+    "original_text": "Catalog",
+    "current_arabic": "الكتالوج"
+  },
+  {
+    "key": "dashboard.enterprise.tabs.adoptionRequests",
+    "original_text": "Adoption Requests",
+    "current_arabic": "طلبات التبني"
+  },
+  {
+    "key": "dashboard.enterprise.totalPets",
+    "original_text": "Total Pets",
+    "current_arabic": "مجموع الحيوانات"
+  },
+  {
+    "key": "dashboard.enterprise.available",
+    "original_text": "Available",
+    "current_arabic": "متاح"
+  },
+  {
+    "key": "dashboard.enterprise.pendingRequests",
+    "original_text": "Pending Requests",
+    "current_arabic": "الطلبات المعلقة"
+  },
+  {
+    "key": "dashboard.enterprise.addPet",
+    "original_text": "Add Pet",
+    "current_arabic": "إضافة حيوان جديد"
+  },
+  {
+    "key": "dashboard.enterprise.noPets",
+    "original_text": "No pets yet. Start by adding your first pet.",
+    "current_arabic": "لا توجد حيوانات بعد. ابدأ بإضافة أول حيوان."
+  },
+  {
+    "key": "dashboard.enterprise.health",
+    "original_text": "Health",
+    "current_arabic": "الصحة"
+  },
+  {
+    "key": "dashboard.enterprise.vaccinated",
+    "original_text": "Vaccinated",
+    "current_arabic": "مُلقَّح"
+  },
+  {
+    "key": "dashboard.enterprise.sterilized",
+    "original_text": "Sterilized",
+    "current_arabic": "مُعَقَّم"
+  },
+  {
+    "key": "dashboard.enterprise.dewormed",
+    "original_text": "Dewormed",
+    "current_arabic": "مُطَهَّر من الديدان"
+  },
+  {
+    "key": "dashboard.enterprise.healthNotesPlaceholder",
+    "original_text": "Health notes (optional)",
+    "current_arabic": "ملاحظات صحية (اختياري)"
+  },
+  {
+    "key": "dashboard.enterprise.behavior",
+    "original_text": "Behavior",
+    "current_arabic": "السلوك"
+  },
+  {
+    "key": "dashboard.enterprise.goodWithKids",
+    "original_text": "Good with kids",
+    "current_arabic": "جيد مع الأطفال"
+  },
+  {
+    "key": "dashboard.enterprise.goodWithDogs",
+    "original_text": "Good with dogs",
+    "current_arabic": "جيد مع الكلاب"
+  },
+  {
+    "key": "dashboard.enterprise.goodWithCats",
+    "original_text": "Good with cats",
+    "current_arabic": "جيد مع القطط"
+  },
+  {
+    "key": "dashboard.enterprise.behaviorNotesPlaceholder",
+    "original_text": "Behavior notes (optional)",
+    "current_arabic": "ملاحظات السلوك (اختياري)"
+  },
+  {
+    "key": "dashboard.enterprise.associatedProducts",
+    "original_text": "Associated Products (optional)",
+    "current_arabic": "منتجات مرفقة مع الحيوان"
+  },
+  {
+    "key": "dashboard.enterprise.imageUrlOptional",
+    "original_text": "Image URL (optional)",
+    "current_arabic": "رابط الصورة (اختياري)"
+  },
+  {
+    "key": "dashboard.enterprise.deleteConfirm",
+    "original_text": "Are you sure you want to delete this pet? Active adoption requests will prevent deletion.",
+    "current_arabic": "هل أنت متأكد أنك تريد حذف هذا الحيوان؟ طلبات التبني النشطة تمنع الحذف."
+  },
+  {
+    "key": "dashboard.enterprise.cannotDeletePet",
+    "original_text": "Cannot delete this pet.",
+    "current_arabic": "لا يمكن حذف هذا الحيوان."
+  },
+  {
+    "key": "dashboard.enterprise.failedToAddPet",
+    "original_text": "Failed to add pet.",
+    "current_arabic": "فشلت إضافة الحيوان."
+  },
+  {
+    "key": "dashboard.enterprise.failedToUpdatePet",
+    "original_text": "Failed to update pet.",
+    "current_arabic": "فشل تحديث الحيوان."
+  },
+  {
+    "key": "dashboard.enterprise.failedToUpdate",
+    "original_text": "Failed to update.",
+    "current_arabic": "فشل التحديث."
+  },
+  {
+    "key": "dashboard.enterprise.failedToAddProduct",
+    "original_text": "Failed to add product.",
+    "current_arabic": "فشلت إضافة المنتج."
+  },
+  {
+    "key": "dashboard.enterprise.failedToDeleteProduct",
+    "original_text": "Failed to delete product.",
+    "current_arabic": "فشلت حذف المنتج."
+  },
+  {
+    "key": "dashboard.enterprise.failedToUpdateProfile",
+    "original_text": "Failed to update profile.",
+    "current_arabic": "فشل تحديث الملف الشخصي."
+  },
+  {
+    "key": "dashboard.enterprise.companyInformation",
+    "original_text": "Company Information",
+    "current_arabic": "معلومات المؤسسة"
+  },
+  {
+    "key": "dashboard.enterprise.editCompanyProfile",
+    "original_text": "Edit Company Profile",
+    "current_arabic": "تعديل ملف المؤسسة"
+  },
+  {
+    "key": "dashboard.enterprise.companyName",
+    "original_text": "Company Name",
+    "current_arabic": "اسم المتجر أو الشركة"
+  },
+  {
+    "key": "dashboard.enterprise.companyLogo",
+    "original_text": "Company Logo",
+    "current_arabic": "شعار المؤسسة"
+  },
+  {
+    "key": "dashboard.enterprise.currentLogoKept",
+    "original_text": "Current logo will be kept if no new file selected.",
+    "current_arabic": "سيتم الاحتفاظ بالشعار الحالي إذا لم تختر ملفاً جديداً."
+  },
+  {
+    "key": "dashboard.enterprise.currentPhotoKept",
+    "original_text": "Current photo will be kept if no new file selected.",
+    "current_arabic": "سيتم الاحتفاظ بالصورة الحالية إذا لم تختر ملفاً جديداً."
+  },
+  {
+    "key": "dashboard.enterprise.editProfile",
+    "original_text": "Edit Profile",
+    "current_arabic": "تعديل الملف الشخصي"
+  },
+  {
+    "key": "dashboard.enterprise.website",
+    "original_text": "Website",
+    "current_arabic": "الموقع الإلكتروني"
+  },
+  {
+    "key": "dashboard.enterprise.editPet",
+    "original_text": "Edit Pet",
+    "current_arabic": "تعديل الحيوان"
+  },
+  {
+    "key": "dashboard.enterprise.adding",
+    "original_text": "Adding...",
+    "current_arabic": "جار الإضافة..."
+  },
+  {
+    "key": "dashboard.enterprise.addProduct",
+    "original_text": "Add Product",
+    "current_arabic": "إضافة منتج"
+  },
+  {
+    "key": "dashboard.enterprise.noProducts",
+    "original_text": "No products yet.",
+    "current_arabic": "لا توجد منتجات بعد."
+  },
+  {
+    "key": "dashboard.enterprise.noAdoptionRequests",
+    "original_text": "No adoption requests yet.",
+    "current_arabic": "لا توجد طلبات تبنٍ بعد."
+  },
+  {
+    "key": "dashboard.enterprise.approve",
+    "original_text": "Approve",
+    "current_arabic": "موافقة"
+  },
+  {
+    "key": "dashboard.enterprise.reject",
+    "original_text": "Reject",
+    "current_arabic": "رفض"
+  },
+  {
+    "key": "dashboard.enterprise.productsCount",
+    "original_text": "{{count}} product(s)",
+    "current_arabic": "{{count}} منتج(ات)"
+  },
+  {
+    "key": "dashboard.enterprise.productCount",
+    "original_text": "Product count",
+    "current_arabic": "عدد المنتجات"
+  },
+  {
+    "key": "dashboard.enterprise.petsUsed",
+    "original_text": "{{count}}/6 pets used",
+    "current_arabic": "{{count}}/6 حيوانات مستخدمة"
+  },
+  {
+    "key": "dashboard.enterprise.by",
+    "original_text": "By: {{name}}",
+    "current_arabic": "بواسطة: {{name}}"
+  },
+  {
+    "key": "dashboard.enterprise.logo",
+    "original_text": "Logo",
+    "current_arabic": "الشعار"
+  },
+  {
+    "key": "dashboard.enterprise.saveChanges",
+    "original_text": "Save Changes",
+    "current_arabic": "حفظ التغييرات"
+  },
+  {
+    "key": "dashboard.superadmin.title",
+    "original_text": "Super Admin Dashboard",
+    "current_arabic": "لوحة تحكم المشرف العام"
+  },
+  {
+    "key": "dashboard.superadmin.tabs.overview",
+    "original_text": "Overview",
+    "current_arabic": "نظرة عامة"
+  },
+  {
+    "key": "dashboard.superadmin.tabs.users",
+    "original_text": "Users",
+    "current_arabic": "المستخدمين"
+  },
+  {
+    "key": "dashboard.superadmin.tabs.organizations",
+    "original_text": "Organizations",
+    "current_arabic": "المؤسسات"
+  },
+  {
+    "key": "dashboard.superadmin.tabs.requests",
+    "original_text": "Adopt Requests",
+    "current_arabic": "طلبات التبني"
+  },
+  {
+    "key": "dashboard.superadmin.stats.totalUsers",
+    "original_text": "Total Users",
+    "current_arabic": "مجموع المستخدمين"
+  },
+  {
+    "key": "dashboard.superadmin.stats.organizations",
+    "original_text": "Organizations",
+    "current_arabic": "المؤسسات"
+  },
+  {
+    "key": "dashboard.superadmin.stats.totalPets",
+    "original_text": "Total Pets",
+    "current_arabic": "مجموع الحيوانات"
+  },
+  {
+    "key": "dashboard.superadmin.stats.adoptions",
+    "original_text": "Adoptions",
+    "current_arabic": "التبنيات"
+  },
+  {
+    "key": "dashboard.superadmin.stats.pendingRequests",
+    "original_text": "Pending Requests",
+    "current_arabic": "الطلبات المعلقة"
+  },
+  {
+    "key": "dashboard.superadmin.stats.veterinaires",
+    "original_text": "Veterinaires",
+    "current_arabic": "الأطباء البيطريين"
+  },
+  {
+    "key": "dashboard.superadmin.createAccount",
+    "original_text": "+ Create Account",
+    "current_arabic": "+ إنشاء حساب"
+  },
+  {
+    "key": "dashboard.superadmin.organization",
+    "original_text": "Organization",
+    "current_arabic": "المؤسسة"
+  },
+  {
+    "key": "dashboard.superadmin.slug",
+    "original_text": "Slug",
+    "current_arabic": "الرابط المختصر"
+  },
+  {
+    "key": "dashboard.superadmin.users",
+    "original_text": "users",
+    "current_arabic": "مستخدمين"
+  },
+  {
+    "key": "dashboard.superadmin.pets",
+    "original_text": "pets",
+    "current_arabic": "حيوانات"
+  },
+  {
+    "key": "dashboard.superadmin.usersCount",
+    "original_text": "{{count}} users",
+    "current_arabic": "{{count}} مستخدم"
+  },
+  {
+    "key": "dashboard.superadmin.noPendingRequests",
+    "original_text": "No pending adopt requests.",
+    "current_arabic": "لا توجد طلبات تبنٍ معلقة."
+  },
+  {
+    "key": "dashboard.superadmin.by",
+    "original_text": "By: {{name}}",
+    "current_arabic": "بواسطة: {{name}}"
+  },
+  {
+    "key": "dashboard.superadmin.created",
+    "original_text": "Created: {{date}}",
+    "current_arabic": "تاريخ الإنشاء: {{date}}"
+  },
+  {
+    "key": "dashboard.superadmin.overdue",
+    "original_text": "⚠ Overdue (response over 24h)",
+    "current_arabic": "⚠ متأخر (تجاوز 24 ساعة)"
+  },
+  {
+    "key": "dashboard.superadmin.approve",
+    "original_text": "Approve",
+    "current_arabic": "موافقة"
+  },
+  {
+    "key": "dashboard.superadmin.reject",
+    "original_text": "Reject",
+    "current_arabic": "رفض"
+  },
+  {
+    "key": "doctors.hero.title",
+    "original_text": "Our\nVeterinaires",
+    "current_arabic": "أطباؤنا\nالبيطريون"
+  },
+  {
+    "key": "doctors.hero.subtitle",
+    "original_text": "Professional veterinary doctors ready to care for your pets.",
+    "current_arabic": "أطباء بيطريون محترفون مستعدون للعناية بحيواناتك."
+  },
+  {
+    "key": "doctors.noResults",
+    "original_text": "No veterinarians available at the moment.",
+    "current_arabic": "لا يوجد أطباء بيطريون متاحون في الوقت الحالي."
+  },
+  {
+    "key": "doctors.bookConsultation",
+    "original_text": "Book Consultation",
+    "current_arabic": "احجز استشارة"
+  },
+  {
+    "key": "doctors.findNearby",
+    "original_text": "Find a vet near you",
+    "current_arabic": "ابحث عن طبيب بيطري قريب منك"
+  },
+  {
+    "key": "donate.hero.badge",
+    "original_text": "Make a Difference",
+    "current_arabic": "كن الفرق"
+  },
+  {
+    "key": "donate.hero.title_line1",
+    "original_text": "Support our",
+    "current_arabic": "ادعم"
+  },
+  {
+    "key": "donate.hero.title_line2",
+    "original_text": "mission",
+    "current_arabic": "مهمتنا"
+  },
+  {
+    "key": "donate.hero.subtitle",
+    "original_text": "Your donation helps us rescue, rehabilitate, and find loving homes for animals across Morocco.",
+    "current_arabic": "تبرعك يساعدنا في إنقاذ وعلاج وإيجاد بيوت محبة للحيوانات في جميع أنحاء المغرب."
+  },
+  {
+    "key": "donate.mode.oneTime",
+    "original_text": "One-Time",
+    "current_arabic": "مرة واحدة"
+  },
+  {
+    "key": "donate.mode.monthly",
+    "original_text": "Monthly",
+    "current_arabic": "شهري"
+  },
+  {
+    "key": "donate.tiers.oneTime.tier1.impact",
+    "original_text": "Nourish 9 cats for a month",
+    "current_arabic": "إطعام 9 قطط لشهر كامل"
+  },
+  {
+    "key": "donate.tiers.oneTime.tier2.impact",
+    "original_text": "Cover vet care for one dog",
+    "current_arabic": "تغطية العلاج البيطري لكلب"
+  },
+  {
+    "key": "donate.tiers.oneTime.tier3.impact",
+    "original_text": "Nourish & care for 3 cats and 3 dogs for a month",
+    "current_arabic": "إطعام ورعاية 3 قطط و3 كلاب لشهر"
+  },
+  {
+    "key": "donate.tiers.oneTime.tier4.impact",
+    "original_text": "Fund a full rescue operation",
+    "current_arabic": "تمويل عملية إنقاذ كاملة"
+  },
+  {
+    "key": "donate.tiers.monthly.tier1.impact",
+    "original_text": "Feed a cat or small dog for a year",
+    "current_arabic": "إطعام قط أو كلب صغير لعام كامل"
+  },
+  {
+    "key": "donate.tiers.monthly.tier2.impact",
+    "original_text": "Feed a large dog for a year",
+    "current_arabic": "إطعام كلب كبير لعام كامل"
+  },
+  {
+    "key": "donate.tiers.monthly.tier3.impact",
+    "original_text": "Feed and care for a dog for a year",
+    "current_arabic": "إطعام ورعاية كلب لعام كامل"
+  },
+  {
+    "key": "donate.tiers.monthly.tier4.impact",
+    "original_text": "Support an entire shelter wing",
+    "current_arabic": "دعم جناح كامل في مأوى"
+  },
+  {
+    "key": "donate.taxInfo",
+    "original_text": "Tax deductible",
+    "current_arabic": "معفى من الضرائب"
+  },
+  {
+    "key": "donate.giveButton",
+    "original_text": "Give {{amount}} MAD",
+    "current_arabic": "تبرع بـ {{amount}} درهم"
+  },
+  {
+    "key": "donate.customAmount",
+    "original_text": "Custom Amount",
+    "current_arabic": "مبلغ مخصص"
+  },
+  {
+    "key": "donate.donate",
+    "original_text": "Donate",
+    "current_arabic": "تبرع"
+  },
+  {
+    "key": "donate.impact.title",
+    "original_text": "Where your money goes",
+    "current_arabic": "أين تذهب أموالك"
+  },
+  {
+    "key": "donate.impact.subtitle",
+    "original_text": "Every donation directly supports our mission to protect and care for animals.",
+    "current_arabic": "كل تبرع يدعم بشكل مباشر مهمتنا في حماية ورعاية الحيوانات."
+  },
+  {
+    "key": "donate.impact.items.shelter",
+    "original_text": "Shelter & housing for rescued animals",
+    "current_arabic": "المأوى والسكن للحيوانات المنقذة"
+  },
+  {
+    "key": "donate.impact.items.vet",
+    "original_text": "Veterinary care & medical treatment",
+    "current_arabic": "العناية البيطرية والعلاج الطبي"
+  },
+  {
+    "key": "donate.impact.items.food",
+    "original_text": "Food, water & daily essentials",
+    "current_arabic": "الطعام والماء والاحتياجات اليومية"
+  },
+  {
+    "key": "donate.impact.items.rescue",
+    "original_text": "Rescue operations & emergency response",
+    "current_arabic": "عمليات الإنقاذ والتدخلات الطارئة"
+  },
+  {
+    "key": "donate.taxSection.title",
+    "original_text": "Tax Benefits",
+    "current_arabic": "المزايا الضريبية"
+  },
+  {
+    "key": "donate.taxSection.description",
+    "original_text": "Nino is a registered non-profit. Your donations are tax-deductible as per Moroccan law. You will receive a tax receipt for every donation, which you can use for your annual tax declaration.",
+    "current_arabic": "نينو جمعية مسجلة. تبرعاتك معفاة من الضرائب حسب القانون المغربي. ستستلم وصلًا ضريبياً لكل تبرع، يمكنك استخدامه في تصريحك السنوي."
+  },
+  {
+    "key": "donate.faq.title",
+    "original_text": "Frequently Asked Questions",
+    "current_arabic": "الأسئلة المتكررة"
+  },
+  {
+    "key": "donate.faq.q1",
+    "original_text": "Is my donation secure?",
+    "current_arabic": "هل تبرعي آمن؟"
+  },
+  {
+    "key": "donate.faq.a1",
+    "original_text": "Yes. All transactions are encrypted and processed through secure payment gateways. We never store your payment details.",
+    "current_arabic": "نعم. جميع المعاملات مشفرة ومعالجة عبر بوابات دفع آمنة. لا نخزن معلومات الدفع الخاصة بك أبداً."
+  },
+  {
+    "key": "donate.faq.q2",
+    "original_text": "Can I cancel or modify my monthly donation?",
+    "current_arabic": "هل يمكنني إلغاء أو تعديل التبرع الشهري؟"
+  },
+  {
+    "key": "donate.faq.a2",
+    "original_text": "Absolutely. You can cancel, pause, or change your monthly donation amount at any time by contacting our support team or through your account settings.",
+    "current_arabic": "بالتأكيد. يمكنك إلغاء أو إيقاف أو تغيير مبلغ التبرع الشهري في أي وقت بالاتصال بفريق الدعم أو من خلال إعدادات الحساب."
+  },
+  {
+    "key": "donate.faq.q3",
+    "original_text": "Will I receive a receipt?",
+    "current_arabic": "هل سأستلم وصلًا؟"
+  },
+  {
+    "key": "donate.faq.a3",
+    "original_text": "Yes, you will receive a tax-deductible receipt via email for every donation, one-time or monthly.",
+    "current_arabic": "نعم، ستستلم وصلًا ضريبياً عبر البريد الإلكتروني لكل تبرع، سواء كان لمرة واحدة أو شهرياً."
+  },
+  {
+    "key": "donate.faq.q4",
+    "original_text": "How is my donation used?",
+    "current_arabic": "كيف يتم استخدام تبرعي؟"
+  },
+  {
+    "key": "donate.faq.a4",
+    "original_text": "Your donation goes directly toward feeding, housing, veterinary care, and rescue operations for animals in need across our shelter network.",
+    "current_arabic": "تبرعك يذهب مباشرة إلى إطعام وإسكان ورعاية بيطرية وعمليات إنقاذ للحيوانات المحتاجة عبر شبكة ملاجئنا."
+  },
+  {
+    "key": "donate.newsletter.title",
+    "original_text": "Stay Informed",
+    "current_arabic": "ابق على اطلاع"
+  },
+  {
+    "key": "donate.newsletter.subtitle",
+    "original_text": "Subscribe to our newsletter and be the first to know about rescue stories, adoption events, and impact updates.",
+    "current_arabic": "اشترك في النشرة الإخبارية وكن أول من يعرف قصص الإنقاذ وفعاليات التبني وآخر المستجدات."
+  },
+  {
+    "key": "donate.newsletter.placeholder",
+    "original_text": "Your email address",
+    "current_arabic": "عنوان بريدك الإلكتروني"
+  },
+  {
+    "key": "donate.newsletter.cta",
+    "original_text": "Subscribe",
+    "current_arabic": "اشتراك"
+  },
+  {
+    "key": "donate.newsletter.success",
+    "original_text": "Thank you! You're now subscribed.",
+    "current_arabic": "شكراً! تم الاشتراك بنجاح."
+  },
+  {
+    "key": "donate.payment.title",
+    "original_text": "Pay via PayPal",
+    "current_arabic": "الدفع عبر PayPal"
+  },
+  {
+    "key": "donate.payment.description",
+    "original_text": "All donations are processed securely through PayPal. Click below to complete your donation.",
+    "current_arabic": "جميع التبرعات تتم معالجتها بشكل آمن عبر PayPal. انقر أدناه لإكمال تبرعك."
+  },
+  {
+    "key": "donate.payment.button",
+    "original_text": "Donate with PayPal",
+    "current_arabic": "تبرع عبر PayPal"
+  },
+  {
+    "key": "adoptQuiz.back",
+    "original_text": "Back",
+    "current_arabic": "رجوع"
+  },
+  {
+    "key": "adoptQuiz.next",
+    "original_text": "Next",
+    "current_arabic": "التالي"
+  },
+  {
+    "key": "adoptQuiz.submit",
+    "original_text": "Submit Request",
+    "current_arabic": "إرسال الطلب"
+  },
+  {
+    "key": "adoptQuiz.submitError",
+    "original_text": "Failed to submit. Please try again.",
+    "current_arabic": "فشل الإرسال. حاول مرة أخرى."
+  },
+  {
+    "key": "adoptQuiz.hours",
+    "original_text": "hrs",
+    "current_arabic": "ساعات"
+  },
+  {
+    "key": "adoptQuiz.doneTitle",
+    "original_text": "Request Submitted! 🎉",
+    "current_arabic": "تم إرسال الطلب! 🎉"
+  },
+  {
+    "key": "adoptQuiz.doneMessage",
+    "original_text": "Your adoption request for {{name}} has been sent. The shelter will review your answers and get back to you soon.",
+    "current_arabic": "تم إرسال طلب التبني الخاص بـ {{name}}. سيقوم المأوى بمراجعة إجاباتك والتواصل معك قريباً."
+  },
+  {
+    "key": "adoptQuiz.doneCta",
+    "original_text": "Back to Pet",
+    "current_arabic": "العودة إلى الحيوان"
+  },
+  {
+    "key": "adoptQuiz.welcome.title",
+    "original_text": "Before You Adopt",
+    "current_arabic": "قبل أن تتبنى"
+  },
+  {
+    "key": "adoptQuiz.welcome.subtitle",
+    "original_text": "Help us find the perfect match! Answer a few quick questions about your lifestyle and home. This helps shelters understand if you and the pet are a great fit.",
+    "current_arabic": "ساعدنا في إيجاد المطابقة المثالية! أجب على بعض الأسئلة حول نمط حياتك ومنزلك. هذا يساعد الملاجئ في معرفة ما إذا كنت والحيوان مناسبين لبعضكما."
+  },
+  {
+    "key": "adoptQuiz.welcome.time",
+    "original_text": "Takes about 2 minutes",
+    "current_arabic": "يستغرق حوالي دقيقتين"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.title",
+    "original_text": "Your Lifestyle",
+    "current_arabic": "نمط حياتك"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.livingSituation",
+    "original_text": "Who do you live with?",
+    "current_arabic": "مع من تعيش؟"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.livingAlone",
+    "original_text": "I live alone",
+    "current_arabic": "أعيش وحدي"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.livingCouple",
+    "original_text": "With my partner",
+    "current_arabic": "مع الشريك"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.livingFamily",
+    "original_text": "With my family",
+    "current_arabic": "مع العائلة"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.livingColiving",
+    "original_text": "With roommates",
+    "current_arabic": "مع زملاء"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.hoursAlone",
+    "original_text": "How many hours will the pet be alone?",
+    "current_arabic": "كم ساعة سيكون الحيوان بمفرده؟"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.activityLevel",
+    "original_text": "How active is your lifestyle?",
+    "current_arabic": "ما مدى نشاطك في حياتك؟"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.activityLow",
+    "original_text": "Mostly sedentary",
+    "current_arabic": "قليل الحركة"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.activityModerate",
+    "original_text": "Moderately active",
+    "current_arabic": "نشاط معتدل"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.activityHigh",
+    "original_text": "Very active",
+    "current_arabic": "نشيط جداً"
+  },
+  {
+    "key": "adoptQuiz.lifestyle.activityVeryHigh",
+    "original_text": "Extremely active",
+    "current_arabic": "نشيط للغاية"
+  },
+  {
+    "key": "adoptQuiz.home.title",
+    "original_text": "Your Home",
+    "current_arabic": "منزلك"
+  },
+  {
+    "key": "adoptQuiz.home.housingType",
+    "original_text": "What type of home do you have?",
+    "current_arabic": "ما نوع مسكنك؟"
+  },
+  {
+    "key": "adoptQuiz.home.housingApartment",
+    "original_text": "Apartment",
+    "current_arabic": "شقة"
+  },
+  {
+    "key": "adoptQuiz.home.housingHouse",
+    "original_text": "House",
+    "current_arabic": "منزل"
+  },
+  {
+    "key": "adoptQuiz.home.housingTownhouse",
+    "original_text": "Townhouse",
+    "current_arabic": "فيلا"
+  },
+  {
+    "key": "adoptQuiz.home.housingFarm",
+    "original_text": "Farm / Rural",
+    "current_arabic": "مزرعة / ريف"
+  },
+  {
+    "key": "adoptQuiz.home.outdoorSpace",
+    "original_text": "What outdoor space do you have?",
+    "current_arabic": "ما المساحة الخارجية المتوفرة لديك؟"
+  },
+  {
+    "key": "adoptQuiz.home.outdoorNone",
+    "original_text": "None",
+    "current_arabic": "لا يوجد"
+  },
+  {
+    "key": "adoptQuiz.home.outdoorBalcony",
+    "original_text": "Balcony",
+    "current_arabic": "شرفة"
+  },
+  {
+    "key": "adoptQuiz.home.outdoorSmallGarden",
+    "original_text": "Small garden",
+    "current_arabic": "حديقة صغيرة"
+  },
+  {
+    "key": "adoptQuiz.home.outdoorLargeGarden",
+    "original_text": "Large garden",
+    "current_arabic": "حديقة كبيرة"
+  },
+  {
+    "key": "adoptQuiz.home.rentOwn",
+    "original_text": "Do you rent or own?",
+    "current_arabic": "هل تسكن في ملكك أم بالإيجار؟"
+  },
+  {
+    "key": "adoptQuiz.home.own",
+    "original_text": "I own",
+    "current_arabic": "ملك"
+  },
+  {
+    "key": "adoptQuiz.home.rentAllowed",
+    "original_text": "I rent (pets allowed)",
+    "current_arabic": "إيجار (مسموح بالحيوانات)"
+  },
+  {
+    "key": "adoptQuiz.home.rentNotAllowed",
+    "original_text": "I rent (pets not allowed)",
+    "current_arabic": "إيجار (غير مسموح بالحيوانات)"
+  },
+  {
+    "key": "adoptQuiz.experience.title",
+    "original_text": "Your Experience",
+    "current_arabic": "خبرتك"
+  },
+  {
+    "key": "adoptQuiz.experience.pastPets",
+    "original_text": "Pet experience",
+    "current_arabic": "الخبرة مع الحيوانات"
+  },
+  {
+    "key": "adoptQuiz.experience.pastNone",
+    "original_text": "First-time owner",
+    "current_arabic": "أول مرة"
+  },
+  {
+    "key": "adoptQuiz.experience.pastSome",
+    "original_text": "Some experience",
+    "current_arabic": "لدي بعض الخبرة"
+  },
+  {
+    "key": "adoptQuiz.experience.pastExperienced",
+    "original_text": "Very experienced",
+    "current_arabic": "لدي خبرة كبيرة"
+  },
+  {
+    "key": "adoptQuiz.experience.pastProfessional",
+    "original_text": "Professional / Vet",
+    "current_arabic": "محترف"
+  },
+  {
+    "key": "adoptQuiz.experience.hasChildren",
+    "original_text": "Children at home?",
+    "current_arabic": "هل يوجد أطفال في المنزل؟"
+  },
+  {
+    "key": "adoptQuiz.experience.childrenNo",
+    "original_text": "No children",
+    "current_arabic": "لا يوجد أطفال"
+  },
+  {
+    "key": "adoptQuiz.experience.childrenYoung",
+    "original_text": "Yes, under 6",
+    "current_arabic": "نعم، أقل من 6 سنوات"
+  },
+  {
+    "key": "adoptQuiz.experience.childrenOlder",
+    "original_text": "Yes, 6-12",
+    "current_arabic": "نعم، 6-12 سنة"
+  },
+  {
+    "key": "adoptQuiz.experience.childrenTeens",
+    "original_text": "Yes, teenagers",
+    "current_arabic": "نعم، مراهقون"
+  },
+  {
+    "key": "adoptQuiz.experience.hasOtherPets",
+    "original_text": "Other pets?",
+    "current_arabic": "حيوانات أخرى؟"
+  },
+  {
+    "key": "adoptQuiz.experience.otherPetsPlaceholder",
+    "original_text": "Tell us about your other pets (type, age, temperament)",
+    "current_arabic": "أخبرنا عن حيواناتك الأخرى (النوع، العمر، الطباع)"
+  },
+  {
+    "key": "adoptQuiz.match.title",
+    "original_text": "Your Match",
+    "current_arabic": "المطابقة الخاصة بك"
+  },
+  {
+    "key": "adoptQuiz.match.preferredSpecies",
+    "original_text": "Preferred species",
+    "current_arabic": "فصيلة الحيوان المفضلة"
+  },
+  {
+    "key": "adoptQuiz.match.preferredAge",
+    "original_text": "Preferred age",
+    "current_arabic": "العمر المفضل"
+  },
+  {
+    "key": "adoptQuiz.match.ageBaby",
+    "original_text": "Baby (under 1yr)",
+    "current_arabic": "صغير (أقل من سنة)"
+  },
+  {
+    "key": "adoptQuiz.match.ageYoung",
+    "original_text": "Young (1-3yrs)",
+    "current_arabic": "شاب (1-3 سنوات)"
+  },
+  {
+    "key": "adoptQuiz.match.ageAdult",
+    "original_text": "Adult (3-7yrs)",
+    "current_arabic": "بالغ (3-7 سنوات)"
+  },
+  {
+    "key": "adoptQuiz.match.ageSenior",
+    "original_text": "Senior (7+yrs)",
+    "current_arabic": "كبير (7+ سنوات)"
+  },
+  {
+    "key": "adoptQuiz.match.preferredSize",
+    "original_text": "Preferred size",
+    "current_arabic": "الحجم المفضل"
+  },
+  {
+    "key": "adoptQuiz.match.sizeSmall",
+    "original_text": "Small",
+    "current_arabic": "صغير"
+  },
+  {
+    "key": "adoptQuiz.match.sizeMedium",
+    "original_text": "Medium",
+    "current_arabic": "متوسط"
+  },
+  {
+    "key": "adoptQuiz.match.sizeLarge",
+    "original_text": "Large",
+    "current_arabic": "كبير"
+  },
+  {
+    "key": "adoptQuiz.match.sizeNoPreference",
+    "original_text": "No preference",
+    "current_arabic": "بدون تفضيل"
+  },
+  {
+    "key": "adoptQuiz.match.preferredEnergy",
+    "original_text": "Preferred energy level",
+    "current_arabic": "مستوى الطاقة المفضل"
+  },
+  {
+    "key": "adoptQuiz.match.energyLow",
+    "original_text": "Calm / Low energy",
+    "current_arabic": "هادئ"
+  },
+  {
+    "key": "adoptQuiz.match.energyModerate",
+    "original_text": "Moderate",
+    "current_arabic": "معتدل"
+  },
+  {
+    "key": "adoptQuiz.match.energyHigh",
+    "original_text": "High energy",
+    "current_arabic": "عالٍ"
+  },
+  {
+    "key": "adoptQuiz.match.energyNoPreference",
+    "original_text": "No preference",
+    "current_arabic": "بدون تفضيل"
+  },
+  {
+    "key": "adoptQuiz.review.title",
+    "original_text": "Review & Submit",
+    "current_arabic": "مراجعة وإرسال"
+  },
+  {
+    "key": "adoptQuiz.review.subtitle",
+    "original_text": "You're adopting {{name}}! Please review your answers before submitting.",
+    "current_arabic": "أنت على وشك تبني {{name}}! راجع إجاباتك قبل الإرسال."
+  },
+  {
+    "key": "adoptQuiz.review.motivation",
+    "original_text": "Why do you want to adopt this pet? (optional)",
+    "current_arabic": "لماذا تريد تبني هذا الحيوان؟ (اختياري)"
+  },
+  {
+    "key": "adoptQuiz.review.motivationPlaceholder",
+    "original_text": "Tell the shelter why you're the perfect home...",
+    "current_arabic": "أخبر المأوى لماذا ستكون البيت المثالي..."
+  },
+  {
+    "key": "adoptQuiz.values.livingSituation.alone",
+    "original_text": "Alone",
+    "current_arabic": "بمفردي"
+  },
+  {
+    "key": "adoptQuiz.values.livingSituation.couple",
+    "original_text": "With partner",
+    "current_arabic": "مع الشريك"
+  },
+  {
+    "key": "adoptQuiz.values.livingSituation.family",
+    "original_text": "With family",
+    "current_arabic": "مع العائلة"
+  },
+  {
+    "key": "adoptQuiz.values.livingSituation.coliving",
+    "original_text": "With roommates",
+    "current_arabic": "مع زملاء"
+  },
+  {
+    "key": "adoptQuiz.values.activityLevel.low",
+    "original_text": "Sedentary",
+    "current_arabic": "قليل الحركة"
+  },
+  {
+    "key": "adoptQuiz.values.activityLevel.moderate",
+    "original_text": "Moderate",
+    "current_arabic": "معتدل"
+  },
+  {
+    "key": "adoptQuiz.values.activityLevel.high",
+    "original_text": "Active",
+    "current_arabic": "نشيط"
+  },
+  {
+    "key": "adoptQuiz.values.activityLevel.veryHigh",
+    "original_text": "Extremely active",
+    "current_arabic": "نشيط جداً"
+  },
+  {
+    "key": "adoptQuiz.values.housingType.apartment",
+    "original_text": "Apartment",
+    "current_arabic": "شقة"
+  },
+  {
+    "key": "adoptQuiz.values.housingType.house",
+    "original_text": "House",
+    "current_arabic": "منزل"
+  },
+  {
+    "key": "adoptQuiz.values.housingType.townhouse",
+    "original_text": "Townhouse",
+    "current_arabic": "فيلا"
+  },
+  {
+    "key": "adoptQuiz.values.housingType.farm",
+    "original_text": "Farm",
+    "current_arabic": "مزرعة"
+  },
+  {
+    "key": "adoptQuiz.values.outdoorSpace.none",
+    "original_text": "None",
+    "current_arabic": "لا يوجد"
+  },
+  {
+    "key": "adoptQuiz.values.outdoorSpace.balcony",
+    "original_text": "Balcony",
+    "current_arabic": "شرفة"
+  },
+  {
+    "key": "adoptQuiz.values.outdoorSpace.smallGarden",
+    "original_text": "Small garden",
+    "current_arabic": "حديقة صغيرة"
+  },
+  {
+    "key": "adoptQuiz.values.outdoorSpace.largeGarden",
+    "original_text": "Large garden",
+    "current_arabic": "حديقة كبيرة"
+  },
+  {
+    "key": "adoptQuiz.values.pastPetExperience.none",
+    "original_text": "First-time",
+    "current_arabic": "لأول مرة"
+  },
+  {
+    "key": "adoptQuiz.values.pastPetExperience.some",
+    "original_text": "Some experience",
+    "current_arabic": "بعض الخبرة"
+  },
+  {
+    "key": "adoptQuiz.values.pastPetExperience.experienced",
+    "original_text": "Experienced",
+    "current_arabic": "لدي خبرة"
+  },
+  {
+    "key": "adoptQuiz.values.pastPetExperience.professional",
+    "original_text": "Professional",
+    "current_arabic": "محترف"
+  },
+  {
+    "key": "adoptQuiz.values.hasChildren.no",
+    "original_text": "No",
+    "current_arabic": "لا"
+  },
+  {
+    "key": "adoptQuiz.values.hasChildren.yesYoung",
+    "original_text": "Yes (under 6)",
+    "current_arabic": "نعم (-6 سنوات)"
+  },
+  {
+    "key": "adoptQuiz.values.hasChildren.yesOlder",
+    "original_text": "Yes (6-12)",
+    "current_arabic": "نعم (6-12 سنة)"
+  },
+  {
+    "key": "adoptQuiz.values.hasChildren.yesTeens",
+    "original_text": "Yes (teens)",
+    "current_arabic": "نعم (مراهقون)"
+  },
+  {
+    "key": "adoptQuiz.values.preferredSpecies.dog",
+    "original_text": "Dog",
+    "current_arabic": "كلب"
+  },
+  {
+    "key": "adoptQuiz.values.preferredSpecies.cat",
+    "original_text": "Cat",
+    "current_arabic": "قط"
+  },
+  {
+    "key": "adoptQuiz.values.preferredSpecies.rabbit",
+    "original_text": "Rabbit",
+    "current_arabic": "أرنب"
+  },
+  {
+    "key": "adoptQuiz.values.preferredSpecies.other",
+    "original_text": "Other",
+    "current_arabic": "آخر"
+  },
+  {
+    "key": "adoptQuiz.values.preferredAge.baby",
+    "original_text": "Baby",
+    "current_arabic": "صغير"
+  },
+  {
+    "key": "adoptQuiz.values.preferredAge.young",
+    "original_text": "Young",
+    "current_arabic": "شاب"
+  },
+  {
+    "key": "adoptQuiz.values.preferredAge.adult",
+    "original_text": "Adult",
+    "current_arabic": "بالغ"
+  },
+  {
+    "key": "adoptQuiz.values.preferredAge.senior",
+    "original_text": "Senior",
+    "current_arabic": "كبير"
+  }
+]

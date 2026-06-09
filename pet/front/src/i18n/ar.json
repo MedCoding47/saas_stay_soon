@@ -200,7 +200,7 @@
   "pets.browser.filter.status": "الحالة",
   "pets.browser.filter.apply": "تطبيق الفلتر",
   "pets.browser.filter.clear": "إعادة تعيين الكل",
-  "pets.browser.found": "تم العثور على {{count}} حيوانات",
+  "pets.browser.found": "حيوانات تم العثور عليها",
   "pets.browser.noResults": "لا توجد حيوانات تطابق معاييرك. جرب تعديل الفلتر.",
   "pets.browser.subtitle": "تصفح الحيوانات المتاحة للتبني في جميع أنحاء المغرب",
 

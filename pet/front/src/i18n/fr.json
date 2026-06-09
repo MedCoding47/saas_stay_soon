@@ -201,7 +201,7 @@
   "pets.browser.filter.status": "Statut",
   "pets.browser.filter.apply": "Appliquer les filtres",
   "pets.browser.filter.clear": "Tout réinitialiser",
-  "pets.browser.found": "{{count}} animaux trouvés",
+  "pets.browser.found": "animaux trouvés",
   "pets.browser.noResults": "Aucun animal ne correspond à vos critères. Essayez d'ajuster les filtres.",
   "pets.browser.subtitle": "Parcourez les animaux disponibles à l'adoption à travers le Maroc",
 
