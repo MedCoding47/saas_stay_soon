@@ -5,6 +5,7 @@ import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import PageTransition from '../../components/animations/PageTransition';
 import InteractiveBentoGallery from '../../components/ui/interactive-bento-gallery';
+import GLSLHills from '../../components/ui/glsl-hills';
 
 const galleryItems = [
   { id: 1, type: 'image', title: 'Bella', desc: 'Sweet dog looking for a home', url: '/images/bella.jpg', span: 'md:col-span-1 md:row-span-3 sm:col-span-1 sm:row-span-2' },
@@ -55,13 +56,9 @@ export default function Guides() {
       <Navbar />
 
       <section className="relative min-h-[75vh] flex items-center overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1400&q=80"
-            alt=""
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-[#0D0D0D]/60 to-[#0D0D0D]/20" />
+        <div className="absolute inset-0 bg-[#0D0D0D]">
+          <GLSLHills width="100%" height="100%" cameraZ={120} planeSize={200} speed={0.3} />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-[#0D0D0D]/60 to-transparent z-[2]" />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-8 pt-32 pb-24 text-center">
           <motion.span
