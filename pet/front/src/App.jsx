@@ -6,7 +6,6 @@ import PetDetails from './pages/pets/PetDetails';
 import AdoptedPets from './pages/pets/AdoptedPets';
 import SwipeMode from './pages/swipe/SwipeMode';
 import Doctors from './pages/doctors/Doctors';
-import MapPage from './pages/map/MapPage';
 import AdminLogin from './pages/admin/Login';
 import AdminDashboard from './pages/admin/Dashboard';
 import PetManagement from './pages/admin/PetManagement';
@@ -49,7 +48,6 @@ function AnimatedRoutes() {
         <Route path="/pets/adopted" element={<AdoptedPets />} />
         <Route path="/swipe" element={<SwipeMode />} />
         <Route path="/doctors" element={<Doctors />} />
-        <Route path="/carte" element={<MapPage />} />
         <Route path="/donate" element={<Donation />} />
         <Route path="/guides" element={<Guides />} />
         <Route path="/login" element={<RoleSelector />} />
