@@ -29,11 +29,11 @@ const SECTIONS = [
 ];
 
 const HERO_IMAGES = {
-  dog: 'https://images.unsplash.com/photo-1544568100-847a948585b9?w=800&q=80',
-  cat: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800&q=80',
-  rabbit: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=800&q=80',
-  bird: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=800&q=80',
-  other: 'https://images.unsplash.com/photo-1583511655826-05700d52f4d9?w=800&q=80',
+  dog: '/images/max.jpg',
+  cat: '/images/luna.jpg',
+  rabbit: '/images/milo.jpg',
+  bird: '/images/coco.jpg',
+  other: '/images/oreo.jpg',
 };
 
 const OTHER_PETS = [
