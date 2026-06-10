@@ -109,7 +109,7 @@ export default function Guides() {
       </div>
 
       <section className="bg-[#FAF7F2] py-20 px-8" dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="max-w-5xl mx-auto">
+        <div className="container mx-auto px-4 max-w-6xl">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSpecies}
@@ -118,87 +118,90 @@ export default function Guides() {
               exit={{ opacity: 0, y: -30 }}
               transition={{ duration: 0.4 }}
             >
-              <div className="relative rounded-4xl overflow-hidden mb-12 min-h-[320px] md:min-h-[420px] shadow-card">
-                <img
-                  src={HERO_IMAGES[activeSpecies]}
-                  alt=""
-                  className="w-full h-full absolute inset-0 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/90 via-[#0D0D0D]/30 to-transparent" />
-                <div className="relative z-10 h-full flex items-end p-8 md:p-12">
-                  <div>
-                    <span className="text-5xl md:text-7xl mb-3 block drop-shadow-lg">
-                      {ICONS[activeSpecies]}
-                    </span>
-                    <h2 className="font-display font-black text-display-sm md:text-display-md text-white drop-shadow-lg">
+              <div className="grid md:grid-cols-2 gap-8 md:gap-12 relative overflow-x-hidden">
+                <div className="md:order-2 relative">
+                  <div className="absolute -z-10 w-72 h-72 rounded-full bg-[#f8b3c4] blur-3xl opacity-20 -top-10 -left-10" />
+                  <img
+                    src={HERO_IMAGES[activeSpecies]}
+                    alt={t(`guides.${activeSpecies}.title`)}
+                    className="rounded-2xl shadow-2xl w-full h-[400px] md:h-[600px] object-cover filter brightness-105"
+                  />
+                </div>
+
+                <div className="md:order-1 flex flex-col justify-between">
+                  <div className="flex flex-col h-full justify-between">
+                    <h1 className="text-5xl md:text-7xl font-bold text-[#0D0D0D] leading-tight tracking-tighter">
                       {t(`guides.${activeSpecies}.title`)}
-                    </h2>
+                    </h1>
+
+                    {activeSpecies !== 'other' ? (
+                      <>
+                        <ul className="space-y-2 tracking-tighter text-lg text-[#0D0D0D]/90 mt-8 md:mt-12">
+                          {SECTIONS.map((s, index) => (
+                            <motion.li
+                              key={s.key}
+                              initial={{ opacity: 0.8 }}
+                              whileHover={{
+                                opacity: 1,
+                                y: -3,
+                                transition: { duration: 0.4, ease: 'easeOut' },
+                              }}
+                              transition={{ delay: index * 0.1 }}
+                            >
+                              <button
+                                onClick={() => setActiveSection(s.key)}
+                                className={`cursor-pointer transition-all duration-300 ${
+                                  activeSection === s.key
+                                    ? 'text-[#D85A30] font-bold'
+                                    : 'text-[#0D0D0D]/70 hover:text-[#0D0D0D]'
+                                }`}
+                              >
+                                <span className={isRTL ? 'ml-3' : 'mr-3'}>{s.icon}</span>
+                                {s.label}
+                              </button>
+                            </motion.li>
+                          ))}
+                        </ul>
+
+                        <div className="mt-auto pt-8 md:pt-12">
+                          <h2 className="text-sm font-semibold text-[#D85A30] tracking-[0.2em] uppercase">
+                            {t('guides.sectionLabel', 'CARE GUIDE')} 2025
+                          </h2>
+                          <motion.p
+                            key={activeSection}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="text-base md:text-lg text-[#0D0D0D]/80 max-w-md pt-4 tracking-tight leading-relaxed"
+                          >
+                            {t(`guides.${activeSpecies}.${activeSection}`)}
+                          </motion.p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 md:mt-12">
+                        {OTHER_PETS.map((pet, i) => (
+                          <motion.div
+                            key={pet.key}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.1, duration: 0.35 }}
+                            className="bg-white rounded-2xl p-6 shadow-card border border-[#E8E0D8] hover:shadow-card-hover transition-shadow duration-300"
+                          >
+                            <span className="text-3xl mb-2 block">{pet.emoji}</span>
+                            <h3 className="font-display font-bold text-lg text-[#0D0D0D] mb-2">
+                              {pet.name}
+                            </h3>
+                            <p className="text-[#8c7e74] text-sm leading-relaxed">
+                              {t(`guides.other.${pet.key}`)}
+                            </p>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-
-              {activeSpecies !== 'other' && (
-                <div className="flex flex-wrap gap-2 mb-10 justify-center">
-                  {SECTIONS.map((s) => (
-                    <button
-                      key={s.key}
-                      onClick={() => setActiveSection(s.key)}
-                      className={`px-5 py-2.5 rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300 ${
-                        activeSection === s.key
-                          ? 'bg-[#0D0D0D] text-white shadow-lg'
-                          : 'bg-white text-[#8c7e74] border border-[#E8E0D8] hover:border-[#D85A30] hover:text-[#D85A30]'
-                      }`}
-                    >
-                      {s.icon} {s.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {activeSpecies !== 'other' ? (
-                <motion.div
-                  key={activeSection}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <div className="bg-white rounded-3xl p-8 md:p-12 shadow-card border border-[#E8E0D8]">
-                    <div className="flex items-start gap-5">
-                      <div className="w-14 h-14 rounded-2xl bg-[#FAF7F2] flex items-center justify-center flex-shrink-0 text-2xl shadow-sm">
-                        {SECTIONS.find(s => s.key === activeSection)?.icon}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-display font-bold text-2xl text-[#0D0D0D] mb-4">
-                          {SECTIONS.find(s => s.key === activeSection)?.label}
-                        </h3>
-                        <p className="text-[#8c7e74] text-lg leading-relaxed">
-                          {t(`guides.${activeSpecies}.${activeSection}`)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ) : (
-                <div className="grid md:grid-cols-2 gap-6">
-                  {OTHER_PETS.map((pet, i) => (
-                    <motion.div
-                      key={pet.key}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.1, duration: 0.35 }}
-                      className="bg-white rounded-3xl p-8 shadow-card border border-[#E8E0D8] hover:shadow-card-hover transition-shadow duration-300"
-                    >
-                      <span className="text-3xl mb-3 block">{pet.emoji}</span>
-                      <h3 className="font-display font-bold text-xl text-[#0D0D0D] mb-3">
-                        {pet.name}
-                      </h3>
-                      <p className="text-[#8c7e74] leading-relaxed">
-                        {t(`guides.other.${pet.key}`)}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
             </motion.div>
           </AnimatePresence>
         </div>
