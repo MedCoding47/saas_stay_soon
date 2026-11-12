@@ -12,6 +12,7 @@ import PetManagement from './pages/admin/PetManagement';
 import AdminAdoptions from './pages/admin/Adoptions';
 import AdminConversations from './pages/admin/Conversations';
 import RoleSelector from './pages/auth/RoleSelector';
+import OrgRegister from './pages/auth/OrgRegister';
 import OrgLogin from './pages/auth/OrganizationLogin';
 import VetLogin from './pages/auth/VeterinaireLogin';
 import ClientLoginNew from './pages/auth/ClientLogin';
@@ -51,6 +52,7 @@ function AnimatedRoutes() {
         <Route path="/donate" element={<Donation />} />
         <Route path="/guides" element={<Guides />} />
         <Route path="/login" element={<RoleSelector />} />
+        <Route path="/register/organization" element={<OrgRegister />} />
         <Route path="/login/organization" element={<OrgLogin />} />
         <Route path="/login/veterinaire" element={<VetLogin />} />
         <Route path="/login/client" element={<ClientLoginNew />} />

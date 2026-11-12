@@ -70,7 +70,10 @@ export default function OrganizationLogin() {
             </motion.form>
 
             <p className="text-center text-xs text-[#8c7e74] mt-8">
-              {t('auth.orgLogin.adminNote')}
+              {t('auth.orgLogin.adminNote')}{' '}
+              <button onClick={() => navigate('/register/organization')} className="text-coral font-semibold hover:underline">
+                {t('auth.orgRegister.createAccount')}
+              </button>
             </p>
           </div>
         </div>

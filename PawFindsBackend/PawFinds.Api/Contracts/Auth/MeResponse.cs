@@ -7,6 +7,7 @@ public sealed record MeResponse(
     string Role,
     Guid? OrganizationId,
     string? PhoneNumber,
+    string? Address,
     string? About,
     string? ProfilePictureUrl);
 

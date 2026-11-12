@@ -9,7 +9,6 @@ using PawFinds.Infrastructure.Adoptions;
 namespace PawFinds.Api.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/adoptions")]
 public sealed class AdoptionsController : ControllerBase
 {
@@ -20,30 +19,11 @@ public sealed class AdoptionsController : ControllerBase
         _adoptionService = adoptionService;
     }
 
-    [HttpGet("mine")]
-    public async Task<ActionResult<PagedResult<AdoptionDto>>> GetMyAdoptions(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
-        CancellationToken cancellationToken = default)
-    {
-        if (!TryGetCurrentUserId(out var adopterId))
-        {
-            return Unauthorized(new { message = "User context is missing." });
-        }
-
-        var request = new GetAdoptionsRequest(
-            AdopterId: adopterId,
-            Page: page,
-            PageSize: pageSize);
-
-        var pagedResult = await _adoptionService.GetAdoptionsPagedAsync(
-            request,
-            cancellationToken);
-
-        return Ok(pagedResult);
-    }
-
-    [HttpPost("apply")]
+    /// <summary>
+    /// Logged-in client submits an adoption interest request.
+    /// Contact details are pulled from the authenticated user's account.
+    /// </summary>
+    [HttpPost]
     [Authorize(Roles = "Client")]
     public async Task<ActionResult<AdoptionDto>> Apply(
         ApplyAdoptionRequest request,
@@ -63,11 +43,8 @@ public sealed class AdoptionsController : ControllerBase
 
         try
         {
-            var adoption = await _adoptionService.CreateApplicationAsync(
-                createRequest,
-                cancellationToken);
-
-            return CreatedAtAction(nameof(GetAdoptions), new { id = adoption.Id }, adoption);
+            var adoption = await _adoptionService.CreateApplicationAsync(createRequest, cancellationToken);
+            return CreatedAtAction(nameof(GetById), new { id = adoption.Id }, adoption);
         }
         catch (AdoptionWorkflowException exception)
         {
@@ -75,20 +52,35 @@ public sealed class AdoptionsController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Shelter/Enterprise: all adoption requests for their organization.
+    /// </summary>
     [HttpGet]
     [Authorize(Roles = "Enterprise,SuperAdmin")]
     public async Task<ActionResult<PagedResult<AdoptionDto>>> GetAdoptions(
         [FromQuery] GetAdoptionsRequest request,
         CancellationToken cancellationToken)
     {
-        var pagedResult = await _adoptionService.GetAdoptionsPagedAsync(
-            request,
-            cancellationToken);
-
+        var pagedResult = await _adoptionService.GetAdoptionsPagedAsync(request, cancellationToken);
         return Ok(pagedResult);
     }
 
-    [HttpPatch("{id:guid}/status")]
+    /// <summary>
+    /// Single adoption request by id (used for the Location header).
+    /// </summary>
+    [HttpGet("{id:guid}")]
+    [Authorize(Roles = "Enterprise,SuperAdmin")]
+    public async Task<ActionResult<AdoptionDto>> GetById(Guid id, CancellationToken cancellationToken)
+    {
+        var all = await _adoptionService.GetAdoptionsAsync(cancellationToken);
+        var adoption = all.FirstOrDefault(a => a.Id == id);
+        return adoption is null ? NotFound() : Ok(adoption);
+    }
+
+    /// <summary>
+    /// Shelter/Enterprise: accept or reject an adoption request.
+    /// </summary>
+    [HttpPatch("{id:guid}")]
     [Authorize(Roles = "Enterprise,SuperAdmin")]
     public async Task<ActionResult<AdoptionDto>> UpdateStatus(
         Guid id,
@@ -119,7 +111,6 @@ public sealed class AdoptionsController : ControllerBase
     private bool TryGetCurrentUserId(out Guid userId)
     {
         var userIdClaim = User.FindFirstValue("user_id");
-
         return Guid.TryParse(userIdClaim, out userId);
     }
 }

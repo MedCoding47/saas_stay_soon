@@ -118,8 +118,24 @@ namespace PawFinds.Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<Guid>("AdopterId")
+                    b.Property<string>("AdopterAddress")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("AdopterEmail")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid?>("AdopterId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdopterName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("AdopterPhone")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ApplicationMessage")
                         .HasMaxLength(2000)
@@ -154,6 +170,8 @@ namespace PawFinds.Infrastructure.Migrations
                     b.HasIndex("PetId");
 
                     b.HasIndex("Status");
+
+                    b.HasIndex("OrganizationId", "AdopterEmail");
 
                     b.HasIndex("OrganizationId", "AdopterId");
 
@@ -457,6 +475,41 @@ namespace PawFinds.Infrastructure.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("PawFinds.Domain.Entities.NewsletterSubscriber", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("SubscribedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("NewsletterSubscribers", (string)null);
+                });
+
             modelBuilder.Entity("PawFinds.Domain.Entities.Notification", b =>
                 {
                     b.Property<Guid>("Id")
@@ -525,6 +578,53 @@ namespace PawFinds.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Organizations", (string)null);
+                });
+
+            modelBuilder.Entity("PawFinds.Domain.Entities.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
+
+                    b.Property<string>("StripePaymentIntentId")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("StripePaymentIntentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("PawFinds.Domain.Entities.Pet", b =>
@@ -707,6 +807,52 @@ namespace PawFinds.Infrastructure.Migrations
                     b.ToTable("Products", (string)null);
                 });
 
+            modelBuilder.Entity("PawFinds.Domain.Entities.Review", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BookingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid?>("CompanyProfileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("VeterinaireProfileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("CompanyProfileId");
+
+                    b.HasIndex("VeterinaireProfileId");
+
+                    b.HasIndex("AuthorId", "BookingId")
+                        .IsUnique()
+                        .HasFilter("[BookingId] IS NOT NULL");
+
+                    b.ToTable("Reviews", (string)null);
+                });
+
             modelBuilder.Entity("PawFinds.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -716,6 +862,9 @@ namespace PawFinds.Infrastructure.Migrations
                     b.Property<string>("About")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("CompanyProfileId")
                         .HasColumnType("uniqueidentifier");
@@ -865,8 +1014,7 @@ namespace PawFinds.Infrastructure.Migrations
                     b.HasOne("PawFinds.Domain.Entities.User", "Adopter")
                         .WithMany()
                         .HasForeignKey("AdopterId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("PawFinds.Domain.Entities.Organization", "Organization")
                         .WithMany("Adoptions")
@@ -1053,6 +1201,25 @@ namespace PawFinds.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("PawFinds.Domain.Entities.Payment", b =>
+                {
+                    b.HasOne("PawFinds.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PawFinds.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PawFinds.Domain.Entities.Pet", b =>
                 {
                     b.HasOne("PawFinds.Domain.Entities.Organization", "Organization")
@@ -1100,6 +1267,38 @@ namespace PawFinds.Infrastructure.Migrations
                     b.Navigation("Pet");
                 });
 
+            modelBuilder.Entity("PawFinds.Domain.Entities.Review", b =>
+                {
+                    b.HasOne("PawFinds.Domain.Entities.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PawFinds.Domain.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("PawFinds.Domain.Entities.CompanyProfile", "CompanyProfile")
+                        .WithMany("Reviews")
+                        .HasForeignKey("CompanyProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("PawFinds.Domain.Entities.VeterinaireProfile", "VeterinaireProfile")
+                        .WithMany("Reviews")
+                        .HasForeignKey("VeterinaireProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("CompanyProfile");
+
+                    b.Navigation("VeterinaireProfile");
+                });
+
             modelBuilder.Entity("PawFinds.Domain.Entities.User", b =>
                 {
                     b.HasOne("PawFinds.Domain.Entities.CompanyProfile", "CompanyProfile")
@@ -1133,6 +1332,11 @@ namespace PawFinds.Infrastructure.Migrations
                     b.Navigation("Organization");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PawFinds.Domain.Entities.CompanyProfile", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("PawFinds.Domain.Entities.Conversation", b =>
@@ -1188,6 +1392,8 @@ namespace PawFinds.Infrastructure.Migrations
                     b.Navigation("Bookings");
 
                     b.Navigation("Recommendations");
+
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

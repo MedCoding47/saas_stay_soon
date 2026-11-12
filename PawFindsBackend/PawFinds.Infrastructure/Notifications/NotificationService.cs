@@ -97,12 +97,15 @@ public sealed class NotificationService : INotificationService
         {
             Id = Guid.NewGuid(),
             OrganizationId = adoption.OrganizationId,
-            UserId = adoption.AdopterId,
+            UserId = adoption.AdopterId ?? Guid.Empty,
             Content = $"Your adoption application status changed to {newStatus}.",
             IsRead = false
         };
 
-        _dbContext.Notifications.Add(notification);
+        if (adoption.AdopterId is not null)
+        {
+            _dbContext.Notifications.Add(notification);
+        }
     }
 
     private Guid EnsureTenant()

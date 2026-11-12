@@ -14,11 +14,11 @@ public sealed class AdoptionService : IAdoptionService
     private static readonly IReadOnlyDictionary<AdoptionStatus, AdoptionStatus[]> AllowedTransitions =
         new Dictionary<AdoptionStatus, AdoptionStatus[]>
         {
-            [AdoptionStatus.Available] = [AdoptionStatus.ApplicationReceived],
-            [AdoptionStatus.ApplicationReceived] = [AdoptionStatus.UnderReview],
-            [AdoptionStatus.UnderReview] = [AdoptionStatus.Approved],
+            [AdoptionStatus.ApplicationReceived] = [AdoptionStatus.UnderReview, AdoptionStatus.Approved, AdoptionStatus.Rejected],
+            [AdoptionStatus.UnderReview] = [AdoptionStatus.Approved, AdoptionStatus.Rejected],
             [AdoptionStatus.Approved] = [AdoptionStatus.Completed],
-            [AdoptionStatus.Completed] = []
+            [AdoptionStatus.Completed] = [],
+            [AdoptionStatus.Rejected] = []
         };
 
     private readonly AppDbContext _dbContext;
@@ -41,6 +41,7 @@ public sealed class AdoptionService : IAdoptionService
         EnsureTenant();
 
         return await _dbContext.Adoptions
+            .Include(adoption => adoption.Pet)
             .AsNoTracking()
             .OrderByDescending(adoption => adoption.CreatedAt)
             .Select(adoption => new AdoptionDto(
@@ -48,6 +49,12 @@ public sealed class AdoptionService : IAdoptionService
                 adoption.OrganizationId,
                 adoption.PetId,
                 adoption.AdopterId,
+                adoption.AdopterName,
+                adoption.AdopterPhone,
+                adoption.AdopterEmail,
+                adoption.AdopterAddress,
+                adoption.Pet.Name,
+                adoption.Pet.ImageUrl,
                 adoption.Status,
                 adoption.ApplicationMessage,
                 adoption.AdminNotes,
@@ -85,6 +92,7 @@ public sealed class AdoptionService : IAdoptionService
         var totalPages = (int)Math.Ceiling((double)totalCount / request.PageSize);
 
         var items = await query
+            .Include(adoption => adoption.Pet)
             .OrderByDescending(adoption => adoption.CreatedAt)
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
@@ -93,6 +101,12 @@ public sealed class AdoptionService : IAdoptionService
                 adoption.OrganizationId,
                 adoption.PetId,
                 adoption.AdopterId,
+                adoption.AdopterName,
+                adoption.AdopterPhone,
+                adoption.AdopterEmail,
+                adoption.AdopterAddress,
+                adoption.Pet.Name,
+                adoption.Pet.ImageUrl,
                 adoption.Status,
                 adoption.ApplicationMessage,
                 adoption.AdminNotes,
@@ -114,14 +128,12 @@ public sealed class AdoptionService : IAdoptionService
         CreateAdoptionRequest request,
         CancellationToken cancellationToken)
     {
-        var organizationId = EnsureTenant();
-
         var pet = await _dbContext.Pets
             .FirstOrDefaultAsync(pet => pet.Id == request.PetId, cancellationToken);
 
         if (pet is null)
         {
-            throw new AdoptionWorkflowException("Pet was not found for the current organization.");
+            throw new AdoptionWorkflowException("Pet was not found.");
         }
 
         if (pet.Status != AdoptionStatus.Available)
@@ -135,29 +147,33 @@ public sealed class AdoptionService : IAdoptionService
 
         if (adopter is null)
         {
-            throw new AdoptionWorkflowException("Adopter was not found for the current organization.");
+            throw new AdoptionWorkflowException("Adopter was not found.");
         }
 
         var adoption = new Adoption
         {
             Id = Guid.NewGuid(),
-            OrganizationId = organizationId,
+            OrganizationId = pet.OrganizationId,
             PetId = request.PetId,
             AdopterId = request.AdopterId,
+            AdopterName = NormalizeOptional(adopter.FullName),
+            AdopterPhone = NormalizeOptional(adopter.PhoneNumber),
+            AdopterEmail = NormalizeOptional(adopter.Email),
+            AdopterAddress = NormalizeOptional(adopter.Address),
             Status = AdoptionStatus.ApplicationReceived,
             ApplicationMessage = NormalizeOptional(request.ApplicationMessage)
         };
-
-        pet.Status = AdoptionStatus.ApplicationReceived;
 
         _dbContext.Adoptions.Add(adoption);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return new AdoptionDto(
             adoption.Id, adoption.OrganizationId, adoption.PetId, adoption.AdopterId,
+            adoption.AdopterName, adoption.AdopterPhone, adoption.AdopterEmail,
+            adoption.AdopterAddress,
+            pet.Name, pet.ImageUrl,
             adoption.Status, adoption.ApplicationMessage, adoption.AdminNotes,
-            adoption.CompletedAt, adoption.CreatedAt, adoption.UpdatedAt,
-            adopter.ProfilePictureUrl);
+            adoption.CompletedAt, adoption.CreatedAt, adoption.UpdatedAt, null);
     }
 
     public async Task<AdoptionDto?> TransitionAsync(
@@ -193,6 +209,15 @@ public sealed class AdoptionService : IAdoptionService
         {
             Complete(adoption);
         }
+        else if (newStatus == AdoptionStatus.Rejected)
+        {
+            adoption.Status = AdoptionStatus.Rejected;
+
+            if (adoption.Pet is not null && adoption.Pet.Status == AdoptionStatus.ApplicationReceived)
+            {
+                adoption.Pet.Status = AdoptionStatus.Available;
+            }
+        }
         else
         {
             adoption.Status = newStatus;
@@ -210,6 +235,9 @@ public sealed class AdoptionService : IAdoptionService
 
         return new AdoptionDto(
             adoption.Id, adoption.OrganizationId, adoption.PetId, adoption.AdopterId,
+            adoption.AdopterName, adoption.AdopterPhone, adoption.AdopterEmail,
+            adoption.AdopterAddress,
+            adoption.Pet?.Name, adoption.Pet?.ImageUrl,
             adoption.Status, adoption.ApplicationMessage, adoption.AdminNotes,
             adoption.CompletedAt, adoption.CreatedAt, adoption.UpdatedAt,
             adoption.Adopter?.ProfilePictureUrl);

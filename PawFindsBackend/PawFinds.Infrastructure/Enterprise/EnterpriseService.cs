@@ -332,7 +332,7 @@ public sealed class EnterpriseService : IEnterpriseService
         cp.Location, cp.Phone, cp.Email, cp.Website, cp.Latitude, cp.Longitude);
 
     private static PetDto ToPetDto(Pet p) => new(
-        p.Id, p.OrganizationId, p.OwnerId, null, p.Name, p.Breed, p.Age,
+        p.Id, p.OrganizationId, p.OwnerId, null, null, null, null, p.Name, p.Breed, p.Age,
         p.Type, p.Location, p.Description, p.ImageUrl, p.ImageFileName,
         p.Status, p.IsVaccinated, p.IsSterilized, p.IsDewormed, p.HealthNotes,
         p.GoodWithKids, p.GoodWithDogs, p.GoodWithCats, p.BehaviorNotes,

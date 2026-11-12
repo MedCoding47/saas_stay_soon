@@ -88,5 +88,28 @@ export function useAuth() {
     }
   };
 
-  return { login, register, uploadImage, updateProfile, loading, error };
+  const registerOrganization = async (form) => {
+    setLoading(true);
+    setError('');
+    try {
+      const { data } = await api.post('/auth/register-org', form);
+      const user = data.user || data;
+      localStorage.setItem('sh-token', data.token || data.accessToken);
+      localStorage.setItem('sh-role', user.role);
+      localStorage.setItem('sh-user', JSON.stringify(user));
+      return user;
+    } catch (err) {
+      if (!err.response) {
+        setError('Cannot connect to server. Make sure the backend is running.');
+      } else {
+        const msg = err.response?.data?.message || err.response?.data?.title || 'Registration failed';
+        setError(msg);
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { login, register, registerOrganization, uploadImage, updateProfile, loading, error };
 }

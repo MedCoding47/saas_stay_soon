@@ -14,6 +14,9 @@ export default function PetCard({ pet, isFavorited, onToggleFavorite, t, classNa
   const orgName = pet.shelterName || pet.ownerName || '';
   const subtitle = orgName ? 'Nino - ' + orgName : (pet.breed || '');
 
+  const ownerPhoneDigits = (pet.ownerPhone || '').replace(/[^\d]/g, '');
+  const whatsappLink = ownerPhoneDigits ? `https://wa.me/${ownerPhoneDigits}` : null;
+
   return (
     <div
       onClick={() => navigate('/pets/' + pet.id)}
@@ -82,6 +85,21 @@ export default function PetCard({ pet, isFavorited, onToggleFavorite, t, classNa
 
         {/* Row 2 — Organization / Breed */}
         <p className="text-sm text-[#8c7e74] mt-1.5 leading-snug line-clamp-2">{subtitle}</p>
+
+        {/* Row 3 — Contact links */}
+        {(pet.ownerPhone || pet.ownerEmail) && (
+          <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mt-2.5 text-xs text-[#8c7e74]" onClick={(e) => e.stopPropagation()}>
+            {pet.ownerPhone && (
+              <a href={`tel:${pet.ownerPhone}`} className="hover:text-coral transition-colors">📞 {pet.ownerPhone}</a>
+            )}
+            {pet.ownerEmail && (
+              <a href={`mailto:${pet.ownerEmail}`} className="hover:text-coral transition-colors">✉️</a>
+            )}
+            {whatsappLink && (
+              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="hover:text-coral transition-colors font-semibold">WhatsApp</a>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

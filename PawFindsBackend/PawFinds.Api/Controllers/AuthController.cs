@@ -79,6 +79,7 @@ public class AuthController : ControllerBase
             Email = request.Email,
             FullName = request.FullName,
             PhoneNumber = request.PhoneNumber,
+            Address = request.Address,
             OrganizationId = request.OrganizationId,
             Role = role,
             IsActive = true,
@@ -90,6 +91,86 @@ public class AuthController : ControllerBase
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
+
+        var token = _jwtService.GenerateToken(user);
+
+        return Ok(new LoginResponse
+        {
+            Token = token,
+            TokenType = "Bearer",
+            UserId = user.Id,
+            OrganizationId = user.OrganizationId,
+            Role = user.Role.ToString(),
+            FullName = user.FullName,
+            ProfilePictureUrl = user.ProfilePictureUrl
+        });
+    }
+
+    [HttpPost("register-org")]
+    public async Task<ActionResult<LoginResponse>> RegisterOrg([FromBody] RegisterOrgRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email)
+            || string.IsNullOrWhiteSpace(request.Password)
+            || string.IsNullOrWhiteSpace(request.FullName)
+            || string.IsNullOrWhiteSpace(request.OrgName)
+            || string.IsNullOrWhiteSpace(request.OrgSlug))
+        {
+            return BadRequest("Email, password, full name, organization name and slug are required.");
+        }
+
+        var email = request.Email.Trim();
+        var orgSlug = request.OrgSlug.Trim().ToLowerInvariant();
+
+        if (await _context.Users.IgnoreQueryFilters().AnyAsync(u => u.Email == email))
+            return BadRequest("Email already exists");
+
+        if (await _context.Organizations.IgnoreQueryFilters().AnyAsync(o => o.Slug == orgSlug))
+            return BadRequest("Organization slug already exists");
+
+        var org = new Organization
+        {
+            Name = request.OrgName.Trim(),
+            Slug = orgSlug,
+            IsActive = true,
+            CreatedAt = DateTimeOffset.UtcNow,
+            UpdatedAt = DateTimeOffset.UtcNow
+        };
+        _context.Organizations.Add(org);
+        await _context.SaveChangesAsync();
+
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            OrganizationId = org.Id,
+            Email = email,
+            FullName = request.FullName.Trim(),
+            PhoneNumber = request.PhoneNumber,
+            Role = RoleType.Enterprise,
+            IsActive = true,
+            CreatedAt = DateTimeOffset.UtcNow,
+            UpdatedAt = DateTimeOffset.UtcNow
+        };
+        user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        var profile = await _context.CompanyProfiles
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(cp => cp.OrganizationId == org.Id);
+
+        if (profile is null)
+        {
+            profile = new CompanyProfile
+            {
+                OrganizationId = org.Id,
+                CompanyName = request.OrgName.Trim(),
+                Location = request.Location ?? "",
+                CreatedAt = DateTimeOffset.UtcNow,
+                UpdatedAt = DateTimeOffset.UtcNow
+            };
+            _context.CompanyProfiles.Add(profile);
+            await _context.SaveChangesAsync();
+        }
 
         var token = _jwtService.GenerateToken(user);
 
@@ -131,6 +212,7 @@ public class AuthController : ControllerBase
             user.Role.ToString(),
             user.OrganizationId,
             user.PhoneNumber,
+            user.Address,
             user.About,
             user.ProfilePictureUrl));
     }
@@ -160,6 +242,9 @@ public class AuthController : ControllerBase
         if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
             user.PhoneNumber = request.PhoneNumber;
 
+        if (!string.IsNullOrWhiteSpace(request.Address))
+            user.Address = request.Address;
+
         if (request.About != null)
             user.About = request.About;
 
@@ -172,7 +257,7 @@ public class AuthController : ControllerBase
 
         return Ok(new MeResponse(
             user.Id, user.Email, user.FullName, user.Role.ToString(),
-            user.OrganizationId, user.PhoneNumber, user.About, user.ProfilePictureUrl));
+            user.OrganizationId, user.PhoneNumber, user.Address, user.About, user.ProfilePictureUrl));
     }
 
     private bool TryGetCurrentUserId(out Guid userId)

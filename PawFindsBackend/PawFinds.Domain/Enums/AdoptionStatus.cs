@@ -9,5 +9,6 @@ public enum AdoptionStatus
     ApplicationReceived = 2,
     UnderReview = 3,
     Approved = 4,
-    Completed = 5
+    Completed = 5,
+    Rejected = 6
 }

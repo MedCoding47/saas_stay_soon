@@ -29,9 +29,11 @@ Open `PawFindsBackend/PawFinds.Api/appsettings.json` and verify:
 
 ```json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=.\\SQLEXPRESS;Database=PawFindsDb;TrustServerCertificate=True;User Id=desarrollo;Password=123456;"
+  "DefaultConnection": "Server=.\\SQLEXPRESS;Database=PawFindsDb;TrustServerCertificate=True;User Id=<DB_USER>;Password=<DB_PASSWORD>;"
 }
 ```
+
+Use dotnet user-secrets or environment variables. Never commit real credentials.
 
 If your SQL Server uses a different instance name or auth mode, update accordingly.
 
@@ -71,7 +73,7 @@ cd pet/front
 npm install
 ```
 
-If you see `connect ETIMEDOUT` or `http://192.168.x.x` errors, edit `package-lock.json` and replace `http://192.168.1.189:8081/repository/npm-all/` with `https://registry.npmjs.org/` in all occurrences, then run `npm install` again.
+If you see `connect ETIMEDOUT` errors, edit `package-lock.json` and replace any non-public registry URL with `https://registry.npmjs.org` in all occurrences, then run `npm install` again.
 
 #### 4b. Run
 
@@ -85,10 +87,13 @@ Opens at `http://localhost:5173`. Vite proxies `/api` requests to `http://localh
 
 | Role | Email | Password |
 |---|---|---|
-| SuperAdmin | `superadmin@pawfinds.com` | `Super@123` |
-| Enterprise (Shelter) | `enterprise@pawfinds.com` | `Enterprise@123` |
-| Client | `client@pawfinds.com` | `Client@123` |
-| Vet | `vet@pawfinds.com` | `Vet@123` |
+| SuperAdmin | `superadmin@pawfinds.com` | *(see below)* |
+| Enterprise (Shelter) | `enterprise@pawfinds.com` | *(see below)* |
+| Client | `client@pawfinds.com` | *(see below)* |
+| Vet | `vet@pawfinds.com` | *(see below)* |
+
+Seed passwords are read from dotnet user-secrets / environment variables.
+Set them locally with `dotnet user-secrets set "Seed:SuperAdminPassword" "<your password>"` (and equivalent keys for the other accounts). Never commit real credentials.
 
 ---
 
@@ -201,9 +206,9 @@ pet/front/src/
 The lockfile references a private registry. Run:
 ```powershell
 # Find & replace private registry URL
-Get-ChildItem -Recurse -Filter "package-lock.json" | Select-String "192.168" -SimpleMatch
+Get-ChildItem -Recurse -Filter "package-lock.json" | Select-String "registry" -SimpleMatch
 ```
-Replace `http://192.168.1.189:8081/repository/npm-all/` → `https://registry.npmjs.org/` in `package-lock.json`, then `npm install` again.
+Replace `https://registry.npmjs.org` → `https://registry.npmjs.org/` in `package-lock.json`, then `npm install` again.
 
 ### `Cannot open database "PawFindsDb"`
 The DB auto-creates on first `dotnet run`. Make sure SQL Server is running:

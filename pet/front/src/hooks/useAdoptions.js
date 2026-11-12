@@ -9,7 +9,8 @@ export function useAdoptions() {
     setLoading(true);
     try {
       const { data } = await api.get('/adoptions');
-      setAdoptions(data.items || data.$values || []);
+      const items = data?.items ?? data?.$values ?? data ?? [];
+      setAdoptions(Array.isArray(items) ? items : []);
     } catch {
       setAdoptions([]);
     } finally {
@@ -19,14 +20,20 @@ export function useAdoptions() {
 
   useEffect(() => { fetchAdoptions(); }, [fetchAdoptions]);
 
-  const updateStatus = async (id, status) => {
-    await api.patch(`/adoptions/${id}/status`, { status });
-    await fetchAdoptions();
+  const apply = async ({ petId, adopterName, adopterPhone, adopterEmail, applicationMessage }) => {
+    const { data } = await api.post('/adoptions', {
+      petId,
+      adopterName,
+      adopterPhone,
+      adopterEmail,
+      applicationMessage
+    });
+    return data;
   };
 
-  const apply = async ({ petId, applicationMessage }) => {
-    const { data } = await api.post('/adoptions/apply', { petId, applicationMessage });
-    return data;
+  const updateStatus = async (id, status) => {
+    await api.patch(`/adoptions/${id}`, { status });
+    await fetchAdoptions();
   };
 
   return { adoptions, loading, updateStatus, apply, refetch: fetchAdoptions };

@@ -109,15 +109,9 @@ export default function EnterpriseDashboard() {
   const loadAdoptions = async () => {
     setAdoptionsLoading(true);
     try {
-      const { data: pets } = await api.get('/enterprise/pets');
-      const all = [];
-      for (const pet of pets) {
-        try {
-          const { data } = await api.get(`/enterprise/pets/${pet.id}/adoptions`);
-          all.push(...data.map(a => ({ ...a, petName: pet.name, petId: pet.id })));
-        } catch {}
-      }
-      setAdoptions(all);
+      const { data } = await api.get('/adoptions');
+      const items = data?.items ?? data?.$values ?? data ?? [];
+      setAdoptions(Array.isArray(items) ? items : []);
     } catch {}
     setAdoptionsLoading(false);
   };
@@ -128,7 +122,7 @@ export default function EnterpriseDashboard() {
 
   const handleRespondAdoption = async (adoptionId, status) => {
     try {
-      await api.patch(`/enterprise/adoptions/${adoptionId}/status`, { status, notes: null });
+      await api.patch(`/adoptions/${adoptionId}`, { status });
       setAdoptions(prev => prev.map(a => a.id === adoptionId ? { ...a, status } : a));
     } catch (err) {
       alert(err.response?.data?.message || t('dashboard.enterprise.failedToUpdate'));
@@ -373,7 +367,6 @@ export default function EnterpriseDashboard() {
             {[
               { key: 'pets', label: `${t('dashboard.enterprise.tabs.myPets')} (${pets.length}/6)` },
               { key: 'profile', label: t('dashboard.enterprise.tabs.companyProfile') },
-              { key: 'catalog', label: t('dashboard.enterprise.tabs.catalog') },
               { key: 'adoptions', label: t('dashboard.enterprise.tabs.adoptionRequests') },
             ].map((t) => (
               <button key={t.key} onClick={() => setTab(t.key)}
@@ -421,7 +414,6 @@ export default function EnterpriseDashboard() {
                         <p className="text-xs text-[#b8aaa0] mt-1">{pet.location}</p>
                         <div className="flex items-center justify-between mt-3">
                           <span className={`tag ${pet.status === 'Available' ? 'tag-teal' : 'tag-outline'}`}>{t('common.status.' + pet.status.toLowerCase())}</span>
-                          <span className="text-xs text-[#b8aaa0]">{t('dashboard.enterprise.productsCount', { count: products[pet.id]?.length || 0 })}</span>
                         </div>
                         <div className="flex gap-2 mt-4">
                           <button onClick={() => handleEditPet(pet)}
@@ -556,28 +548,6 @@ export default function EnterpriseDashboard() {
                           </label>
                         </div>
                       </div>
-
-                      {catalogProducts.length > 0 && (
-                        <div>
-                          <h4 className="text-xs font-bold text-[#8c7e74] uppercase tracking-wider mb-3">{t('dashboard.enterprise.associatedProducts')}</h4>
-                          <div className="grid grid-cols-2 gap-2">
-                            {catalogProducts.map(p => (
-                              <label key={p.id} className="flex items-center gap-2 text-sm text-[#0D0D0D]">
-                                <input type="checkbox" className="w-4 h-4 rounded border-[#E8E0D8] text-[#0D0D0D] focus:ring-[#0D0D0D]"
-                                  checked={petForm.productIds?.includes(p.id)}
-                                  onChange={(e) => {
-                                    if (e.target.checked) {
-                                      setPetForm({ ...petForm, productIds: [...(petForm.productIds || []), p.id] });
-                                    } else {
-                                      setPetForm({ ...petForm, productIds: (petForm.productIds || []).filter(id => id !== p.id) });
-                                    }
-                                  }} />
-                                {p.name}
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      )}
 
                       <div>
                         <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('common.photo')}</label>
@@ -716,28 +686,6 @@ export default function EnterpriseDashboard() {
                           </label>
                         </div>
                       </div>
-
-                      {catalogProducts.length > 0 && (
-                        <div>
-                          <h4 className="text-xs font-bold text-[#8c7e74] uppercase tracking-wider mb-3">{t('dashboard.enterprise.associatedProducts')}</h4>
-                          <div className="grid grid-cols-2 gap-2">
-                            {catalogProducts.map(p => (
-                              <label key={p.id} className="flex items-center gap-2 text-sm text-[#0D0D0D]">
-                                <input type="checkbox" className="w-4 h-4 rounded border-[#E8E0D8] text-[#0D0D0D] focus:ring-[#0D0D0D]"
-                                  checked={editPetForm.productIds?.includes(p.id)}
-                                  onChange={(e) => {
-                                    if (e.target.checked) {
-                                      setEditPetForm({ ...editPetForm, productIds: [...(editPetForm.productIds || []), p.id] });
-                                    } else {
-                                      setEditPetForm({ ...editPetForm, productIds: (editPetForm.productIds || []).filter(id => id !== p.id) });
-                                    }
-                                  }} />
-                                {p.name}
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      )}
 
                       <div>
                         <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('common.photo')}</label>
@@ -924,36 +872,63 @@ export default function EnterpriseDashboard() {
                 <div className="text-center py-16 text-[#8c7e74]">{t('dashboard.enterprise.noAdoptionRequests')}</div>
               ) : (
                 <div className="space-y-3">
-                  {adoptions.map((a) => (
-                    <div key={a.id} className="bg-white rounded-3xl border border-[#E8E0D8] p-5 flex items-center justify-between hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-300">
-                      <div className="flex items-center gap-4">
-                        {a.adopterProfilePictureUrl ? (
-                          <img src={a.adopterProfilePictureUrl} alt="" className="w-10 h-10 rounded-full object-cover" />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-[#E8E0D8] flex items-center justify-center text-sm font-bold text-[#8c7e74]">
-                            {a.adopterName?.charAt(0) || '?'}
+                  {adoptions.map((a) => {
+                    const isPending = a.status === 'ApplicationReceived' || a.status === 'UnderReview';
+                    const isAccepted = a.status === 'Approved' || a.status === 'Completed';
+                    const isRejected = a.status === 'Rejected';
+                    const statusLabel = isAccepted ? t('dashboard.enterprise.status.accepted') : isRejected ? t('dashboard.enterprise.status.rejected') : t('dashboard.enterprise.status.pending');
+                    const adopterPhoneDigits = (a.adopterPhone || '').replace(/[^\d]/g, '');
+                    const whatsappLink = adopterPhoneDigits ? `https://wa.me/${adopterPhoneDigits}` : null;
+                    return (
+                      <div key={a.id} className="bg-white rounded-3xl border border-[#E8E0D8] p-5 flex items-center justify-between hover:-translate-y-0.5 hover:shadow-card-hover transition-all duration-300">
+                        <div className="flex items-center gap-4">
+                          {a.adopterProfilePictureUrl ? (
+                            <img src={a.adopterProfilePictureUrl} alt="" className="w-10 h-10 rounded-full object-cover" />
+                          ) : (
+                            <div className="w-10 h-10 rounded-full bg-[#E8E0D8] flex items-center justify-center text-sm font-bold text-[#8c7e74]">
+                              {a.adopterName?.charAt(0) || '?'}
+                            </div>
+                          )}
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-[#0D0D0D]">{a.petName}</span>
+                              {a.petImageUrl && <span className="text-[10px] tag tag-outline">{t('common.photo')}</span>}
+                            </div>
+                            <span className="text-[#8c7e74] text-sm ml-2">{t('dashboard.enterprise.by')} {a.adopterName}</span>
+                            {a.adopterAddress && (
+                              <p className="text-xs text-[#b8aaa0] mt-0.5">📍 {a.adopterAddress}</p>
+                            )}
+                            <p className="text-xs text-[#b8aaa0] mt-0.5">{new Date(a.createdAt).toLocaleDateString()}</p>
+                            {a.applicationMessage && <p className="text-sm text-[#0D0D0D] mt-2 italic">&quot;{a.applicationMessage}&quot;</p>}
                           </div>
-                        )}
-                        <div>
-                          <span className="font-bold text-[#0D0D0D]">{a.petName}</span>
-                          <span className="text-[#8c7e74] text-sm ml-2">{t('dashboard.enterprise.by')} {a.adopterName}</span>
-                          <p className="text-xs text-[#b8aaa0] mt-0.5">{new Date(a.createdAt).toLocaleDateString()}</p>
-                          {a.applicationMessage && <p className="text-sm text-[#0D0D0D] mt-2 italic">&quot;{a.applicationMessage}&quot;</p>}
+                        </div>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className={`tag ${isAccepted ? 'tag-teal' : isRejected ? 'tag-outline' : 'tag-coral'}`}>{statusLabel}</span>
+                          {isPending && (
+                            <>
+                              <button onClick={() => handleRespondAdoption(a.id, 'Approved')}
+                                className="text-xs px-4 py-2 bg-[#e6f7f4] text-[#1a8a7a] rounded-full hover:bg-[#1a8a7a] hover:text-white font-semibold transition-all duration-200">{t('dashboard.enterprise.approve')}</button>
+                              <button onClick={() => handleRespondAdoption(a.id, 'Rejected')}
+                                className="text-xs px-4 py-2 bg-[#fef2ef] text-[#D85A30] rounded-full hover:bg-[#D85A30] hover:text-white font-semibold transition-all duration-200">{t('dashboard.enterprise.reject')}</button>
+                            </>
+                          )}
+                          {isAccepted && (
+                            <div className="flex flex-col items-end gap-1">
+                              {a.adopterPhone && (
+                                <a href={`tel:${a.adopterPhone}`} className="text-xs text-[#0D0D0D] underline hover:text-[#D85A30] transition-colors flex items-center gap-1">📞 {a.adopterPhone}</a>
+                              )}
+                              {a.adopterEmail && (
+                                <a href={`mailto:${a.adopterEmail}`} className="text-xs text-[#0D0D0D] underline hover:text-[#D85A30] transition-colors flex items-center gap-1">✉️ {a.adopterEmail}</a>
+                              )}
+                              {whatsappLink && (
+                                <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-xs text-[#0D0D0D] underline hover:text-[#1ebe5c] transition-colors flex items-center gap-1">💬 WhatsApp</a>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <span className={`tag ${a.status === 'ApplicationReceived' ? 'tag-coral' : a.status === 'Completed' ? 'tag-teal' : 'tag-outline'}`}>{t('common.status.' + a.status)}</span>
-                        {a.status === 'ApplicationReceived' && (
-                          <>
-                            <button onClick={() => handleRespondAdoption(a.id, 'Completed')}
-                              className="text-xs px-4 py-2 bg-[#e6f7f4] text-[#1a8a7a] rounded-full hover:bg-[#1a8a7a] hover:text-white font-semibold transition-all duration-200">{t('dashboard.enterprise.approve')}</button>
-                            <button onClick={() => handleRespondAdoption(a.id, 'Cancelled')}
-                              className="text-xs px-4 py-2 bg-[#fef2ef] text-[#D85A30] rounded-full hover:bg-[#D85A30] hover:text-white font-semibold transition-all duration-200">{t('dashboard.enterprise.reject')}</button>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>

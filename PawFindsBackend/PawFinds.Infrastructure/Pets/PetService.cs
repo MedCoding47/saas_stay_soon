@@ -45,13 +45,20 @@ public sealed class PetService : IPetService
             .OrderByDescending(pet => pet.CreatedAt)
             .Skip((query.PageNumber - 1) * query.PageSize)
             .Take(query.PageSize)
-            .Select(pet => ToDto(pet))
             .ToListAsync(cancellationToken);
+
+        var profiles = await LoadProfilesAsync(
+            pets.Select(pet => pet.OrganizationId).Distinct().ToList(),
+            cancellationToken);
+
+        var petDtos = pets
+            .Select(pet => ToDto(pet, null, profiles.GetValueOrDefault(pet.OrganizationId)))
+            .ToList();
 
         var totalPages = (int)Math.Ceiling((double)totalCount / query.PageSize);
 
         return new PagedResult<PetDto>(
-            pets,
+            petDtos,
             query.PageNumber,
             query.PageSize,
             totalCount,
@@ -62,12 +69,21 @@ public sealed class PetService : IPetService
         Guid id,
         CancellationToken cancellationToken)
     {
-        return await _dbContext.Pets
+        var pet = await _dbContext.Pets
             .AsNoTracking()
             .Include(p => p.Owner)
-            .Where(pet => pet.Id == id)
-            .Select(pet => ToDto(pet))
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(pet => pet.Id == id, cancellationToken);
+
+        if (pet is null)
+        {
+            return null;
+        }
+
+        var profile = (await LoadProfilesAsync(
+            [pet.OrganizationId],
+            cancellationToken)).GetValueOrDefault(pet.OrganizationId);
+
+        return ToDto(pet, pet.Owner?.FullName, profile);
     }
 
     public async Task<PetDto> CreatePetAsync(
@@ -104,7 +120,11 @@ public sealed class PetService : IPetService
         _dbContext.Pets.Add(pet);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return ToDto(pet);
+        var profile = (await LoadProfilesAsync(
+            [pet.OrganizationId],
+            cancellationToken)).GetValueOrDefault(pet.OrganizationId);
+
+        return ToDto(pet, null, profile);
     }
 
     public async Task<bool> UpdatePetAsync(
@@ -169,13 +189,35 @@ public sealed class PetService : IPetService
         Guid ownerId,
         CancellationToken cancellationToken)
     {
-        return await _dbContext.Pets
+        var pets = await _dbContext.Pets
             .AsNoTracking()
             .Include(p => p.Owner)
             .Where(pet => pet.OwnerId == ownerId)
             .OrderByDescending(pet => pet.CreatedAt)
-            .Select(pet => ToDto(pet))
             .ToListAsync(cancellationToken);
+
+        var profiles = await LoadProfilesAsync(
+            pets.Select(pet => pet.OrganizationId).Distinct().ToList(),
+            cancellationToken);
+
+        return pets
+            .Select(pet => ToDto(pet, pet.Owner?.FullName, profiles.GetValueOrDefault(pet.OrganizationId)))
+            .ToList();
+    }
+
+    private async Task<Dictionary<Guid, CompanyProfile>> LoadProfilesAsync(
+        List<Guid> organizationIds,
+        CancellationToken cancellationToken)
+    {
+        if (organizationIds.Count == 0)
+        {
+            return new Dictionary<Guid, CompanyProfile>();
+        }
+
+        return await _dbContext.CompanyProfiles
+            .AsNoTracking()
+            .Where(cp => organizationIds.Contains(cp.OrganizationId))
+            .ToDictionaryAsync(cp => cp.OrganizationId, cp => cp, cancellationToken);
     }
 
     private Guid EnsureTenant()
@@ -189,13 +231,16 @@ public sealed class PetService : IPetService
         return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
 
-    private static PetDto ToDto(Pet pet)
+    private static PetDto ToDto(Pet pet, string? ownerName, CompanyProfile? profile)
     {
         return new PetDto(
             pet.Id,
             pet.OrganizationId,
             pet.OwnerId,
-            pet.Owner != null ? pet.Owner.FullName : null,
+            ownerName,
+            profile?.CompanyName,
+            profile?.Phone,
+            profile?.Email,
             pet.Name,
             pet.Breed,
             pet.Age,

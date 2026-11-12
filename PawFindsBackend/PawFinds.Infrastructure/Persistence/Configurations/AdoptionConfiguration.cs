@@ -17,6 +17,18 @@ public sealed class AdoptionConfiguration : IEntityTypeConfiguration<Adoption>
             .HasMaxLength(80)
             .IsRequired();
 
+        builder.Property(adoption => adoption.AdopterName)
+            .HasMaxLength(200);
+
+        builder.Property(adoption => adoption.AdopterPhone)
+            .HasMaxLength(50);
+
+        builder.Property(adoption => adoption.AdopterEmail)
+            .HasMaxLength(200);
+
+        builder.Property(adoption => adoption.AdopterAddress)
+            .HasMaxLength(500);
+
         builder.Property(adoption => adoption.ApplicationMessage)
             .HasMaxLength(2000);
 
@@ -36,6 +48,7 @@ public sealed class AdoptionConfiguration : IEntityTypeConfiguration<Adoption>
         builder.HasOne(adoption => adoption.Adopter)
             .WithMany()
             .HasForeignKey(adoption => adoption.AdopterId)
+            .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(adoption => adoption.OrganizationId);
@@ -43,5 +56,6 @@ public sealed class AdoptionConfiguration : IEntityTypeConfiguration<Adoption>
         builder.HasIndex(adoption => new { adoption.OrganizationId, adoption.Status });
         builder.HasIndex(adoption => new { adoption.OrganizationId, adoption.PetId });
         builder.HasIndex(adoption => new { adoption.OrganizationId, adoption.AdopterId });
+        builder.HasIndex(adoption => new { adoption.OrganizationId, adoption.AdopterEmail });
     }
 }

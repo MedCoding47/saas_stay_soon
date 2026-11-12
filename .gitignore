@@ -61,3 +61,20 @@ err-*.txt
 frontend.err
 backend.err
 wwwroot/
+
+# dotnet user-level caches
+.dotnet_home/
+.nuget/
+
+# Published output
+api-publish/
+publish/
+
+# Temp dev servers
+pet/front/server.js
+
+# Secrets
+*.user.secrets*
+secrets.json
+*.pem
+*.key

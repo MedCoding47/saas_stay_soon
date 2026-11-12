@@ -7,7 +7,7 @@ import PageTransition from '../../components/animations/PageTransition';
 
 export default function ClientRegister() {
   const { t } = useTranslation();
-  const [form, setForm] = useState({ fullName: '', email: '', password: '', confirmPassword: '' });
+  const [form, setForm] = useState({ fullName: '', email: '', phone: '', address: '', password: '', confirmPassword: '' });
   const { register, loading, error } = useAuth();
   const navigate = useNavigate();
 
@@ -18,6 +18,8 @@ export default function ClientRegister() {
       await register({
         fullName: form.fullName,
         email: form.email,
+        phoneNumber: form.phone,
+        address: form.address,
         password: form.password,
       });
       navigate('/login/client');
@@ -66,6 +68,14 @@ export default function ClientRegister() {
               <div className="mb-5">
                 <label className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-2 block">{t('common.email')}</label>
                 <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder={t('common.emailPlaceholder')} required className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+              </div>
+              <div className="mb-5">
+                <label className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-2 block">{t('common.phone')}</label>
+                <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder={t('common.phonePlaceholder')} className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
+              </div>
+              <div className="mb-5">
+                <label className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-2 block">{t('auth.register.address')}</label>
+                <input type="text" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder={t('auth.register.addressPlaceholder')} className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] text-sm outline-none focus:border-[#0D0D0D] transition-colors" />
               </div>
               <div className="mb-5">
                 <label className="text-xs font-bold tracking-widest uppercase text-[#8c7e74] mb-2 block">{t('common.password')}</label>

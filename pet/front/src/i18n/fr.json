@@ -97,7 +97,16 @@
 
   "auth.orgLogin.title": "Organisation.",
   "auth.orgLogin.subtitle": "Connectez-vous avec votre compte d'organisation",
-  "auth.orgLogin.adminNote": "Les comptes d'organisation sont créés par l'administrateur de la plateforme. Contactez votre administrateur si vous n'avez pas de compte.",
+  "auth.orgLogin.adminNote": "Nouveau sur Nino ?",
+
+  "auth.orgRegister.title": "Enregistrez votre refuge.",
+  "auth.orgRegister.subtitle": "Créez un compte refuge et commencez à lister des animaux.",
+  "auth.orgRegister.orgName": "Nom du refuge / de l'organisation",
+  "auth.orgRegister.orgSlug": "Identifiant de l'organisation (utilisé dans le lien de votre profil)",
+  "auth.orgRegister.createAccount": "Enregistrer mon refuge",
+  "auth.orgRegister.hasAccount": "Déjà un compte ? Se connecter",
+  "auth.orgRegister.rightTitle": "Pour les refuges",
+  "auth.orgRegister.rightDesc": "Gérez votre organisation, vos animaux et les demandes d'adoption depuis un seul tableau de bord.",
 
   "auth.admin.title": "Connexion Admin.",
   "auth.admin.subtitle": "Entrez vos identifiants pour continuer",

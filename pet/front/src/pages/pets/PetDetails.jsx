@@ -63,6 +63,11 @@ export default function PetDetails() {
   const [loading, setLoading] = useState(true);
   const [showQuiz, setShowQuiz] = useState(false);
   const [petProducts, setPetProducts] = useState([]);
+  const [showAdoptForm, setShowAdoptForm] = useState(false);
+  const [adoptMessage, setAdoptMessage] = useState('');
+  const [adoptSubmitting, setAdoptSubmitting] = useState(false);
+  const [adoptSuccess, setAdoptSuccess] = useState(false);
+  const [adoptError, setAdoptError] = useState('');
   const { isFavorited, toggleFavorite } = useFavorites();
 
   const token = localStorage.getItem('sh-token');
@@ -92,7 +97,27 @@ export default function PetDetails() {
 
   const handleAdoptClick = () => {
     if (!token) { navigate('/login/client'); return; }
-    setShowQuiz(true);
+    setAdoptMessage('');
+    setAdoptSuccess(false);
+    setAdoptError('');
+    setShowAdoptForm(true);
+  };
+
+  const handleAdoptSubmit = async (e) => {
+    e.preventDefault();
+    setAdoptSubmitting(true);
+    setAdoptError('');
+    try {
+      await api.post('/adoptions', {
+        petId: pet.id,
+        applicationMessage: adoptMessage || null
+      });
+      setAdoptSuccess(true);
+    } catch (err) {
+      setAdoptError(err.response?.data?.message || 'Failed to send your request. Please try again.');
+    } finally {
+      setAdoptSubmitting(false);
+    }
   };
 
   const handleInfoClick = () => {
@@ -107,6 +132,8 @@ export default function PetDetails() {
   const imgSrc = pet?.imageUrl;
   const status = petStatusLabel(pet?.status);
   const isAvailable = status === 'Available';
+  const ownerPhoneDigits = (pet?.ownerPhone || '').replace(/[^\d]/g, '');
+  const whatsappLink = ownerPhoneDigits ? `https://wa.me/${ownerPhoneDigits}` : null;
 
   if (loading) {
     return (
@@ -237,12 +264,56 @@ export default function PetDetails() {
               <button onClick={handleInfoClick} className="btn-outline px-8">
                 {t('pets.details.contact')}
               </button>
+              {whatsappLink && (
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-outline px-6 flex items-center gap-2 group"
+                >
+                  <span className="font-bold group-hover:text-coral transition-colors">WhatsApp</span>
+                </a>
+              )}
               <button onClick={() => toggleFavorite(pet)} className={`w-12 h-12 rounded-full border-2 flex items-center justify-center text-lg transition-all flex-shrink-0 ${
                 isFavorited(pet.id) ? 'bg-coral border-coral text-white' : 'bg-white border-[#E8E0D8] text-[#8c7e74] hover:border-coral hover:text-coral'
               }`}>
                 {isFavorited(pet.id) ? '♥' : '♡'}
               </button>
             </div>
+
+            {showAdoptForm && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setShowAdoptForm(false)}>
+                <div className="bg-white rounded-3xl p-8 w-full max-w-md" onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-between p-6 border-b border-[#E8E0D8]">
+                    <h2 className="font-display font-black text-xl text-[#0D0D0D]">{t('pets.details.adoptRequest')}</h2>
+                    <button onClick={() => setShowAdoptForm(false)} className="w-9 h-9 flex items-center justify-center rounded-full text-muted-light hover:text-dark hover:bg-[#FAF7F2] transition-all text-lg font-light">&times;</button>
+                  </div>
+                  <div className="p-6">
+                    {adoptSuccess ? (
+                      <div className="text-center py-4">
+                        <p className="text-3xl mb-4">🐾</p>
+                        <h3 className="font-display font-black text-xl text-[#0D0D0D] mb-2">{t('adoptQuiz.doneTitle', 'Request Submitted!')}</h3>
+                        <p className="text-[#8c7e74] text-sm leading-relaxed">{t('adoptQuiz.doneMessage', { name: pet.name })}</p>
+                        <button onClick={() => setShowAdoptForm(false)} className="btn-dark mt-6 rounded-xl px-8 py-2.5 text-sm">{t('common.close')}</button>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleAdoptSubmit} className="space-y-4">
+                        {adoptError && <p className="text-red-500 text-sm bg-red-50 p-3 rounded-2xl">{adoptError}</p>}
+                        <p className="text-sm text-[#8c7e74]">{t('pets.details.adoptRequestInfo', { name: pet.name })}</p>
+                        <div>
+                          <label className="block text-sm font-semibold text-[#0D0D0D] mb-1.5">{t('dashboard.client.messageOptional')}</label>
+                          <textarea className="w-full px-5 py-4 rounded-2xl border-2 border-[#E8E0D8] bg-white text-[#0D0D0D] outline-none focus:border-[#0D0D0D] transition-colors resize-none" rows="3" value={adoptMessage} onChange={(e) => setAdoptMessage(e.target.value)} placeholder={t('dashboard.client.adoptionPlaceholder')} />
+                        </div>
+                        <p className="text-xs text-[#8c7e74]">{t('pets.details.adoptRequestAutoFill')}</p>
+                        <button type="submit" className="btn-dark w-full rounded-xl px-8 py-3 text-sm" disabled={adoptSubmitting}>
+                          {adoptSubmitting ? t('common.submitting') : t('dashboard.client.submitRequest')}
+                        </button>
+                      </form>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {!token && (
               <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mt-6">
@@ -302,17 +373,18 @@ export default function PetDetails() {
             <div className="w-full h-full bg-[#FAF7F2] flex items-center justify-center text-6xl text-[#b8aaa0]">🗺️</div>
           </div>
           <div className="bg-[#0D0D0D] rounded-3xl p-8">
-            <p className="font-display font-bold text-white text-2xl">{pet.ownerName || t('pets.details.shelter.defaultName', 'Nino Shelter')}</p>
+            <p className="font-display font-bold text-white text-2xl">{pet.shelterName || pet.ownerName || t('pets.details.shelter.defaultName', 'Nino Shelter')}</p>
             <div className="mt-4 space-y-2 text-sm">
               <p className="text-white/50 flex items-center gap-2">📍 {pet.location || t('common.morocco')}</p>
               {pet.shelterAddress && <p className="text-white/50 flex items-center gap-2">🏠 {pet.shelterAddress}</p>}
               {pet.ownerPhone ? (
                 <a href={`tel:${pet.ownerPhone}`} className="text-white/50 flex items-center gap-2 hover:text-white transition-colors">📞 {pet.ownerPhone}</a>
-              ) : (
-                <p className="text-white/50 flex items-center gap-2">📞 +212 5XX XX XX XX</p>
-              )}
+              ) : null}
               {pet.ownerEmail && (
                 <a href={`mailto:${pet.ownerEmail}`} className="text-white/50 flex items-center gap-2 hover:text-white transition-colors">✉️ {pet.ownerEmail}</a>
+              )}
+              {whatsappLink && (
+                <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-white/50 flex items-center gap-2 hover:text-white transition-colors">💬 WhatsApp</a>
               )}
             </div>
             <div className="text-white/40 text-xs mt-4 space-y-1">

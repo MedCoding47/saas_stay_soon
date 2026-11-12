@@ -97,7 +97,16 @@
 
   "auth.orgLogin.title": "المؤسسة.",
   "auth.orgLogin.subtitle": "سجل الدخول بحساب المؤسسة الخاص بك",
-  "auth.orgLogin.adminNote": "حسابات المؤسسات تنشأ من طرف مشرف المنصة. اتصل بمشرفك إذا لم يكن لديك حساب.",
+  "auth.orgLogin.adminNote": "جديد على نينو؟",
+
+  "auth.orgRegister.title": "سجّل ملجأك.",
+  "auth.orgRegister.subtitle": "أنشئ حساب ملجأ وابدأ بعرض الحيوانات.",
+  "auth.orgRegister.orgName": "اسم الملجأ / المؤسسة",
+  "auth.orgRegister.orgSlug": "معرّف المؤسسة (يُستخدم في رابط ملفك الشخصي)",
+  "auth.orgRegister.createAccount": "تسجيل الملجأ",
+  "auth.orgRegister.hasAccount": "لديك حساب بالفعل؟ تسجيل الدخول",
+  "auth.orgRegister.rightTitle": "للملاجئ",
+  "auth.orgRegister.rightDesc": "إدارة المؤسسة والحيوانات وطلبات التبني من لوحة تحكم واحدة.",
 
   "auth.admin.title": "دخول المشرف.",
   "auth.admin.subtitle": "أدخل بيانات اعتمادك للمتابعة",

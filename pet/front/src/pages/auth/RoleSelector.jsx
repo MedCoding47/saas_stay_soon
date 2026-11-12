@@ -9,21 +9,26 @@ const roles = [
     titleKey: 'auth.roleSelector.client',
     descriptionKey: 'auth.roleSelector.clientDesc',
     emoji: '🐾',
-    path: '/login/client',
+    ctaPath: '/login/client',
+    ctaLabelKey: 'auth.roleSelector.signInRegister',
   },
   {
     key: 'organization',
     titleKey: 'auth.roleSelector.enterprise',
     descriptionKey: 'auth.roleSelector.enterpriseDesc',
     emoji: '🏢',
-    path: '/login/organization',
+    ctaPath: '/register/organization',
+    ctaLabelKey: 'auth.orgRegister.createAccount',
+    secondaryPath: '/login/organization',
+    secondaryLabelKey: 'auth.orgRegister.hasAccount',
   },
   {
     key: 'veterinaire',
     titleKey: 'auth.roleSelector.vet',
     descriptionKey: 'auth.roleSelector.vetDesc',
     emoji: '🩺',
-    path: '/login/veterinaire',
+    ctaPath: '/login/veterinaire',
+    ctaLabelKey: 'common.signIn',
   },
 ];
 
@@ -55,17 +60,25 @@ export default function RoleSelector() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 className="bg-white rounded-3xl border border-[#E8E0D8] p-8 flex flex-col items-center text-center hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 cursor-pointer"
-                onClick={() => navigate(role.path)}
+                onClick={() => navigate(role.ctaPath)}
               >
                 <div className="text-6xl mb-5">{role.emoji}</div>
                 <h2 className="text-xl font-bold text-[#0D0D0D] mb-2">{t(role.titleKey)}</h2>
                 <p className="text-[#8c7e74] text-sm mb-6 flex-1 leading-relaxed">{t(role.descriptionKey)}</p>
                 <button
-                  onClick={(e) => { e.stopPropagation(); navigate(role.path); }}
+                  onClick={(e) => { e.stopPropagation(); navigate(role.ctaPath); }}
                   className="btn-dark w-full text-sm"
                 >
-                  {role.key === 'client' ? t('auth.roleSelector.signInRegister') : t('common.signIn')}
+                  {t(role.ctaLabelKey)}
                 </button>
+                {role.secondaryPath && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); navigate(role.secondaryPath); }}
+                    className="text-xs text-[#8c7e74] hover:text-coral mt-3 transition-colors underline decoration-dotted underline-offset-2"
+                  >
+                    {t(role.secondaryLabelKey)}
+                  </button>
+                )}
               </motion.div>
             ))}
           </div>

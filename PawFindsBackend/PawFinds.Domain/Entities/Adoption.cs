@@ -9,7 +9,15 @@ public sealed class Adoption : BaseEntity
 
     public Guid PetId { get; set; }
 
-    public Guid AdopterId { get; set; }
+    public Guid? AdopterId { get; set; }
+
+    public string? AdopterName { get; set; }
+
+    public string? AdopterPhone { get; set; }
+
+    public string? AdopterEmail { get; set; }
+
+    public string? AdopterAddress { get; set; }
 
     public AdoptionStatus Status { get; set; } = AdoptionStatus.ApplicationReceived;
 

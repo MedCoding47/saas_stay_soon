@@ -40,7 +40,7 @@ public sealed record ProductDto(
     Guid Id, Guid? PetId, string Name, string? Description, decimal Price, string? ImageUrl, DateTimeOffset CreatedAt);
 
 public sealed record AdoptionDto(
-    Guid Id, Guid PetId, Guid AdopterId, string? AdopterName, string? PetName,
+    Guid Id, Guid PetId, Guid? AdopterId, string? AdopterName, string? PetName,
     AdoptionStatus Status, string? ApplicationMessage, string? AdminNotes,
     DateTimeOffset? CompletedAt, DateTimeOffset CreatedAt,
     string? AdopterProfilePictureUrl);
